@@ -5,7 +5,14 @@ import { useNavigate } from "react-router";
 
 function Login() {
     const navigate = useNavigate();
-    const [users, setUsers] = useState<string[]>(["test", "user1", "user2"]);
+    const [users] = useState<string[]>(() => {
+        const savedUsers = localStorage.getItem("users");
+        if (savedUsers) {
+            return JSON.parse(savedUsers);
+        } else {
+            return [];
+        }
+    });
     const [newUserName, setNewUserName] = useState<string>("");
 
     function renderUser(index: number, name: string) {
@@ -30,6 +37,8 @@ function Login() {
                         if (newUserName.trim() === "") {
                             alert("ใส่ชื่อของเธอก่อนนะ!");
                         } else {
+                            const updatedUsers = [...users, newUserName.trim()];
+                            localStorage.setItem("users", JSON.stringify(updatedUsers));
                             navigate("/intro", { state: { name: newUserName } })
                         }
                     }}>ตกลง</BorderedButton>
