@@ -22,7 +22,7 @@ function Layout() {
 
   if (!isLandscape) {
     return (
-      <div className="flex items-center justify-center h-screen w-screen bg-gradient-to-b from-[#FFF1F6] to-[#CFE1F9]">
+      <div className="flex items-center justify-center h-screen w-screen bg-linear-to-b from-[#FFF1F6] to-[#CFE1F9]">
         <div className="text-center">
           <svg
             className="w-24 h-24 mx-auto mb-4 text-gray-600"
