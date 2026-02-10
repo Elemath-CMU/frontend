@@ -12,12 +12,12 @@ function Pencil({ id: key, length, x, y, fixed, onMouseDown, onTouchStart }: Pen
     // Fixed dimensions
     const tipHeight = 26;
     const bottomCapHeight = 11; // Space needed for rounded bottom
-    const strokeWidth = 2;
-    const width = 62;
+    // const strokeWidth = 2;
+    // const width = 62;
     
     // Calculate body height based on length
     const bodyHeight = length - tipHeight - bottomCapHeight;
-    const totalHeight = length + strokeWidth; // Add stroke width to prevent cutoff
+    // const totalHeight = length + strokeWidth; // Add stroke width to prevent cutoff
     
     // Calculate bottom position
     const bodyBottom = tipHeight + bodyHeight + bottomCapHeight;

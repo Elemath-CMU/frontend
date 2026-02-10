@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import FullScreenCloudBackground from "../components/FullScreenCloudBackground";
 import { useEffect, useMemo, useState } from "react";
 import StoryLine from "../components/StoryLine";
@@ -10,7 +10,7 @@ type IntroState = {
 }
 
 function Intro() {
-    const { state } = useLocation();
+    // const { state } = useLocation();
     const navigate = useNavigate();
     const [panelOpened, setPanelOpened] = useState<boolean>(false);
     const states: IntroState[] = useMemo(() => [
