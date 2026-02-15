@@ -6,7 +6,7 @@ import MapButton2 from "../components/button/Mapbutton2";
 function MapPage() {
   return (
     <FullScreenCloudBackground>
-      <div className="flex h-1/2 w-full justify-center items-center">
+      <div className="flex h-1/2 w-full justify-center items-center touch-none">
         {/* <div className="flex flex-col justify-center items-center gap-8">
           <div className="text-4xl text-primary font-bold">Map Page</div>
         </div> */}

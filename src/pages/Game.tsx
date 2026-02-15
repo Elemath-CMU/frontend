@@ -4,6 +4,9 @@ import StoryLine from "../components/StoryLine";
 import useGameController from "./GameController";
 import BorderedButton from "../components/button/BorderedButton";
 
+const GAME_WIDTH = 1120;
+const GAME_HEIGHT = 630;
+
 export interface DialogueData {
   text: string | React.ReactNode;
   canClickNext: boolean;
@@ -49,62 +52,86 @@ function Game() {
   const [objects, setObjects] = useState<ObjectData[]>([]);
 
   const [rules, setRules] = useState<CheckAnswerRule[]>([{
-    type: "dropOnObject",
-    objectId: 1,
-    targetObjectId: "spirit",
-  }]);
+      type: "dropOnObject",
+      objectId: 1,
+      targetObjectId: "spirit",
+    }]);
 
-  const [dragging, setDragging] = useState<{ id: number; offsetX: number; offsetY: number } | null>(null);
+  const [dragging, setDragging] = useState<{ id: number; offsetX: number; offsetY: number; } | null>(null);
+
+  const getSVGPoint = (
+    svg: SVGSVGElement,
+    clientX: number,
+    clientY: number,
+  ) => {
+    const pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+
+    return pt.matrixTransform(svg.getScreenCTM()?.inverse());
+  };
+
 
   const onMouseDown = (id: number) => (e: React.MouseEvent<SVGGElement>) => {
-    const obj = objects.find(o => o.id === id)!;
+    const svg = e.currentTarget.closest("svg")!;
+    const point = getSVGPoint(svg, e.clientX, e.clientY);
+    const obj = objects.find((o) => o.id === id)!;
 
     setDragging({
       id,
-      offsetX: e.clientX - obj.x,
-      offsetY: e.clientY - obj.y
+      offsetX: point.x - obj.x,
+      offsetY: point.y - obj.y,
     });
   };
   const onTouchStart = (id: number) => (e: React.TouchEvent<SVGGElement>) => {
+    const svg = e.currentTarget.closest("svg")!;
     const touch = e.touches[0];
-    const obj = objects.find(o => o.id === id)!;
+    const point = getSVGPoint(svg, touch.clientX, touch.clientY);
+
+    const obj = objects.find((o) => o.id === id)!;
     setDragging({
       id,
-      offsetX: touch.clientX - obj.x,
-      offsetY: touch.clientY - obj.y
+      offsetX: point.x - obj.x,
+      offsetY: point.y - obj.y,
     });
   };
 
   const onMouseMove = (e: React.MouseEvent<SVGGElement>) => {
     if (!dragging) return;
+    const svg = e.currentTarget.closest("svg")!;
+    const point = getSVGPoint(svg, e.clientX, e.clientY);
 
     const { id, offsetX, offsetY } = dragging;
-    const x = e.clientX - offsetX;
-    const y = e.clientY - offsetY;
+    const x = point.x - offsetX;
+    const y = point.y - offsetY;
 
-    setObjects((objs) =>
-      [...(objs.filter(o => o.id !== id)),
-      { ...objs.find(o => o.id === id)!, x, y }
-      ]
-    );
+    setObjects((objs) => [
+      ...objs.filter((o) => o.id !== id),
+      { ...objs.find((o) => o.id === id)!, x, y },
+    ]);
   };
+
   const onTouchMove = (e: React.TouchEvent<SVGGElement>) => {
     if (!dragging) return;
+
+    const svg = e.currentTarget.closest("svg")!;
     const touch = e.touches[0];
+    const point = getSVGPoint(svg, touch.clientX, touch.clientY);
 
     const { id, offsetX, offsetY } = dragging;
-    const x = touch.clientX - offsetX;
-    const y = touch.clientY - offsetY;
 
-    setObjects((objs) =>
-      [...(objs.filter(o => o.id !== id)),
-      { ...objs.find(o => o.id === id)!, x, y }
-      ]
-    );
+    const x = point.x - offsetX;
+    const y = point.y - offsetY;
+
+    setObjects((objs) => [
+      ...objs.filter((o) => o.id !== id),
+      { ...objs.find((o) => o.id === id)!, x, y },
+    ]);
   };
 
   const onMouseUp = () => setDragging(null);
   const onTouchCancel = () => setDragging(null);
+  const onTouchEnd = () => setDragging(null);
 
   useEffect(() => {
     const gameInteractions: InteractiveGameData[] = [
@@ -113,16 +140,16 @@ function Game() {
         type: "playground",
         dialogues: [
           {
-            text: 'เอาล่ะ เรามาเริ่มจากการเตรียมวัตถุดิบกันก่อนแล้วกัน!',
+            text: "เอาล่ะ เรามาเริ่มจากการเตรียมวัตถุดิบกันก่อนแล้วกัน!",
             canClickNext: true
           },
           {
-            text: 'ไหนเธอลองลากดินสอมาที่ฉันสิ!',
+            text: "ไหนเธอลองลากดินสอมาที่ฉันสิ!",
             canClickNext: false
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 200, x: 400, y: 100 },
+          {id: 1, type: "pencil", length: 200, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2,},
         ],
         rules: [
           {
@@ -142,8 +169,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 200, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 50, x: 500, y: 100 },
+          { id: 1, type: "pencil", length: 200, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
+          { id: 2, type: "pencil", length: 50, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
         ],
         rules: [
           {
@@ -167,8 +194,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 50, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 200, x: 500, y: 100 },
+          { id: 1, type: "pencil", length: 50, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
+          { id: 2, type: "pencil", length: 200, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
         ],
         rules: [
           {
@@ -188,8 +215,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 200, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 75, x: 500, y: 100 },
+          { id: 1, type: "pencil", length: 200, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
+          { id: 2, type: "pencil", length: 75, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
         ],
         rules: [
           {
@@ -209,8 +236,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 75, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 150, x: 500, y: 100 },
+          { id: 1, type: "pencil", length: 75, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
+          { id: 2, type: "pencil", length: 150, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
         ],
         rules: [
           {
@@ -230,8 +257,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 100, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 75, x: 500, y: 100 },
+          { id: 1, type: "pencil", length: 100, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
+          { id: 2, type: "pencil", length: 75, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
         ],
         rules: [
           {
@@ -251,8 +278,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 110, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 100, x: 500, y: 100 },
+          { id: 1, type: "pencil", length: 110, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
+          { id: 2, type: "pencil", length: 100, x: GAME_WIDTH / 2 , y: GAME_HEIGHT / 2 },
         ],
         rules: [
           {
@@ -297,8 +324,8 @@ function Game() {
         if (!draggedObj) continue;
 
         // Define target bounds (spirit position and size)
-        const targetX = window.innerWidth - 200;
-        const targetY = (window.innerHeight - 116) / 2;
+        const targetX = GAME_WIDTH - 200;
+        const targetY = (GAME_HEIGHT - 116) / 2;
         const targetWidth = 143;
         const targetHeight = 116;
 
@@ -346,18 +373,20 @@ function Game() {
   }, [rules]);
 
   return (
-    <div className="font-mali h-dvh w-screen relative">
+    <div className="font-mali h-dvh w-screen relative touch-none">
       <div className="flex h-1/3 w-full bg-linear-to-b from-[#FFF1F6] to-[#CFE1F9]" />
       <div key="board" className="flex h-2/3 w-full bg-[#DFC1A4]" />
       <svg
         className="absolute inset-0 w-full h-full"
-        preserveAspectRatio="none"
+        viewBox={`0 0 ${GAME_WIDTH} ${GAME_HEIGHT}`}
+        preserveAspectRatio="xMidYMid meet"
         onMouseMove={onMouseMove}
         onTouchMove={onTouchMove}
         onMouseUp={onMouseUp}
         onTouchCancel={onTouchCancel}
+        onTouchEnd={onTouchEnd}
       >
-        <foreignObject x="0" y="0" width="100%" height="100%">
+        <foreignObject x="0" y="50" width="100%" height="100%">
           <div className="w-full h-full flex p-10 justify-end items-center">
             <svg key="spirit" width="143" height="116" viewBox="0 0 143 116" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M125.166 49.2065C125.166 77.7284 102.39 106.527 71.4384 106.527C40.4864 106.527 17.7107 81.3207 17.7107 52.7988C17.7107 24.2769 37.2442 1.5 68.1962 1.5C99.1482 1.5 125.166 20.6846 125.166 49.2065Z" fill="white" />

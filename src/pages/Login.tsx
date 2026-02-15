@@ -28,7 +28,7 @@ function Login() {
 
     return (
         <FullScreenCloudBackground>
-            <div className="flex h-full w-full justify-center items-center">
+            <div className="flex h-full w-full justify-center items-center touch-none">
                 <div className="flex flex-col justify-center items-center gap-5">
                     <div className="text-4xl text-primary font-bold">เธอชื่ออะไร?</div>
                     <div className="flex gap-8">{users.map((user, index) => renderUser(index, user))}</div>
