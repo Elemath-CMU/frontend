@@ -19,6 +19,7 @@ export interface PencilData {
   x: number;
   y: number;
   fixed?: boolean;
+  rotation?: number;
 }
 
 export type ObjectData = PencilData;
@@ -149,7 +150,7 @@ function Game() {
           }
         ],
         objects: [
-          {id: 1, type: "pencil", length: 200, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2,},
+          {id: 1, type: "pencil", length: 200, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2},
         ],
         rules: [
           {
@@ -170,7 +171,7 @@ function Game() {
         ],
         objects: [
           { id: 1, type: "pencil", length: 200, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
-          { id: 2, type: "pencil", length: 50, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
+          { id: 2, type: "pencil", length: 50, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 + 150},
         ],
         rules: [
           {
@@ -194,7 +195,7 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 50, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
+          { id: 1, type: "pencil", length: 50, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 +150},
           { id: 2, type: "pencil", length: 200, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
         ],
         rules: [
@@ -215,8 +216,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 200, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
-          { id: 2, type: "pencil", length: 75, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
+          { id: 1, type: "pencil", length: 200, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
+          { id: 2, type: "pencil", length: 75, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 +125},
         ],
         rules: [
           {
@@ -236,8 +237,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 75, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
-          { id: 2, type: "pencil", length: 150, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
+          { id: 1, type: "pencil", length: 75, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
+          { id: 2, type: "pencil", length: 150, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2},
         ],
         rules: [
           {
@@ -280,6 +281,27 @@ function Game() {
         objects: [
           { id: 1, type: "pencil", length: 110, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
           { id: 2, type: "pencil", length: 100, x: GAME_WIDTH / 2 , y: GAME_HEIGHT / 2 },
+        ],
+        rules: [
+          {
+            type: "dropOnObject",
+            objectId: 1,
+            targetObjectId: "spirit",
+          }
+        ]
+      },
+      {
+        interaction: 8,
+        type: "playground",
+        dialogues: [
+          {
+            text: <span>เก่งมาก ทีนี้เธอลองลากดินสอแท่งที่<u><strong>ยาวกว่า</strong></u>มาที่ฉันสิ</span>,
+            canClickNext: false
+          }
+        ],
+        objects: [
+          { id: 1, type: "pencil", length: 200, x: GAME_WIDTH / 2 , y: GAME_HEIGHT / 2 - 100, rotation: 90},
+          { id: 2, type: "pencil", length: 100, x: GAME_WIDTH / 2 , y: GAME_HEIGHT / 2 + 50, rotation: 90},
         ],
         rules: [
           {
@@ -422,7 +444,7 @@ function Game() {
         </foreignObject>
         {objects.map(obj => {
           if (obj.type === "pencil") {
-            return <Pencil key={obj.id} id={obj.id} length={obj.length} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} fixed={obj.fixed} />;
+            return <Pencil key={obj.id} id={obj.id} length={obj.length} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} fixed={obj.fixed} rotation={obj.rotation}/>;
           }
           return null;
         })}

@@ -4,11 +4,12 @@ export interface PencilProps {
   x: number;
   y: number;
   fixed?: boolean;
+  rotation?: number;
   onMouseDown?: React.MouseEventHandler<SVGGElement>;
   onTouchStart?: React.TouchEventHandler<SVGGElement>;
 }
 
-function Pencil({ id: key, length, x, y, fixed, onMouseDown, onTouchStart }: PencilProps) {
+function Pencil({ id: key, length, x, y, fixed, rotation = 0, onMouseDown, onTouchStart }: PencilProps) {
     // Fixed dimensions
     const tipHeight = 26;
     const bottomCapHeight = 11; // Space needed for rounded bottom
@@ -24,7 +25,7 @@ function Pencil({ id: key, length, x, y, fixed, onMouseDown, onTouchStart }: Pen
     const bottomY = tipHeight + bodyHeight;
     
     return (
-        <g key={key} transform={`translate(${x}, ${y})`} fill="none" onMouseDown={ fixed ? undefined : onMouseDown} onTouchStart={fixed ? undefined : onTouchStart} className="cursor-grab">
+        <g key={key} transform={`translate(${x}, ${y}) rotate(${rotation}, 31, ${length / 2})`} fill="none" onMouseDown={ fixed ? undefined : onMouseDown} onTouchStart={fixed ? undefined : onTouchStart} className="cursor-grab">
             {/* Pencil body */}
             <path 
                 d={`M60 ${tipHeight}V${bottomY}C60 ${bottomY + 6.075} 55.0751 ${bodyBottom} 49 ${bodyBottom}H13C6.92487 ${bodyBottom} 2 ${bottomY + 6.075} 2 ${bottomY}V${tipHeight}H60Z`} 
