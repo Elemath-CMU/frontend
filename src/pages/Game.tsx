@@ -37,8 +37,10 @@ export interface CheckAnswerDropOnObject {
   objectId: number | string;
   targetObjectId: number | string;
 }
-
-export type CheckAnswerRule = CheckAnswerDropOnObject;
+export interface CheckAnswerLastDialogue {
+  type: "lastDialogue";
+}
+export type CheckAnswerRule = CheckAnswerDropOnObject | CheckAnswerLastDialogue;
 
 export interface PlayGroundData {
   interaction: number;
@@ -49,6 +51,19 @@ export interface PlayGroundData {
 }
 
 export type InteractiveGameData = PlayGroundData;
+
+// Helper function to extract width and height from SVG element
+const getSvgDimensions = (svg: React.ReactNode): { width: number; height: number } => {
+  if (React.isValidElement(svg) && svg.type === 'svg') {
+    const props = svg.props as { width?: string | number; height?: string | number };
+    const width = typeof props.width === 'string' ? parseFloat(props.width) : props.width;
+    const height = typeof props.height === 'string' ? parseFloat(props.height) : props.height;
+    if (width && height) {
+      return { width, height };
+    }
+  }
+  return { width: 0, height: 0 };
+};
 
 function Game() {
   useGameController();
@@ -87,6 +102,14 @@ function Game() {
             y: boardCenterY - obj.length / 2
           };
         }
+        if (obj.type === "other") {
+          const { width, height } = getSvgDimensions(obj.svg);
+          return {
+            ...obj,
+            x: boardCenterX - width / 2,
+            y: boardCenterY - height / 2
+          };
+        }
         return obj;
       }
       if (!obj.renderAtMiddleOfBoard) return obj;
@@ -108,7 +131,6 @@ function Game() {
 
   const onMouseDown = (id: number | string) => (e: React.MouseEvent<SVGGElement>) => {
     const obj = objects.find(o => o.id === id)!;
-
     setDragging({
       id,
       offsetX: e.clientX - obj.x,
@@ -169,14 +191,10 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 175, x: 400, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, fixed: true, length: 175, x: 400, y: 100 },
         ],
         rules: [
-          {
-            type: "dropOnObject",
-            objectId: 1,
-            targetObjectId: "spirit",
-          }
+          { type: "lastDialogue" }
         ]
       },
       {
@@ -184,20 +202,15 @@ function Game() {
         type: "playground",
         dialogues: [
           {
-            text: <span>เก่งมาก ทีนี้เธอลองลากดินสอแท่งที่<u><strong>ยาวกว่า</strong></u>มาที่ฉันสิ</span>,
+            text: 'ไหนเธอลองลากดินสอมาที่ฉันสิ!',
             canClickNext: false
           }
         ],
         objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 200, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 50, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 175, x: 400, y: 100 },
         ],
         rules: [
-          {
-            type: "dropOnObject",
-            objectId: 1,
-            targetObjectId: "spirit",
-          }
+          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
         ]
       },
       {
@@ -205,24 +218,16 @@ function Game() {
         type: "playground",
         dialogues: [
           {
-            text: "เยี่ยมเลย! ทีนี้เรามาลุยของจริงกันดีกว่า!",
-            canClickNext: true
-          },
-          {
-            text: <span>เธอลากดินสอแท่งที่<u><strong>ยาวกว่า</strong></u>มาที่ฉันสิ</span>,
+            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
             canClickNext: false
           }
         ],
         objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 50, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 200, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 175, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 70, x: 400, y: 100 },
         ],
         rules: [
-          {
-            type: "dropOnObject",
-            objectId: 2,
-            targetObjectId: "spirit",
-          }
+          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
         ]
       },
       {
@@ -230,20 +235,16 @@ function Game() {
         type: "playground",
         dialogues: [
           {
-            text: <span>เก่งมาก ทีนี้เธอลองลากดินสอแท่งที่<u><strong>ยาวกว่า</strong></u>มาที่ฉันสิ</span>,
+            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
             canClickNext: false
           }
         ],
         objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 200, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 75, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 70, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 175, x: 400, y: 100 },
         ],
         rules: [
-          {
-            type: "dropOnObject",
-            objectId: 1,
-            targetObjectId: "spirit",
-          }
+          { type: "dropOnObject", objectId: 2, targetObjectId: "spirit" },
         ]
       },
       {
@@ -251,20 +252,16 @@ function Game() {
         type: "playground",
         dialogues: [
           {
-            text: <span>เก่งมาก ทีนี้เธอลองลากดินสอแท่งที่<u><strong>ยาวกว่า</strong></u>มาที่ฉันสิ</span>,
+            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
             canClickNext: false
           }
         ],
         objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 75, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 150, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 160, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 70, x: 400, y: 100 },
         ],
         rules: [
-          {
-            type: "dropOnObject",
-            objectId: 2,
-            targetObjectId: "spirit",
-          }
+          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
         ]
       },
       {
@@ -272,20 +269,16 @@ function Game() {
         type: "playground",
         dialogues: [
           {
-            text: <span>เก่งมาก ทีนี้เธอลองลากดินสอแท่งที่<u><strong>ยาวกว่า</strong></u>มาที่ฉันสิ</span>,
+            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
             canClickNext: false
           }
         ],
         objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 100, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 75, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 160, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 90, x: 400, y: 100 },
         ],
         rules: [
-          {
-            type: "dropOnObject",
-            objectId: 1,
-            targetObjectId: "spirit",
-          }
+          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
         ]
       },
       {
@@ -293,20 +286,101 @@ function Game() {
         type: "playground",
         dialogues: [
           {
-            text: <span>เก่งมาก ทีนี้เธอลองลากดินสอแท่งที่<u><strong>ยาวกว่า</strong></u>มาที่ฉันสิ</span>,
+            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
             canClickNext: false
           }
         ],
         objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 110, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 100, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 160, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 90, x: 400, y: 100 },
         ],
         rules: [
+          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
+        ]
+      },
+      {
+        interaction: 8,
+        type: "playground",
+        dialogues: [
           {
-            type: "dropOnObject",
-            objectId: 1,
-            targetObjectId: "spirit",
+            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
+            canClickNext: false
           }
+        ],
+        objects: [
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 90, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 160, x: 400, y: 100 },
+        ],
+        rules: [
+          { type: "dropOnObject", objectId: 2, targetObjectId: "spirit" },
+        ]
+      },
+      {
+        interaction: 9,
+        type: "playground",
+        dialogues: [
+          {
+            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
+            canClickNext: false
+          }
+        ],
+        objects: [
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 90, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 115, x: 400, y: 100 },
+        ],
+        rules: [
+          { type: "dropOnObject", objectId: 2, targetObjectId: "spirit" },
+        ]
+      },
+      {
+        interaction: 10,
+        type: "playground",
+        dialogues: [
+          {
+            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
+            canClickNext: false
+          }
+        ],
+        objects: [
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 90, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 115, x: 400, y: 100 },
+        ],
+        rules: [
+          { type: "dropOnObject", objectId: 2, targetObjectId: "spirit" },
+        ]
+      },
+      {
+        interaction: 11,
+        type: "playground",
+        dialogues: [
+          {
+            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
+            canClickNext: false
+          }
+        ],
+        objects: [
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 105, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 90, x: 400, y: 100 },
+        ],
+        rules: [
+          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
+        ]
+      },
+      {
+        interaction: 12,
+        type: "playground",
+        dialogues: [
+          {
+            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
+            canClickNext: false
+          }
+        ],
+        objects: [
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 90, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 85, x: 400, y: 100 },
+        ],
+        rules: [
+          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
         ]
       },
     ];
@@ -322,14 +396,17 @@ function Game() {
 
   // Check if an object is within bounds of a target
   const isWithinBounds = (draggedObj: ObjectData, targetX: number, targetY: number, targetWidth: number, targetHeight: number) => {
-    const objX = draggedObj.x;
+    let objX = draggedObj.x;
     const objY = draggedObj.y;
-    
+
     let objWidth = 62; // default width for pencil
     let objHeight = draggedObj.type === "pencil" ? draggedObj.length : 62;
-    
+
     if (draggedObj.type === "pencil" && draggedObj.orientation === "horizontal") {
+      // When rotated 90°, swap dimensions and adjust position
       [objWidth, objHeight] = [objHeight, objWidth];
+      // The rotation happens around (0,0), so after 90° rotation, the bounds shift
+      objX = draggedObj.x - draggedObj.length;
     }
 
     const objRight = objX + objWidth;
@@ -384,6 +461,11 @@ function Game() {
           completedRules.push(rule);
         }
       }
+      else if (rule.type === "lastDialogue") {
+        if (dialogueIndex === dialogues.length - 1) {
+          completedRules.push(rule);
+        }
+      }
     }
     if (completedRules.length > 0) {
       setRules((prevRules) => ((prevRules?.filter(r => !completedRules.includes(r)) || null)));
@@ -391,7 +473,7 @@ function Game() {
     if (usedObjectIds.length > 0) {
       setObjects((prevObjects) => prevObjects.filter(o => !usedObjectIds.includes(o.id)));
     }
-  }, [objects, rules]);
+  }, [dialogueIndex, dialogues.length, objects, rules]);
 
   useEffect(() => {
     if (dragging == null) {
@@ -437,7 +519,7 @@ function Game() {
               </svg>
             </BorderedButton>
           </div>
-          <div className="flex justify-center -m-20">
+          <div className="flex justify-center items-center gap-3 -m-20">
             {dialogues[dialogueIndex] && <StoryLine story={dialogues[dialogueIndex].text} onNext={() => {
               if (dialogueIndex < dialogues.length - 1) {
                 setDialogueIndex(dialogueIndex + 1);
@@ -461,7 +543,14 @@ function Game() {
         </foreignObject>
         {objects.map(obj => {
           if (obj.type === "pencil") {
-            return <Pencil key={obj.id} id={obj.id} length={obj.length} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} fixed={obj.fixed} />;
+            return <Pencil key={obj.id} id={obj.id} length={obj.length} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} orientation={obj.orientation ? (obj.orientation == "vertical" ? "up" : "right") : undefined} fixed={obj.fixed} />;
+          }
+          if (obj.type === "other") {
+            return (
+              <g key={obj.id} id={String(obj.id)} transform={`translate(${obj.x}, ${obj.y})`} onMouseDown={obj.fixed ? undefined : onMouseDown(obj.id)} onTouchStart={obj.fixed ? undefined : onTouchStart(obj.id)}>
+                {obj.svg}
+              </g>
+            );
           }
           return null;
         })}
