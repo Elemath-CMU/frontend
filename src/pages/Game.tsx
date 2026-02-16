@@ -13,6 +13,7 @@ export interface ObjectBaseData {
   id: number | string;
   type: string;
   renderAtMiddleOfBoard?: boolean;
+  forceCenterOnBoard?: boolean;
   x: number;
   y: number;
   fixed?: boolean;
@@ -21,10 +22,15 @@ export interface ObjectBaseData {
 export interface PencilData extends ObjectBaseData {
   type: "pencil";
   length: number;
-  oriantation?: "horizontal" | "vertical";
+  orientation?: "horizontal" | "vertical";
 }
 
-export type ObjectData = PencilData;
+export interface OtherObjectData extends ObjectBaseData {
+  type: "other";
+  svg: React.ReactNode;
+}
+
+export type ObjectData = PencilData | OtherObjectData;
 
 export interface CheckAnswerDropOnObject {
   type: "dropOnObject";
@@ -46,7 +52,7 @@ export type InteractiveGameData = PlayGroundData;
 
 function Game() {
   useGameController();
-  const [/*interactions*/, setInteractions] = useState<InteractiveGameData[]>([]);
+  const [/* interactions */, setInteractions] = useState<InteractiveGameData[]>([]);
   const [interactionIndex, setInteractionIndex] = useState<number>(0);
 
   const [dialogues, setDialogues] = useState<DialogueData[]>([]);
@@ -56,7 +62,49 @@ function Game() {
 
   const [rules, setRules] = useState<null | CheckAnswerRule[]>(null);
 
-  const [dragging, setDragging] = useState<{ id: number | string; offsetX: number; offsetY: number } | null>(null);
+  const [dragging, setDragging] = useState<{ id: number | string; offsetX: number; offsetY: number; } | null>(null);
+
+  const centerObjectsOnBoard = (objs: ObjectData[]): ObjectData[] => {
+    const forced = objs.filter(obj => obj.forceCenterOnBoard);
+    const centered = objs.filter(obj => obj.renderAtMiddleOfBoard && !obj.forceCenterOnBoard);
+    if (centered.length === 0 && forced.length === 0) return objs;
+
+    const boardTop = window.innerHeight / 3;
+    const boardHeight = (window.innerHeight * 2) / 3;
+    const boardCenterX = window.innerWidth / 2;
+    const boardCenterY = boardTop + boardHeight / 2;
+    const pencilWidth = 62;
+    const spacing = 24;
+    const totalWidth = centered.length * pencilWidth + (centered.length - 1) * spacing;
+    const startX = boardCenterX - totalWidth / 2;
+
+    return objs.map((obj) => {
+      if (obj.forceCenterOnBoard) {
+        if (obj.type === "pencil") {
+          return {
+            ...obj,
+            x: boardCenterX - pencilWidth / 2,
+            y: boardCenterY - obj.length / 2
+          };
+        }
+        return obj;
+      }
+      if (!obj.renderAtMiddleOfBoard) return obj;
+
+      const index = centered.findIndex(item => item.id === obj.id);
+      if (index === -1) return obj;
+
+      if (obj.type === "pencil") {
+        return {
+          ...obj,
+          x: startX + index * (pencilWidth + spacing),
+          y: boardCenterY - obj.length / 2
+        };
+      }
+
+      return obj;
+    });
+  };
 
   const onMouseDown = (id: number | string) => (e: React.MouseEvent<SVGGElement>) => {
     const obj = objects.find(o => o.id === id)!;
@@ -85,9 +133,7 @@ function Game() {
     const y = e.clientY - offsetY;
 
     setObjects((objs) =>
-      [...(objs.filter(o => o.id !== id)),
-      { ...objs.find(o => o.id === id)!, x, y }
-      ]
+      objs.map((o) => (o.id === id ? { ...o, x, y } : o))
     );
   };
   const onTouchMove = (e: React.TouchEvent<SVGGElement>) => {
@@ -99,9 +145,7 @@ function Game() {
     const y = touch.clientY - offsetY;
 
     setObjects((objs) =>
-      [...(objs.filter(o => o.id !== id)),
-      { ...objs.find(o => o.id === id)!, x, y }
-      ]
+      objs.map((o) => (o.id === id ? { ...o, x, y } : o))
     );
   };
 
@@ -125,7 +169,7 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 200, x: 400, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 175, x: 400, y: 100 },
         ],
         rules: [
           {
@@ -145,8 +189,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 200, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 50, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 200, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 50, x: 500, y: 100 },
         ],
         rules: [
           {
@@ -170,8 +214,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 50, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 200, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 50, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 200, x: 500, y: 100 },
         ],
         rules: [
           {
@@ -191,8 +235,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 200, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 75, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 200, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 75, x: 500, y: 100 },
         ],
         rules: [
           {
@@ -212,8 +256,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 75, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 150, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 75, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 150, x: 500, y: 100 },
         ],
         rules: [
           {
@@ -233,8 +277,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 100, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 75, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 100, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 75, x: 500, y: 100 },
         ],
         rules: [
           {
@@ -254,8 +298,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 110, x: 400, y: 100 },
-          { id: 2, type: "pencil", length: 100, x: 500, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 110, x: 400, y: 100 },
+          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 100, x: 500, y: 100 },
         ],
         rules: [
           {
@@ -271,14 +315,25 @@ function Game() {
     }).then(() => {
       setInteractions(gameInteractions);
       setDialogues(gameInteractions[interactionIndex].dialogues);
-      setObjects(gameInteractions[interactionIndex].objects);
+      setObjects(centerObjectsOnBoard(gameInteractions[interactionIndex].objects));
       setRules(gameInteractions[interactionIndex].rules);
     });
   }, [interactionIndex]);
 
   // Check if an object is within bounds of a target
-  const isWithinBounds = (objX: number, objY: number, objLength: number, targetX: number, targetY: number, targetWidth: number, targetHeight: number) => {
-    const objRight = objX + objLength;
+  const isWithinBounds = (draggedObj: ObjectData, targetX: number, targetY: number, targetWidth: number, targetHeight: number) => {
+    const objX = draggedObj.x;
+    const objY = draggedObj.y;
+    
+    let objWidth = 62; // default width for pencil
+    let objHeight = draggedObj.type === "pencil" ? draggedObj.length : 62;
+    
+    if (draggedObj.type === "pencil" && draggedObj.orientation === "horizontal") {
+      [objWidth, objHeight] = [objHeight, objWidth];
+    }
+
+    const objRight = objX + objWidth;
+    const objBottom = objY + objHeight;
     const targetRight = targetX + targetWidth;
     const targetBottom = targetY + targetHeight;
 
@@ -286,7 +341,7 @@ function Game() {
       objX < targetRight &&
       objRight > targetX &&
       objY < targetBottom &&
-      objY + objLength > targetY
+      objBottom > targetY
     );
   };
 
@@ -300,16 +355,24 @@ function Game() {
         const draggedObj = objects.find(o => o.id === rule.objectId);
         if (!draggedObj) continue;
 
-        // Define target bounds (spirit position and size)
-        const targetX = window.innerWidth - 200;
-        const targetY = (window.innerHeight - 116) / 2;
-        const targetWidth = 143;
-        const targetHeight = 116;
+        // Get target bounds dynamically from the spirit element
+        let targetX = window.innerWidth - 200;
+        let targetY = (window.innerHeight - 116) / 2;
+        let targetWidth = 143;
+        let targetHeight = 116;
+
+        const spiritElement = document.getElementById("spirit");
+        console.log("Spirit element:", spiritElement);
+        if (spiritElement) {
+          const rect = spiritElement.getBoundingClientRect();
+          targetX = rect.left;
+          targetY = rect.top;
+          targetWidth = rect.width;
+          targetHeight = rect.height;
+        }
 
         const isCorrect = isWithinBounds(
-          draggedObj.x,
-          draggedObj.y,
-          draggedObj.length,
+          draggedObj,
           targetX,
           targetY,
           targetWidth,
@@ -352,7 +415,7 @@ function Game() {
   return (
     <div className="font-mali h-dvh w-screen relative touch-none">
       <div className="flex h-1/3 w-full bg-linear-to-b from-[#FFF1F6] to-[#CFE1F9]" />
-      <div key="board" className="flex h-2/3 w-full bg-[#DFC1A4]" />
+      <div id="board" key="board" className="flex h-2/3 w-full bg-[#DFC1A4]" />
       <svg
         className="absolute inset-0 w-full h-full"
         preserveAspectRatio="none"
@@ -364,20 +427,6 @@ function Game() {
       >
         <foreignObject x="0" y="0" width="100%" height="100%">
           <div className="w-full h-full flex p-10 justify-end items-center">
-            <svg key="spirit" width="143" height="116" viewBox="0 0 143 116" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M125.166 49.2065C125.166 77.7284 102.39 106.527 71.4384 106.527C40.4864 106.527 17.7107 81.3207 17.7107 52.7988C17.7107 24.2769 37.2442 1.5 68.1962 1.5C99.1482 1.5 125.166 20.6846 125.166 49.2065Z" fill="white" />
-              <path d="M32.5603 62.9727C29.8486 71.1738 22.1527 76.525 13.7737 73.7545C5.39472 70.984 -0.494451 61.141 2.21721 52.9399C4.92887 44.7388 13.9196 40.3363 22.2987 43.1068C30.6777 45.8773 35.272 54.7715 32.5603 62.9727Z" fill="white" />
-              <path d="M128.332 73.7545C136.533 71.0428 143.662 61.1778 140.891 52.7988C138.121 44.4198 129.227 39.8255 121.026 42.5372C112.824 45.2488 108.422 54.2396 111.193 62.6186C113.963 70.9976 120.131 76.4662 128.332 73.7545Z" fill="white" />
-              <path d="M50.522 87.7824C51.1239 99.3668 41.1929 109.299 28.3405 109.967C15.4881 110.635 4.58114 101.785 3.97919 90.2009C3.37723 78.6165 13.3082 68.684 26.1606 68.0162C39.0131 67.3484 49.92 76.198 50.522 87.7824Z" fill="white" />
-              <path d="M89.2024 87.7824C88.6005 99.3668 98.5315 109.299 111.384 109.967C124.236 110.635 135.143 101.785 135.745 90.2009C136.347 78.6165 126.416 68.684 113.564 68.0162C100.711 67.3484 89.8044 76.198 89.2024 87.7824Z" fill="white" />
-              <path d="M68.1962 105.482C68.1962 109.702 61.042 113.124 52.2168 113.124C43.3917 113.124 36.2375 109.702 36.2375 105.482C36.2375 101.261 43.3917 97.8393 52.2168 97.8393C61.042 97.8393 68.1962 101.261 68.1962 105.482Z" fill="white" />
-              <path d="M103.397 105.018C103.397 109.239 96.2429 112.661 87.4177 112.661C78.5926 112.661 71.4384 109.239 71.4384 105.018C71.4384 100.798 78.5926 97.3762 87.4177 97.3762C96.2429 97.3762 103.397 100.798 103.397 105.018Z" fill="white" />
-              <path d="M20.1289 42.9136C5.77058 38.9767 -3.26123 53.5665 4.14949 66.0721M130.03 75.144C144.62 95.0603 129.303 115.411 102.471 108.029C94.8711 118.193 72.5966 113.124 71.2071 106.64M9.45656 75.144C-5.1333 95.0603 10.1831 115.411 37.0152 108.029C44.6151 118.193 66.8896 113.124 68.2791 106.64M122.851 42.9136C137.209 38.9767 146.241 53.5665 138.83 66.0721M20.0268 33.8912C30.6637 -8.71177 105.945 -9.87839 122.851 33.8912" stroke="black" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-              <ellipse cx="53.9712" cy="40.947" rx="5.55804" ry="8.33706" transform="rotate(66.5725 53.9712 40.947)" fill="#B5CDFF" />
-              <ellipse cx="5.55804" cy="8.33706" rx="5.55804" ry="8.33706" transform="matrix(-0.397589 0.917564 0.917564 0.397589 83.0723 32.5324)" fill="#B5CDFF" />
-              <path d="M72.5963 57.9128C73.2138 58.2693 73.2138 59.1607 72.5963 59.5172L64.954 63.9295C64.3364 64.2861 63.5645 63.8404 63.5645 63.1273V54.3027C63.5645 53.5896 64.3364 53.1439 64.954 53.5005L72.5963 57.9128Z" fill="#FCD9DF" />
-              <path d="M70.0488 57.9128C69.4313 58.2693 69.4313 59.1607 70.0488 59.5172L77.6911 63.9295C78.3087 64.2861 79.0806 63.8404 79.0806 63.1273V54.3027C79.0806 53.5896 78.3087 53.1439 77.6911 53.5005L70.0488 57.9128Z" fill="#FCD9DF" />
-            </svg>
           </div>
         </foreignObject>
         <foreignObject x="0" y="0" width="100%" height="100%">
@@ -394,6 +443,20 @@ function Game() {
                 setDialogueIndex(dialogueIndex + 1);
               }
             }} canClickNext={dialogues[dialogueIndex].canClickNext} />}
+            <svg id="spirit" key="spirit" width="143" height="116" viewBox="0 0 143 116" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M125.166 49.2065C125.166 77.7284 102.39 106.527 71.4384 106.527C40.4864 106.527 17.7107 81.3207 17.7107 52.7988C17.7107 24.2769 37.2442 1.5 68.1962 1.5C99.1482 1.5 125.166 20.6846 125.166 49.2065Z" fill="white" />
+              <path d="M32.5603 62.9727C29.8486 71.1738 22.1527 76.525 13.7737 73.7545C5.39472 70.984 -0.494451 61.141 2.21721 52.9399C4.92887 44.7388 13.9196 40.3363 22.2987 43.1068C30.6777 45.8773 35.272 54.7715 32.5603 62.9727Z" fill="white" />
+              <path d="M128.332 73.7545C136.533 71.0428 143.662 61.1778 140.891 52.7988C138.121 44.4198 129.227 39.8255 121.026 42.5372C112.824 45.2488 108.422 54.2396 111.193 62.6186C113.963 70.9976 120.131 76.4662 128.332 73.7545Z" fill="white" />
+              <path d="M50.522 87.7824C51.1239 99.3668 41.1929 109.299 28.3405 109.967C15.4881 110.635 4.58114 101.785 3.97919 90.2009C3.37723 78.6165 13.3082 68.684 26.1606 68.0162C39.0131 67.3484 49.92 76.198 50.522 87.7824Z" fill="white" />
+              <path d="M89.2024 87.7824C88.6005 99.3668 98.5315 109.299 111.384 109.967C124.236 110.635 135.143 101.785 135.745 90.2009C136.347 78.6165 126.416 68.684 113.564 68.0162C100.711 67.3484 89.8044 76.198 89.2024 87.7824Z" fill="white" />
+              <path d="M68.1962 105.482C68.1962 109.702 61.042 113.124 52.2168 113.124C43.3917 113.124 36.2375 109.702 36.2375 105.482C36.2375 101.261 43.3917 97.8393 52.2168 97.8393C61.042 97.8393 68.1962 101.261 68.1962 105.482Z" fill="white" />
+              <path d="M103.397 105.018C103.397 109.239 96.2429 112.661 87.4177 112.661C78.5926 112.661 71.4384 109.239 71.4384 105.018C71.4384 100.798 78.5926 97.3762 87.4177 97.3762C96.2429 97.3762 103.397 100.798 103.397 105.018Z" fill="white" />
+              <path d="M20.1289 42.9136C5.77058 38.9767 -3.26123 53.5665 4.14949 66.0721M130.03 75.144C144.62 95.0603 129.303 115.411 102.471 108.029C94.8711 118.193 72.5966 113.124 71.2071 106.64M9.45656 75.144C-5.1333 95.0603 10.1831 115.411 37.0152 108.029C44.6151 118.193 66.8896 113.124 68.2791 106.64M122.851 42.9136C137.209 38.9767 146.241 53.5665 138.83 66.0721M20.0268 33.8912C30.6637 -8.71177 105.945 -9.87839 122.851 33.8912" stroke="black" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+              <ellipse cx="53.9712" cy="40.947" rx="5.55804" ry="8.33706" transform="rotate(66.5725 53.9712 40.947)" fill="#B5CDFF" />
+              <ellipse cx="5.55804" cy="8.33706" rx="5.55804" ry="8.33706" transform="matrix(-0.397589 0.917564 0.917564 0.397589 83.0723 32.5324)" fill="#B5CDFF" />
+              <path d="M72.5963 57.9128C73.2138 58.2693 73.2138 59.1607 72.5963 59.5172L64.954 63.9295C64.3364 64.2861 63.5645 63.8404 63.5645 63.1273V54.3027C63.5645 53.5896 64.3364 53.1439 64.954 53.5005L72.5963 57.9128Z" fill="#FCD9DF" />
+              <path d="M70.0488 57.9128C69.4313 58.2693 69.4313 59.1607 70.0488 59.5172L77.6911 63.9295C78.3087 64.2861 79.0806 63.8404 79.0806 63.1273V54.3027C79.0806 53.5896 78.3087 53.1439 77.6911 53.5005L70.0488 57.9128Z" fill="#FCD9DF" />
+            </svg>
           </div>
         </foreignObject>
         {objects.map(obj => {
