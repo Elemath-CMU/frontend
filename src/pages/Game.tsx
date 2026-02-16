@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Pencil from "../components/Pencil";
 import StoryLine from "../components/StoryLine";
 import useGameController from "./GameController";
@@ -67,6 +67,9 @@ const getSvgDimensions = (svg: React.ReactNode): { width: number; height: number
 
 function Game() {
   useGameController();
+  const BOARD_WIDTH = 917;
+  const BOARD_HEIGHT = 412;
+  const svgRef = useRef<SVGSVGElement | null>(null);
   const [/* interactions */, setInteractions] = useState<InteractiveGameData[]>([]);
   const [interactionIndex, setInteractionIndex] = useState<number>(0);
 
@@ -84,9 +87,9 @@ function Game() {
     const centered = objs.filter(obj => obj.renderAtMiddleOfBoard && !obj.forceCenterOnBoard);
     if (centered.length === 0 && forced.length === 0) return objs;
 
-    const boardTop = window.innerHeight / 3;
-    const boardHeight = (window.innerHeight * 2) / 3;
-    const boardCenterX = window.innerWidth / 2;
+    const boardTop = BOARD_HEIGHT / 3;
+    const boardHeight = (BOARD_HEIGHT * 2) / 3;
+    const boardCenterX = BOARD_WIDTH / 2;
     const boardCenterY = boardTop + boardHeight / 2;
     const pencilWidth = 62;
     const spacing = 24;
@@ -129,30 +132,55 @@ function Game() {
     });
   };
 
+  const getBoardScale = useCallback(() => {
+    const svg = svgRef.current;
+    if (!svg) return { scaleX: 1, scaleY: 1 };
+    const rect = svg.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return { scaleX: 1, scaleY: 1 };
+    return {
+      scaleX: BOARD_WIDTH / rect.width,
+      scaleY: BOARD_HEIGHT / rect.height
+    };
+  }, [BOARD_WIDTH, BOARD_HEIGHT]);
+
+  const toBoardPoint = useCallback((clientX: number, clientY: number) => {
+    const svg = svgRef.current;
+    if (!svg) return { x: clientX, y: clientY };
+    const rect = svg.getBoundingClientRect();
+    const { scaleX, scaleY } = getBoardScale();
+    return {
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY
+    };
+  }, [getBoardScale]);
+
   const onMouseDown = (id: number | string) => (e: React.MouseEvent<SVGGElement>) => {
     const obj = objects.find(o => o.id === id)!;
+    const point = toBoardPoint(e.clientX, e.clientY);
     setDragging({
       id,
-      offsetX: e.clientX - obj.x,
-      offsetY: e.clientY - obj.y
+      offsetX: point.x - obj.x,
+      offsetY: point.y - obj.y
     });
   };
   const onTouchStart = (id: number | string) => (e: React.TouchEvent<SVGGElement>) => {
     const touch = e.touches[0];
     const obj = objects.find(o => o.id === id)!;
+    const point = toBoardPoint(touch.clientX, touch.clientY);
     setDragging({
       id,
-      offsetX: touch.clientX - obj.x,
-      offsetY: touch.clientY - obj.y
+      offsetX: point.x - obj.x,
+      offsetY: point.y - obj.y
     });
   };
 
   const onMouseMove = (e: React.MouseEvent<SVGGElement>) => {
     if (!dragging) return;
+    const point = toBoardPoint(e.clientX, e.clientY);
 
     const { id, offsetX, offsetY } = dragging;
-    const x = e.clientX - offsetX;
-    const y = e.clientY - offsetY;
+    const x = point.x - offsetX;
+    const y = point.y - offsetY;
 
     setObjects((objs) =>
       objs.map((o) => (o.id === id ? { ...o, x, y } : o))
@@ -161,10 +189,11 @@ function Game() {
   const onTouchMove = (e: React.TouchEvent<SVGGElement>) => {
     if (!dragging) return;
     const touch = e.touches[0];
+    const point = toBoardPoint(touch.clientX, touch.clientY);
 
     const { id, offsetX, offsetY } = dragging;
-    const x = touch.clientX - offsetX;
-    const y = touch.clientY - offsetY;
+    const x = point.x - offsetX;
+    const y = point.y - offsetY;
 
     setObjects((objs) =>
       objs.map((o) => (o.id === id ? { ...o, x, y } : o))
@@ -433,8 +462,8 @@ function Game() {
         if (!draggedObj) continue;
 
         // Get target bounds dynamically from the spirit element
-        let targetX = window.innerWidth - 200;
-        let targetY = (window.innerHeight - 116) / 2;
+        let targetX = BOARD_WIDTH - 200;
+        let targetY = (BOARD_HEIGHT - 116) / 2;
         let targetWidth = 143;
         let targetHeight = 116;
 
@@ -442,10 +471,12 @@ function Game() {
         console.log("Spirit element:", spiritElement);
         if (spiritElement) {
           const rect = spiritElement.getBoundingClientRect();
-          targetX = rect.left;
-          targetY = rect.top;
-          targetWidth = rect.width;
-          targetHeight = rect.height;
+          const topLeft = toBoardPoint(rect.left, rect.top);
+          const { scaleX, scaleY } = getBoardScale();
+          targetX = topLeft.x;
+          targetY = topLeft.y;
+          targetWidth = rect.width * scaleX;
+          targetHeight = rect.height * scaleY;
         }
 
         const isCorrect = isWithinBounds(
@@ -499,19 +530,23 @@ function Game() {
       <div className="flex h-1/3 w-full bg-linear-to-b from-[#FFF1F6] to-[#CFE1F9]" />
       <div id="board" key="board" className="flex h-2/3 w-full bg-[#DFC1A4]" />
       <svg
+        ref={svgRef}
         className="absolute inset-0 w-full h-full"
-        preserveAspectRatio="none"
+        width={BOARD_WIDTH}
+        height={BOARD_HEIGHT}
+        viewBox={`0 0 ${BOARD_WIDTH} ${BOARD_HEIGHT}`}
+        preserveAspectRatio="xMidYMid meet"
         onMouseMove={onMouseMove}
         onTouchMove={onTouchMove}
         onMouseUp={onMouseUp}
         onTouchCancel={onTouchCancel}
         onTouchEnd={onTouchEnd}
       >
-        <foreignObject x="0" y="0" width="100%" height="100%">
+        <foreignObject x="0" y="0" width={BOARD_WIDTH} height={BOARD_HEIGHT}>
           <div className="w-full h-full flex p-10 justify-end items-center">
           </div>
         </foreignObject>
-        <foreignObject x="0" y="0" width="100%" height="100%">
+        <foreignObject x="0" y="0" width={BOARD_WIDTH} height={BOARD_HEIGHT}>
           <div className="w-full flex justify-end items-start p-5">
             <BorderedButton onClick={() => window.location.reload()}>
               <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
