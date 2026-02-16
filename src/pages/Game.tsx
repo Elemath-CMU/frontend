@@ -105,6 +105,7 @@ function Game() {
 
   const onMouseUp = () => setDragging(null);
   const onTouchCancel = () => setDragging(null);
+  const onTouchEnd = () => setDragging(null);
 
   useEffect(() => {
     const gameInteractions: InteractiveGameData[] = [
@@ -346,7 +347,7 @@ function Game() {
   }, [rules]);
 
   return (
-    <div className="font-mali h-dvh w-screen relative">
+    <div className="font-mali h-dvh w-screen relative touch-none">
       <div className="flex h-1/3 w-full bg-linear-to-b from-[#FFF1F6] to-[#CFE1F9]" />
       <div key="board" className="flex h-2/3 w-full bg-[#DFC1A4]" />
       <svg
@@ -356,6 +357,7 @@ function Game() {
         onTouchMove={onTouchMove}
         onMouseUp={onMouseUp}
         onTouchCancel={onTouchCancel}
+        onTouchEnd={onTouchEnd}
       >
         <foreignObject x="0" y="0" width="100%" height="100%">
           <div className="w-full h-full flex p-10 justify-end items-center">

@@ -19,7 +19,7 @@ function Login() {
         return (
             <div key={index} className="flex flex-col items-center gap-3">
                 <button type="button" title={name} className="size-25 rounded-[20px] bg-linear-to-b from-[#E8E2F8] to-[#C6CDF9] cursor-pointer" onClick={() => {
-                    navigate("/map")
+                    navigate("/map", { state: { name } })
                 }} />
                 <div className="text-primary text-sm font-semibold">{name}</div>
             </div>
@@ -28,7 +28,7 @@ function Login() {
 
     return (
         <FullScreenCloudBackground>
-            <div className="flex h-full w-full justify-center items-center">
+            <div className="flex h-full w-full justify-center items-center touch-none">
                 <div className="flex flex-col justify-center items-center gap-5">
                     <div className="text-4xl text-primary font-bold">เธอชื่ออะไร?</div>
                     <div className="flex gap-8">{users.map((user, index) => renderUser(index, user))}</div>
@@ -37,9 +37,14 @@ function Login() {
                         if (newUserName.trim() === "") {
                             alert("ใส่ชื่อของเธอก่อนนะ!");
                         } else {
-                            const updatedUsers = [...users, newUserName.trim()];
+                            const name = newUserName.trim();
+                            if (users.includes(name)) {
+                                alert("ชื่อนี้มีคนใช้แล้วนะ! ลองชื่ออื่นดูสิ");
+                                return;
+                            }
+                            const updatedUsers = [...users, name];
                             localStorage.setItem("users", JSON.stringify(updatedUsers));
-                            navigate("/intro", { state: { name: newUserName } })
+                            navigate("/intro", { state: { name } })
                         }
                     }}>ตกลง</BorderedButton>
                 </div>

@@ -46,7 +46,7 @@ function Intro() {
 
     return (
         <FullScreenCloudBackground>
-            <div className="flex h-full w-full justify-center items-center">
+            <div className="flex h-full w-full justify-center items-center touch-none">
                 <div className="flex flex-col justify-center items-center gap-16">
                     <StoryLine
                         story={(() => {
