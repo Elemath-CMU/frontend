@@ -258,8 +258,8 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 100, x: GAME_WIDTH / 2 - 100, y: GAME_HEIGHT / 2 },
-          { id: 2, type: "pencil", length: 75, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
+          { id: 1, type: "pencil", length: 100, x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 },
+          { id: 2, type: "pencil", length: 75, x: GAME_WIDTH / 2 - 100 , y: GAME_HEIGHT / 2 },
         ],
         rules: [
           {
@@ -301,6 +301,48 @@ function Game() {
         ],
         objects: [
           { id: 1, type: "pencil", length: 200, x: GAME_WIDTH / 2 , y: GAME_HEIGHT / 2 - 100, rotation: 90},
+          { id: 2, type: "pencil", length: 100, x: GAME_WIDTH / 2 , y: GAME_HEIGHT / 2 + 50, rotation: 90},
+        ],
+        rules: [
+          {
+            type: "dropOnObject",
+            objectId: 1,
+            targetObjectId: "spirit",
+          }
+        ]
+      },
+      {
+        interaction: 9,
+        type: "playground",
+        dialogues: [
+          {
+            text: <span>เก่งมาก ทีนี้เธอลองลากดินสอแท่งที่<u><strong>ยาวกว่า</strong></u>มาที่ฉันสิ</span>,
+            canClickNext: false
+          }
+        ],
+        objects: [
+          { id: 1, type: "pencil", length: 100, x: GAME_WIDTH / 2 , y: GAME_HEIGHT / 2 - 100, rotation: 90},
+          { id: 2, type: "pencil", length: 150, x: GAME_WIDTH / 2 , y: GAME_HEIGHT / 2 + 50, rotation: 90},
+        ],
+        rules: [
+          {
+            type: "dropOnObject",
+            objectId: 2,
+            targetObjectId: "spirit",
+          }
+        ]
+      },
+      {
+        interaction: 10,
+        type: "playground",
+        dialogues: [
+          {
+            text: <span>เก่งมาก ทีนี้เธอลองลากดินสอแท่งที่<u><strong>ยาวกว่า</strong></u>มาที่ฉันสิ</span>,
+            canClickNext: false
+          }
+        ],
+        objects: [
+          { id: 1, type: "pencil", length: 120, x: GAME_WIDTH / 2 , y: GAME_HEIGHT / 2 - 100, rotation: 90},
           { id: 2, type: "pencil", length: 100, x: GAME_WIDTH / 2 , y: GAME_HEIGHT / 2 + 50, rotation: 90},
         ],
         rules: [
