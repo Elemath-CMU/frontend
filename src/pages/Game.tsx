@@ -9,13 +9,19 @@ export interface DialogueData {
   canClickNext: boolean;
 }
 
-export interface PencilData {
-  id: number;
-  type: "pencil";
-  length: number;
+export interface ObjectBaseData {
+  id: number | string;
+  type: string;
+  renderAtMiddleOfBoard?: boolean;
   x: number;
   y: number;
   fixed?: boolean;
+}
+
+export interface PencilData extends ObjectBaseData {
+  type: "pencil";
+  length: number;
+  oriantation?: "horizontal" | "vertical";
 }
 
 export type ObjectData = PencilData;
@@ -48,15 +54,11 @@ function Game() {
 
   const [objects, setObjects] = useState<ObjectData[]>([]);
 
-  const [rules, setRules] = useState<CheckAnswerRule[]>([{
-    type: "dropOnObject",
-    objectId: 1,
-    targetObjectId: "spirit",
-  }]);
+  const [rules, setRules] = useState<null | CheckAnswerRule[]>(null);
 
-  const [dragging, setDragging] = useState<{ id: number; offsetX: number; offsetY: number } | null>(null);
+  const [dragging, setDragging] = useState<{ id: number | string; offsetX: number; offsetY: number } | null>(null);
 
-  const onMouseDown = (id: number) => (e: React.MouseEvent<SVGGElement>) => {
+  const onMouseDown = (id: number | string) => (e: React.MouseEvent<SVGGElement>) => {
     const obj = objects.find(o => o.id === id)!;
 
     setDragging({
@@ -65,7 +67,7 @@ function Game() {
       offsetY: e.clientY - obj.y
     });
   };
-  const onTouchStart = (id: number) => (e: React.TouchEvent<SVGGElement>) => {
+  const onTouchStart = (id: number | string) => (e: React.TouchEvent<SVGGElement>) => {
     const touch = e.touches[0];
     const obj = objects.find(o => o.id === id)!;
     setDragging({
@@ -123,7 +125,7 @@ function Game() {
           }
         ],
         objects: [
-          { id: 1, type: "pencil", length: 200, x: 400, y: 100 },
+          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 200, x: 400, y: 100 },
         ],
         rules: [
           {
@@ -290,6 +292,7 @@ function Game() {
 
   // Main check answer function
   const checkAnswer = useCallback(() => {
+    if (!rules) return;
     const usedObjectIds: (number | string)[] = [];
     const completedRules: CheckAnswerRule[] = [];
     for (const rule of rules) {
@@ -320,7 +323,7 @@ function Game() {
       }
     }
     if (completedRules.length > 0) {
-      setRules((prevRules) => prevRules.filter(r => !completedRules.includes(r)));
+      setRules((prevRules) => ((prevRules?.filter(r => !completedRules.includes(r)) || null)));
     }
     if (usedObjectIds.length > 0) {
       setObjects((prevObjects) => prevObjects.filter(o => !usedObjectIds.includes(o.id)));
@@ -337,7 +340,7 @@ function Game() {
   }, [dragging, checkAnswer]);
 
   useEffect(() => {
-    if (rules.length === 0) {
+    if (rules && rules.length === 0) {
       const timer = setTimeout(() => {
         setInteractionIndex((prev) => prev + 1);
         setDialogueIndex(0);
