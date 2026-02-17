@@ -1,10 +1,10 @@
-export interface MapButtonProps {
+export interface MapButtonInactiveProps {
   children?: React.ReactNode;
   type?: "submit" | "reset" | "button" | undefined;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-function MapButton2({ children, type = "button", onClick }: MapButtonProps) {
+function MapButtonInactive({ children, type = "button", onClick }: MapButtonInactiveProps) {
   return (
     <button
       type={type}
@@ -17,4 +17,4 @@ function MapButton2({ children, type = "button", onClick }: MapButtonProps) {
     </button>
   );
 }
-export default MapButton2;
+export default MapButtonInactive;

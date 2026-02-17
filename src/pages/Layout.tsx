@@ -1,10 +1,51 @@
 import { Outlet } from "react-router";
 import { useState, useEffect } from "react";
+import { AuthContext } from "../hooks/useAuth";
+import type { User } from "./Login";
 
 function Layout() {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLandscape, setIsLandscape] = useState(
     typeof window !== "undefined" && window.innerWidth > window.innerHeight
   );
+
+  const nextEpisodeIndex = () => {
+    if (currentUser) {
+      setCurrentUser({
+        ...currentUser,
+        episode: currentUser.episode + 1,
+        interaction: 0,
+      });
+      const savedUsers = localStorage.getItem("users");
+      if (savedUsers) {
+        const users: User[] = JSON.parse(savedUsers);
+        const updatedUsers = users.map((user) =>
+          user.name === currentUser.name
+            ? { ...user, episode: user.episode + 1, interaction: 0 }
+            : user
+        );
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+      }
+    }
+  };
+  const nextInteractionIndex = () => {
+    if (currentUser) {
+      setCurrentUser({
+        ...currentUser,
+        interaction: currentUser.interaction + 1,
+      });
+      const savedUsers = localStorage.getItem("users");
+      if (savedUsers) {
+        const users: User[] = JSON.parse(savedUsers);
+        const updatedUsers = users.map((user) =>
+          user.name === currentUser.name
+            ? { ...user, interaction: user.interaction + 1 }
+            : user
+        );
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+      }
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,7 +89,11 @@ function Layout() {
     );
   }
 
-  return <Outlet />;
+  return (
+    <AuthContext.Provider value={{ currentUser, setCurrentUser, nextEpisodeIndex, nextInteractionIndex }}>
+      <Outlet />
+    </AuthContext.Provider>
+  );
 }
 
 export default Layout;

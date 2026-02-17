@@ -1,14 +1,16 @@
 export interface PencilProps {
   id: number | string;
-  length: number; // length in pixels (e.g., 100-300)
+  length: number;
+  color: string;
   x: number;
   y: number;
+  orientation?: 'up' | 'down' | 'left' | 'right'; // Optional orientation prop
   fixed?: boolean;
   onMouseDown?: React.MouseEventHandler<SVGGElement>;
   onTouchStart?: React.TouchEventHandler<SVGGElement>;
 }
 
-function Pencil({ id: key, length, x, y, fixed, onMouseDown, onTouchStart }: PencilProps) {
+function Pencil({ id: key, length, color, x, y, orientation, fixed, onMouseDown, onTouchStart }: PencilProps) {
     // Fixed dimensions
     const tipHeight = 26;
     const bottomCapHeight = 11; // Space needed for rounded bottom
@@ -24,17 +26,17 @@ function Pencil({ id: key, length, x, y, fixed, onMouseDown, onTouchStart }: Pen
     const bottomY = tipHeight + bodyHeight;
     
     return (
-        <g key={key} transform={`translate(${x}, ${y})`} fill="none" onMouseDown={ fixed ? undefined : onMouseDown} onTouchStart={fixed ? undefined : onTouchStart} className="cursor-grab">
+        <g key={key} transform={`translate(${x}, ${y}) ${orientation ? `rotate(${orientation === 'up' ? 0 : orientation === 'right' ? 90 : orientation === 'down' ? 180 : -90})` : ''}`} fill="none" onMouseDown={ fixed ? undefined : onMouseDown} onTouchStart={fixed ? undefined : onTouchStart} className="cursor-grab">
             {/* Pencil body */}
             <path 
                 d={`M60 ${tipHeight}V${bottomY}C60 ${bottomY + 6.075} 55.0751 ${bodyBottom} 49 ${bodyBottom}H13C6.92487 ${bodyBottom} 2 ${bottomY + 6.075} 2 ${bottomY}V${tipHeight}H60Z`} 
-                fill="#F9D17B" 
+                fill={color} 
                 stroke="black" 
                 strokeWidth="2" 
             />
             <path 
                 d={`M60 ${tipHeight}V${bottomY}C60 ${bottomY + 6.075} 55.0751 ${bodyBottom} 49 ${bodyBottom}H13C6.92487 ${bodyBottom} 2 ${bottomY + 6.075} 2 ${bottomY}V${tipHeight}H60Z`} 
-                fill="#F9D17B" 
+                fill={color} 
                 stroke="black" 
                 strokeWidth="2" 
             />

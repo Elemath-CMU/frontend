@@ -1,6 +1,6 @@
 function FullScreenCloudBackground({ children }: { children?: React.ReactNode }) {
   return (
-    <div className="font-mali h-screen w-screen relative bg-[#CFE1F9]">
+    <div className="font-mali h-svh w-svw relative bg-[#CFE1F9]">
       <div className="h-1/2 w-full bg-linear-to-b from-[#FFF1F6] to-[#CFE1F9]" />
       <svg viewBox="0 0 917 330" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full absolute bottom-0">
         <path d="M0 122H917V258H0V122Z" fill="white" fillOpacity="0.5" />
