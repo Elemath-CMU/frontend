@@ -351,7 +351,7 @@ function Game() {
                   <div className="flex justify-center items-center gap-10">
                     <button type="button" className="flex p-1.5 bg-linear-to-b from-[#E8E2F8] to-[#C6CDF9] text-primary rounded-full cursor-pointer shadow-[0_0_12px_0_rgba(175,168,207,0.5)]" onClick={() => {
                       nextEpisodeIndex();
-                      history.back();
+                      navigate('/map', { replace: true });
                     }}>
                       <div className="flex gap-2 px-8 py-4 w-full h-full rounded-full bg-white text-primary text-base font-semibold">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
