@@ -261,8 +261,6 @@ function Game() {
         const distanceX = Math.abs(draggedObj.x - rule.position.x);
         const distanceY = Math.abs(draggedObj.y - rule.position.y);
 
-        console.log(`Checking snap for object ${draggedObj.id}: distanceX=${distanceX}, distanceY=${distanceY}, tolerance=${tolerance}`);
-
         if (distanceX <= tolerance && distanceY <= tolerance) {
           // Snap object to exact position
           setObjects((prevObjects) =>
