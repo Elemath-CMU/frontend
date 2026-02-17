@@ -529,4 +529,26 @@ export const gameData: InteractiveGameData[][] = [
       </div>,
     },
   ],
+  [
+    {
+      interaction: 1,
+      type: "playground",
+      dialogues: [
+        {
+          text: "เอาล่ะ ต่อจากนี้เราจะใช้ดินสอที่มีความยาวเท่าเดิมในการวัดเสมอนะ",
+          canClickNext: true
+        },
+        {
+          text: "ลองใช้ดินสอจากกองนี้วัดหนังสือดูสิ!",
+          canClickNext: false
+        }
+      ],
+      objects: [
+        { id: 1, type: "pencil", orientation: "horizontal", length: 79.5, color: "#E8E2F8", x: 500, y: 230 },
+      ],
+      rules: [
+        { type: "lastDialogue" },
+      ],
+    },
+  ],
 ]
