@@ -1,7 +1,10 @@
 import { Outlet } from "react-router";
 import { useState, useEffect } from "react";
+import { AuthContext } from "../hooks/useAuth";
+import type { User } from "./Login";
 
 function Layout() {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLandscape, setIsLandscape] = useState(
     typeof window !== "undefined" && window.innerWidth > window.innerHeight
   );
@@ -48,7 +51,11 @@ function Layout() {
     );
   }
 
-  return <Outlet />;
+  return (
+    <AuthContext.Provider value={{ currentUser, setCurrentUser }}>
+      <Outlet />
+    </AuthContext.Provider>
+  );
 }
 
 export default Layout;

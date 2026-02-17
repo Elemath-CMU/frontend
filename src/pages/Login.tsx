@@ -2,10 +2,18 @@ import { useState } from "react";
 import FullScreenCloudBackground from "../components/FullScreenCloudBackground";
 import BorderedButton from "../components/button/BorderedButton";
 import { useNavigate } from "react-router";
+import useAuth from "../hooks/useAuth";
+
+export interface User {
+  name: string;
+  episodes: number;
+  interactions: number;
+}
 
 function Login() {
+    const { setCurrentUser } = useAuth();
     const navigate = useNavigate();
-    const [users] = useState<string[]>(() => {
+    const [users] = useState<User[]>(() => {
         const savedUsers = localStorage.getItem("users");
         if (savedUsers) {
             return JSON.parse(savedUsers);
@@ -15,13 +23,14 @@ function Login() {
     });
     const [newUserName, setNewUserName] = useState<string>("");
 
-    function renderUser(index: number, name: string) {
+    function renderUser(index: number, user: User) {
         return (
             <div key={index} className="flex flex-col items-center gap-3">
-                <button type="button" title={name} className="size-25 rounded-[20px] bg-linear-to-b from-[#E8E2F8] to-[#C6CDF9] cursor-pointer" onClick={() => {
-                    navigate("/map", { state: { name } })
+                <button type="button" title={user.name} className="size-25 rounded-[20px] bg-linear-to-b from-[#E8E2F8] to-[#C6CDF9] cursor-pointer" onClick={() => {
+                    setCurrentUser(user);
+                    navigate("/map")
                 }} />
-                <div className="text-primary text-sm font-semibold">{name}</div>
+                <div className="text-primary text-sm font-semibold">{user.name}</div>
             </div>
         );
     }
@@ -38,13 +47,14 @@ function Login() {
                             alert("ใส่ชื่อของเธอก่อนนะ!");
                         } else {
                             const name = newUserName.trim();
-                            if (users.includes(name)) {
+                            if (users.some(user => user.name === name)) {
                                 alert("ชื่อนี้มีคนใช้แล้วนะ! ลองชื่ออื่นดูสิ");
                                 return;
                             }
-                            const updatedUsers = [...users, name];
+                            const updatedUsers = [...users, { name, episodes: 0, interactions: 0 }];
                             localStorage.setItem("users", JSON.stringify(updatedUsers));
-                            navigate("/intro", { state: { name } })
+                            setCurrentUser(updatedUsers[updatedUsers.length - 1]);
+                            navigate("/intro")
                         }
                     }}>ตกลง</BorderedButton>
                 </div>
