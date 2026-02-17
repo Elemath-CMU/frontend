@@ -44,7 +44,19 @@ export interface PlayGroundData {
   rules: CheckAnswerRule[];
 }
 
-export type InteractiveGameData = PlayGroundData;
+export interface StoryLineData {
+  interaction: number;
+  type: "storyline";
+  dialogues: DialogueData[];
+}
+
+export interface CheckPointData {
+  interaction: number;
+  type: "checkpoint";
+  text: string | React.ReactNode;
+}
+
+export type InteractiveGameData = PlayGroundData | StoryLineData | CheckPointData;
 
 export const gameData: InteractiveGameData[][] = [
   [
@@ -253,6 +265,15 @@ export const gameData: InteractiveGameData[][] = [
       rules: [
         { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
       ]
+    },
+    {
+      interaction: 13,
+      type: "checkpoint",
+      text: <div>
+        <p>ว้าว! เธอเริ่มเตรียมวัตถุดิบคล่องแล้วสินะ</p>
+        <br />
+        <p>ตอนนี้เธออยากพักก่อนมั้ย?</p>
+      </div>,
     },
   ],
 ]
