@@ -5,7 +5,7 @@ import useGameController from "./GameController";
 import BorderedButton from "../components/button/BorderedButton";
 import { gameData, type CheckAnswerRule, type DialogueData, type InteractiveGameData, type ObjectData } from "./GameData";
 import useAuth from "../hooks/useAuth";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 // Helper function to extract width and height from SVG element
 const getSvgDimensions = (svg: React.ReactNode): { width: number; height: number } => {
@@ -22,12 +22,13 @@ const getSvgDimensions = (svg: React.ReactNode): { width: number; height: number
 
 function Game() {
   useGameController();
+  const { state } = useLocation() as { state: { episodeIndex: number } };
   const { currentUser, nextInteractionIndex, nextEpisodeIndex } = useAuth();
   const navigate = useNavigate();
   const BOARD_WIDTH = 917;
   const BOARD_HEIGHT = 412;
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const [episodeIndex, setEpisodeIndex] = useState<number>(0);
+  const [episodeIndex, setEpisodeIndex] = useState<number>(state?.episodeIndex || 0);
   const [interactions, setInteractions] = useState<InteractiveGameData[]>([]);
   const [interactionIndex, setInteractionIndex] = useState<number>(0);
 
