@@ -3,54 +3,7 @@ import Pencil from "../components/Pencil";
 import StoryLine from "../components/StoryLine";
 import useGameController from "./GameController";
 import BorderedButton from "../components/button/BorderedButton";
-
-export interface DialogueData {
-  text: string | React.ReactNode;
-  canClickNext: boolean;
-}
-
-export interface ObjectBaseData {
-  id: number | string;
-  type: string;
-  renderAtMiddleOfBoard?: boolean;
-  forceCenterOnBoard?: boolean;
-  x: number;
-  y: number;
-  fixed?: boolean;
-}
-
-export interface PencilData extends ObjectBaseData {
-  type: "pencil";
-  length: number;
-  orientation?: "horizontal" | "vertical";
-}
-
-export interface OtherObjectData extends ObjectBaseData {
-  type: "other";
-  svg: React.ReactNode;
-}
-
-export type ObjectData = PencilData | OtherObjectData;
-
-export interface CheckAnswerDropOnObject {
-  type: "dropOnObject";
-  objectId: number | string;
-  targetObjectId: number | string;
-}
-export interface CheckAnswerLastDialogue {
-  type: "lastDialogue";
-}
-export type CheckAnswerRule = CheckAnswerDropOnObject | CheckAnswerLastDialogue;
-
-export interface PlayGroundData {
-  interaction: number;
-  type: "playground";
-  dialogues: DialogueData[];
-  objects: ObjectData[];
-  rules: CheckAnswerRule[];
-}
-
-export type InteractiveGameData = PlayGroundData;
+import { gameData, type CheckAnswerRule, type DialogueData, type InteractiveGameData, type ObjectData } from "./GameData";
 
 // Helper function to extract width and height from SVG element
 const getSvgDimensions = (svg: React.ReactNode): { width: number; height: number } => {
@@ -70,7 +23,7 @@ function Game() {
   const BOARD_WIDTH = 917;
   const BOARD_HEIGHT = 412;
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const [/* interactions */, setInteractions] = useState<InteractiveGameData[]>([]);
+  const [interactions, setInteractions] = useState<InteractiveGameData[]>([]);
   const [interactionIndex, setInteractionIndex] = useState<number>(0);
 
   const [dialogues, setDialogues] = useState<DialogueData[]>([]);
@@ -205,222 +158,14 @@ function Game() {
   const onTouchEnd = () => setDragging(null);
 
   useEffect(() => {
-    const gameInteractions: InteractiveGameData[] = [
-      {
-        interaction: 1,
-        type: "playground",
-        dialogues: [
-          {
-            text: 'เอาล่ะ เรามาเริ่มจากการเตรียมวัตถุดิบกันก่อนแล้วกัน!',
-            canClickNext: true
-          },
-          {
-            text: 'ไหนเธอลองลากดินสอมาที่ฉันสิ!',
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, fixed: true, length: 175, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "lastDialogue" }
-        ]
-      },
-      {
-        interaction: 2,
-        type: "playground",
-        dialogues: [
-          {
-            text: 'ไหนเธอลองลากดินสอมาที่ฉันสิ!',
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 175, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
-        ]
-      },
-      {
-        interaction: 3,
-        type: "playground",
-        dialogues: [
-          {
-            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 175, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 70, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
-        ]
-      },
-      {
-        interaction: 4,
-        type: "playground",
-        dialogues: [
-          {
-            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 70, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 175, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "dropOnObject", objectId: 2, targetObjectId: "spirit" },
-        ]
-      },
-      {
-        interaction: 5,
-        type: "playground",
-        dialogues: [
-          {
-            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 160, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 70, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
-        ]
-      },
-      {
-        interaction: 6,
-        type: "playground",
-        dialogues: [
-          {
-            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 160, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 90, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
-        ]
-      },
-      {
-        interaction: 7,
-        type: "playground",
-        dialogues: [
-          {
-            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 160, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 90, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
-        ]
-      },
-      {
-        interaction: 8,
-        type: "playground",
-        dialogues: [
-          {
-            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 90, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 160, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "dropOnObject", objectId: 2, targetObjectId: "spirit" },
-        ]
-      },
-      {
-        interaction: 9,
-        type: "playground",
-        dialogues: [
-          {
-            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 90, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, orientation: "horizontal", length: 115, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "dropOnObject", objectId: 2, targetObjectId: "spirit" },
-        ]
-      },
-      {
-        interaction: 10,
-        type: "playground",
-        dialogues: [
-          {
-            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 90, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 115, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "dropOnObject", objectId: 2, targetObjectId: "spirit" },
-        ]
-      },
-      {
-        interaction: 11,
-        type: "playground",
-        dialogues: [
-          {
-            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 105, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 90, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
-        ]
-      },
-      {
-        interaction: 12,
-        type: "playground",
-        dialogues: [
-          {
-            text: <p>ไหนเธอลองลากดินสอแท่งที่<strong><u>ยาวกว่า</u></strong>มาที่ฉันสิ!</p>,
-            canClickNext: false
-          }
-        ],
-        objects: [
-          { id: 1, type: "pencil", renderAtMiddleOfBoard: true, length: 90, x: 400, y: 100 },
-          { id: 2, type: "pencil", renderAtMiddleOfBoard: true, length: 85, x: 400, y: 100 },
-        ],
-        rules: [
-          { type: "dropOnObject", objectId: 1, targetObjectId: "spirit" },
-        ]
-      },
-    ];
-    fetch("/", {
-      method: "GET",
-    }).then(() => {
+    const timer = setTimeout(() => {
+      const gameInteractions = gameData[0];
       setInteractions(gameInteractions);
       setDialogues(gameInteractions[interactionIndex].dialogues);
       setObjects(centerObjectsOnBoard(gameInteractions[interactionIndex].objects));
       setRules(gameInteractions[interactionIndex].rules);
-    });
+    }, 0);
+    return () => clearTimeout(timer);
   }, [interactionIndex]);
 
   // Check if an object is within bounds of a target
@@ -468,7 +213,6 @@ function Game() {
         let targetHeight = 116;
 
         const spiritElement = document.getElementById("spirit");
-        console.log("Spirit element:", spiritElement);
         if (spiritElement) {
           const rect = spiritElement.getBoundingClientRect();
           const topLeft = toBoardPoint(rect.left, rect.top);
@@ -504,7 +248,7 @@ function Game() {
     if (usedObjectIds.length > 0) {
       setObjects((prevObjects) => prevObjects.filter(o => !usedObjectIds.includes(o.id)));
     }
-  }, [dialogueIndex, dialogues.length, objects, rules]);
+  }, [dialogueIndex, dialogues.length, getBoardScale, objects, rules, toBoardPoint]);
 
   useEffect(() => {
     if (dragging == null) {
@@ -518,12 +262,17 @@ function Game() {
   useEffect(() => {
     if (rules && rules.length === 0) {
       const timer = setTimeout(() => {
-        setInteractionIndex((prev) => prev + 1);
-        setDialogueIndex(0);
+        const nextInteraction = interactionIndex + 1;
+        if (nextInteraction >= interactions.length) {
+          // show checkpoint dialogue
+        } else {
+          setInteractionIndex((prev) => prev + 1);
+          setDialogueIndex(0);
+        }
       }, 0);
       return () => clearTimeout(timer);
     }
-  }, [rules]);
+  }, [interactionIndex, interactions.length, rules]);
 
   return (
     <div className="font-mali h-dvh w-screen relative touch-none">
