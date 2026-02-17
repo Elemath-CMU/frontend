@@ -4,6 +4,8 @@ import StoryLine from "../components/StoryLine";
 import useGameController from "./GameController";
 import BorderedButton from "../components/button/BorderedButton";
 import { gameData, type CheckAnswerRule, type DialogueData, type InteractiveGameData, type ObjectData } from "./GameData";
+import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router";
 
 // Helper function to extract width and height from SVG element
 const getSvgDimensions = (svg: React.ReactNode): { width: number; height: number } => {
@@ -20,6 +22,8 @@ const getSvgDimensions = (svg: React.ReactNode): { width: number; height: number
 
 function Game() {
   useGameController();
+  const { currentUser, nextInteractionIndex, nextEpisodeIndex } = useAuth();
+  const navigate = useNavigate();
   const BOARD_WIDTH = 917;
   const BOARD_HEIGHT = 412;
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -258,6 +262,12 @@ function Game() {
   }, [dialogueIndex, dialogues.length, getBoardScale, objects, rules, toBoardPoint]);
 
   useEffect(() => {
+    if (!currentUser) {
+      navigate("/", { replace: true });
+    }
+  }, [currentUser, navigate]);
+
+  useEffect(() => {
     if (dragging == null) {
       const timer = setTimeout(() => {
         checkAnswer();
@@ -272,10 +282,11 @@ function Game() {
         setRules(null);
         setInteractionIndex((prev) => prev + 1);
         setDialogueIndex(0);
+        nextInteractionIndex();
       }, 0);
       return () => clearTimeout(timer);
     }
-  }, [interactionIndex, interactions.length, rules]);
+  }, [interactionIndex, interactions.length, nextInteractionIndex, rules]);
 
   return (
     <div className="font-mali h-dvh w-screen relative touch-none">
@@ -318,6 +329,7 @@ function Game() {
                   <div className="text-base">{interactions[interactionIndex].text}</div>
                   <div className="flex justify-center items-center gap-10">
                     <button type="button" className="flex p-1.5 bg-linear-to-b from-[#E8E2F8] to-[#C6CDF9] text-primary rounded-full cursor-pointer shadow-[0_0_12px_0_rgba(175,168,207,0.5)]" onClick={() => {
+                      nextEpisodeIndex();
                       history.back();
                     }}>
                       <div className="flex gap-2 px-8 py-4 w-full h-full rounded-full bg-white text-primary text-base font-semibold">
@@ -335,7 +347,11 @@ function Game() {
                       </div>
                     </button>
                     <button type="button" className="flex p-1.5 bg-white text-primary rounded-full cursor-pointer shadow-[0_0_12px_0_rgba(175,168,207,0.5)]" onClick={() => {
+                      setRules(null);
+                      setDialogueIndex(0);
+                      setInteractionIndex(0);
                       setEpisodeIndex((prev) => prev + 1)
+                      nextEpisodeIndex();
                     }}>
                       <div className="flex gap-2 px-8 py-4 w-full h-full rounded-full bg-linear-to-r from-[#ACD189] to-[#79B0BA] text-white text-base font-semibold">
                         <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -9,6 +9,44 @@ function Layout() {
     typeof window !== "undefined" && window.innerWidth > window.innerHeight
   );
 
+  const nextEpisodeIndex = () => {
+    if (currentUser) {
+      setCurrentUser({
+        ...currentUser,
+        episode: currentUser.episode + 1,
+        interaction: 0,
+      });
+      const savedUsers = localStorage.getItem("users");
+      if (savedUsers) {
+        const users: User[] = JSON.parse(savedUsers);
+        const updatedUsers = users.map((user) =>
+          user.name === currentUser.name
+            ? { ...user, episode: user.episode + 1, interaction: 0 }
+            : user
+        );
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+      }
+    }
+  };
+  const nextInteractionIndex = () => {
+    if (currentUser) {
+      setCurrentUser({
+        ...currentUser,
+        interaction: currentUser.interaction + 1,
+      });
+      const savedUsers = localStorage.getItem("users");
+      if (savedUsers) {
+        const users: User[] = JSON.parse(savedUsers);
+        const updatedUsers = users.map((user) =>
+          user.name === currentUser.name
+            ? { ...user, interaction: user.interaction + 1 }
+            : user
+        );
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+      }
+    }
+  };
+
   useEffect(() => {
     const handleResize = () => {
       setIsLandscape(window.innerWidth > window.innerHeight);
@@ -52,7 +90,7 @@ function Layout() {
   }
 
   return (
-    <AuthContext.Provider value={{ currentUser, setCurrentUser }}>
+    <AuthContext.Provider value={{ currentUser, setCurrentUser, nextEpisodeIndex, nextInteractionIndex }}>
       <Outlet />
     </AuthContext.Provider>
   );

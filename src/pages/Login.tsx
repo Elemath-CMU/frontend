@@ -6,8 +6,8 @@ import useAuth from "../hooks/useAuth";
 
 export interface User {
   name: string;
-  episodes: number;
-  interactions: number;
+  episode: number;
+  interaction: number;
 }
 
 function Login() {
@@ -51,7 +51,7 @@ function Login() {
                                 alert("ชื่อนี้มีคนใช้แล้วนะ! ลองชื่ออื่นดูสิ");
                                 return;
                             }
-                            const updatedUsers = [...users, { name, episodes: 0, interactions: 0 }];
+                            const updatedUsers = [...users, { name, episode: 0, interaction: 0 }];
                             localStorage.setItem("users", JSON.stringify(updatedUsers));
                             setCurrentUser(updatedUsers[updatedUsers.length - 1]);
                             navigate("/intro")
