@@ -339,13 +339,12 @@ function Game() {
             </BorderedButton>
           </div>
           <div className="flex justify-center items-center gap-3 -m-20">
-            <div className="flex justify-center items-center">
-              {interactions[interactionIndex]?.type === "playground" && dialogues[dialogueIndex] && <StoryLine story={dialogues[dialogueIndex].text} onNext={() => {
-                if (dialogueIndex < dialogues.length - 1) {
-                  setDialogueIndex(dialogueIndex + 1);
-                }
-              }} canClickNext={dialogues[dialogueIndex].canClickNext} />}
-              <svg width="43" height="42" viewBox="0 0 43 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+            {interactions[interactionIndex]?.type === "playground" && dialogues[dialogueIndex] && <div className="flex justify-center items-center"><StoryLine story={dialogues[dialogueIndex].text} onNext={() => {
+              if (dialogueIndex < dialogues.length - 1) {
+                setDialogueIndex(dialogueIndex + 1);
+              }
+            }} canClickNext={dialogues[dialogueIndex].canClickNext} /><svg width="43" height="42" viewBox="0 0 43 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_96_6)">
                   <path d="M40.8203 20.0986C41.5756 20.462 41.5756 21.538 40.8203 21.9014L2.43359 40.3701C1.76969 40.6895 1 40.2055 1 39.4688V2.53125C1 1.7945 1.76969 1.31046 2.43359 1.62988L40.8203 20.0986Z" fill="white" stroke="url(#paint0_linear_96_6)" strokeWidth="2" />
                 </g>
@@ -358,8 +357,7 @@ function Game() {
                     <rect width="43" height="42" fill="white" />
                   </clipPath>
                 </defs>
-              </svg>
-            </div>
+              </svg></div>}
             {interactions[interactionIndex]?.type === "checkpoint" &&
               <div className="p-0.5 rounded-[20px] bg-linear-to-b from-[#D1AADB] to-[#5263D2]">
                 <div className="flex flex-col p-5 gap-6 rounded-[18px] bg-white">

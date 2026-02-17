@@ -351,6 +351,10 @@ export const gameData: InteractiveGameData[][] = [
           </svg>
           , x: 400, y: 100
         },
+        { id: 4, type: "other", fixed:true, svg: <svg width="161" height="76" viewBox="0 0 161 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1" y="1" width="159" height="74" stroke="#E04559" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="4 6"/>
+</svg>
+, x: 460 - 159, y: 115 },
         { id: 3, type: "pencil", orientation: "horizontal", length: 159, color: "#F9D17B", x: 220, y: 330 },
         { id: 2, type: "pencil", orientation: "horizontal", length: 159, color: "#F9D17B", x: 220, y: 330 },
       ],
