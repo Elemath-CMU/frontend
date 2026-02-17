@@ -355,12 +355,12 @@ export const gameData: InteractiveGameData[][] = [
           </svg>
           , x: 400, y: 100
         },
-        { id: 2, type: "pencil", orientation: "horizontal", length: 159, x: 220, y: 330 },
         { id: 3, type: "pencil", orientation: "horizontal", length: 159, x: 220, y: 330 },
+        { id: 2, type: "pencil", orientation: "horizontal", length: 159, x: 220, y: 330 },
       ],
       rules: [
-        { type: "snapToPosition", objectId: 2, position: { x: 480, y: 120 } },
-        { type: "snapToPosition", objectId: 3, position: { x: 480 + 175, y: 120 } },
+        { type: "snapToPosition", objectId: 2, position: { x: 460, y: 115 } },
+        { type: "snapToPosition", objectId: 3, position: { x: 460 + 159, y: 115 } },
       ],
     },
   ],
