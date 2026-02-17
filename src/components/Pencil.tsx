@@ -1,6 +1,7 @@
 export interface PencilProps {
   id: number | string;
-  length: number; // length in pixels (e.g., 100-300)
+  length: number;
+  color: string;
   x: number;
   y: number;
   orientation?: 'up' | 'down' | 'left' | 'right'; // Optional orientation prop
@@ -9,7 +10,7 @@ export interface PencilProps {
   onTouchStart?: React.TouchEventHandler<SVGGElement>;
 }
 
-function Pencil({ id: key, length, x, y, orientation, fixed, onMouseDown, onTouchStart }: PencilProps) {
+function Pencil({ id: key, length, color, x, y, orientation, fixed, onMouseDown, onTouchStart }: PencilProps) {
     // Fixed dimensions
     const tipHeight = 26;
     const bottomCapHeight = 11; // Space needed for rounded bottom
@@ -29,13 +30,13 @@ function Pencil({ id: key, length, x, y, orientation, fixed, onMouseDown, onTouc
             {/* Pencil body */}
             <path 
                 d={`M60 ${tipHeight}V${bottomY}C60 ${bottomY + 6.075} 55.0751 ${bodyBottom} 49 ${bodyBottom}H13C6.92487 ${bodyBottom} 2 ${bottomY + 6.075} 2 ${bottomY}V${tipHeight}H60Z`} 
-                fill="#F9D17B" 
+                fill={color} 
                 stroke="black" 
                 strokeWidth="2" 
             />
             <path 
                 d={`M60 ${tipHeight}V${bottomY}C60 ${bottomY + 6.075} 55.0751 ${bodyBottom} 49 ${bodyBottom}H13C6.92487 ${bodyBottom} 2 ${bottomY + 6.075} 2 ${bottomY}V${tipHeight}H60Z`} 
-                fill="#F9D17B" 
+                fill={color} 
                 stroke="black" 
                 strokeWidth="2" 
             />

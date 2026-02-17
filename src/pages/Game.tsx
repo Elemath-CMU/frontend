@@ -403,7 +403,7 @@ function Game() {
         </foreignObject>
         {objects.map(obj => {
           if (obj.type === "pencil") {
-            return <Pencil key={obj.id} id={obj.id} length={obj.length} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} orientation={obj.orientation ? (obj.orientation == "vertical" ? "up" : "right") : undefined} fixed={obj.fixed} />;
+            return <Pencil key={obj.id} id={obj.id} length={obj.length} color={obj.color} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} orientation={obj.orientation ? (obj.orientation == "vertical" ? "up" : "right") : undefined} fixed={obj.fixed} />;
           }
           if (obj.type === "other") {
             return (
