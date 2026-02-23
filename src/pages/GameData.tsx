@@ -49,10 +49,16 @@ export interface CheckAnswerSnapToPosition {
     position: { x: number; y: number };
   }[]
 }
+export interface CheckAnswerSnapAnyIdToPosition {
+  type: "snapAnyIdToPosition";
+  answers: {
+    position: { x: number; y: number };
+  }[]
+}
 export interface CheckAnswerLastDialogue {
   type: "lastDialogue";
 }
-export type CheckAnswerRule = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerSnapToPosition | CheckAnswerLastDialogue;
+export type CheckAnswerRule = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerSnapToPosition | CheckAnswerSnapAnyIdToPosition | CheckAnswerLastDialogue;
 
 export interface Interaction {
   interaction: number;
