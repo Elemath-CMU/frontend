@@ -127,7 +127,12 @@ function Game() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const gameInteractions = gameData[episodeIndex] || [];
+      const gameInteractions = gameData[episodeIndex];
+      if (!gameInteractions) {
+        alert("เกมหมดแล้วจ้า");
+        navigate('/map', { replace: true });
+        return;
+      }
       setInteractions(gameInteractions);
       if (gameInteractions[interactionIndex].type === "playground") {
         setDialogues(gameInteractions[interactionIndex].dialogues);
@@ -140,7 +145,7 @@ function Game() {
       }
     }, 0);
     return () => clearTimeout(timer);
-  }, [episodeIndex, interactionIndex]);
+  }, [episodeIndex, interactionIndex, navigate]);
 
   // Check if an object is within bounds of a target
   const isWithinBounds = (draggedObj: ObjectData, targetX: number, targetY: number, targetWidth: number, targetHeight: number) => {
