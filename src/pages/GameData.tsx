@@ -25,6 +25,7 @@ export interface ObjectSpawner extends ObjectBaseData {
   type: "spawner";
   fixed: true;
   spawnObject: Omit<PencilData, "id" | "type" | "x" | "y" | "fixed"> | Omit<OtherObjectData, "id" | "type" | "x" | "y" | "fixed">;
+  spawnIcons?: React.ReactNode;
 }
 export type ObjectData = PencilData | OtherObjectData | ObjectSpawner;
 
