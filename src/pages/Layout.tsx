@@ -46,6 +46,24 @@ function Layout() {
       }
     }
   };
+  const resetInteractionIndex = () => {
+    if (currentUser) {
+      setCurrentUser({
+        ...currentUser,
+        interaction: 0,
+      });
+      const savedUsers = localStorage.getItem("users");
+      if (savedUsers) {
+        const users: User[] = JSON.parse(savedUsers);
+        const updatedUsers = users.map((user) =>
+          user.name === currentUser.name
+            ? { ...user, interaction: 0 }
+            : user
+        );
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+      }
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -90,7 +108,7 @@ function Layout() {
   }
 
   return (
-    <AuthContext.Provider value={{ currentUser, setCurrentUser, nextEpisodeIndex, nextInteractionIndex }}>
+    <AuthContext.Provider value={{ currentUser, setCurrentUser, nextEpisodeIndex, nextInteractionIndex, resetInteractionIndex }}>
       <Outlet />
     </AuthContext.Provider>
   );
