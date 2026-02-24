@@ -27,6 +27,7 @@ function Game() {
   const [rule, setRule] = useState<null | CheckAnswerRule>(null);
 
   const [dragging, setDragging] = useState<{ id: number | string; offsetX: number; offsetY: number; } | null>(null);
+  const [draggedObject, setDraggedObject] = useState<ObjectData | null>(null);
 
   const getBoardScale = useCallback(() => {
     const svg = svgRef.current;
@@ -83,6 +84,7 @@ function Game() {
       offsetX: point.x - obj.x,
       offsetY: point.y - obj.y
     });
+    setDraggedObject(obj);
   };
   const onTouchStart = (id: number | string) => (e: React.TouchEvent<SVGGElement>) => {
     const touch = e.touches[0];
@@ -93,6 +95,7 @@ function Game() {
       offsetX: point.x - obj.x,
       offsetY: point.y - obj.y
     });
+    setDraggedObject(obj);
   };
 
   const onMouseMove = (e: React.MouseEvent<SVGGElement>) => {
@@ -106,6 +109,7 @@ function Game() {
     setObjects((objs) =>
       objs.map((o) => (o.id === id ? { ...o, x, y } : o))
     );
+    setDraggedObject((obj) => obj && obj.id === id ? { ...obj, x, y } : obj);
   };
   const onTouchMove = (e: React.TouchEvent<SVGGElement>) => {
     if (!dragging) return;
@@ -119,6 +123,7 @@ function Game() {
     setObjects((objs) =>
       objs.map((o) => (o.id === id ? { ...o, x, y } : o))
     );
+    setDraggedObject((obj) => obj && obj.id === id ? { ...obj, x, y } : obj);
   };
 
   const onMouseUp = () => setDragging(null);
@@ -181,14 +186,13 @@ function Game() {
     if (rule.type === "dropOnObject") {
       const usedObjectIds = new Set<number | string>();
       const remainingAnswers = rule.answers.filter((answer) => {
-        const draggedObj = objects.find(o => o.id === answer.objectId);
-        if (!draggedObj) return true;
+        if (!draggedObject) return true;
 
         const targetBounds = getTargetBounds(answer.targetObjectId);
         if (!targetBounds) return true;
 
         const isCorrect = isWithinBounds(
-          draggedObj,
+          draggedObject,
           targetBounds.x,
           targetBounds.y,
           targetBounds.width,
@@ -196,7 +200,8 @@ function Game() {
         );
 
         if (isCorrect) {
-          usedObjectIds.add(draggedObj.id);
+          usedObjectIds.add(draggedObject.id);
+          setDraggedObject(null);
           return false;
         }
 
@@ -214,11 +219,10 @@ function Game() {
     else if (rule.type === "dropOnArea") {
       const usedObjectIds = new Set<number | string>();
       const remainingAnswers = rule.answers.filter((answer) => {
-        const draggedObj = objects.find(o => o.id === answer.objectId);
-        if (!draggedObj) return true;
+        if (!draggedObject) return true;
 
         const isCorrect = isWithinBounds(
-          draggedObj,
+          draggedObject,
           answer.area.x,
           answer.area.y,
           answer.area.width,
@@ -226,7 +230,8 @@ function Game() {
         );
 
         if (isCorrect) {
-          usedObjectIds.add(draggedObj.id);
+          usedObjectIds.add(draggedObject.id);
+          setDraggedObject(null);
           return false;
         }
 
@@ -252,15 +257,15 @@ function Game() {
     else if (rule.type === "snapToPosition") {
       const answersToSnap = new Map<number | string, { x: number; y: number }>();
       const remainingAnswers = rule.answers.filter((answer) => {
-        const draggedObj = objects.find(o => o.id === answer.objectId);
-        if (!draggedObj) return true;
+        if (!draggedObject) return true;
 
         const tolerance = 15; // pixels
-        const distanceX = Math.abs(draggedObj.x - answer.position.x);
-        const distanceY = Math.abs(draggedObj.y - answer.position.y);
+        const distanceX = Math.abs(draggedObject.x - answer.position.x);
+        const distanceY = Math.abs(draggedObject.y - answer.position.y);
 
         if (distanceX <= tolerance && distanceY <= tolerance) {
-          answersToSnap.set(draggedObj.id, { x: answer.position.x, y: answer.position.y });
+          answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
+          setDraggedObject(null);
           return false;
         }
 
@@ -281,7 +286,44 @@ function Game() {
         setRule({ ...rule, answers: remainingAnswers });
       }
     }
-  }, [dialogueIndex, dialogues.length, getTargetBounds, nextInteractionIndex, objects, rule]);
+    else if (rule.type === "snapObjectWithThisPropertiesToPosition") {
+      const answersToSnap = new Map<number | string, { x: number; y: number }>();
+      const remainingAnswers = rule.answers.filter((answer) => {
+        if (!draggedObject) return true;
+
+        const tolerance = 15; // pixels
+        const distanceX = Math.abs(draggedObject.x - answer.position.x);
+        const distanceY = Math.abs(draggedObject.y - answer.position.y);
+
+        if (distanceX <= tolerance && distanceY <= tolerance) {
+          if (draggedObject.type !== answer.objectProperties.type) return true;
+          if (draggedObject.type === "pencil" && answer.objectProperties.type === "pencil") {
+            if (draggedObject.length !== answer.objectProperties.length) return true;
+            if (draggedObject.orientation !== answer.objectProperties.orientation) return true;
+            if (draggedObject.color !== answer.objectProperties.color) return true;
+            answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+      if (answersToSnap.size > 0) {
+        setObjects((prevObjects) =>
+          prevObjects.map((o) => {
+            const snap = answersToSnap.get(o.id);
+            if (!snap) return o;
+            return { ...o, x: snap.x, y: snap.y, fixed: true };
+          })
+        );
+      }
+
+      if (remainingAnswers.length !== rule.answers.length) {
+        setRule({ ...rule, answers: remainingAnswers });
+      }
+    }
+  }, [dialogueIndex, dialogues.length, draggedObject, getTargetBounds, nextInteractionIndex, rule]);
 
   useEffect(() => {
     if (!currentUser) {
@@ -437,6 +479,13 @@ function Game() {
             return (
               <g key={obj.id} id={String(obj.id)} transform={`translate(${obj.x}, ${obj.y})`} onMouseDown={obj.fixed ? undefined : onMouseDown(obj.id)} onTouchStart={obj.fixed ? undefined : onTouchStart(obj.id)}>
                 {obj.svg}
+              </g>
+            );
+          }
+          if (obj.type === "spawner") {
+            return (
+              <g key={obj.id} id={String(obj.id)} transform={`translate(${obj.x}, ${obj.y})`} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)}>
+                {obj.spawnIcons}
               </g>
             );
           }

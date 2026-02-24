@@ -50,16 +50,17 @@ export interface CheckAnswerSnapToPosition {
     position: { x: number; y: number };
   }[]
 }
-export interface CheckAnswerSnapAnyIdToPosition {
-  type: "snapAnyIdToPosition";
+export interface CheckAnswerSnapObjectWithThisPropertiesToPosition {
+  type: "snapObjectWithThisPropertiesToPosition";
   answers: {
+    objectProperties: Omit<PencilData, "id" | "x" | "y" | "fixed"> | Omit<OtherObjectData, "id" | "x" | "y" | "fixed">;
     position: { x: number; y: number };
   }[]
 }
 export interface CheckAnswerLastDialogue {
   type: "lastDialogue";
 }
-export type CheckAnswerRule = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerSnapToPosition | CheckAnswerSnapAnyIdToPosition | CheckAnswerLastDialogue;
+export type CheckAnswerRule = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerSnapToPosition | CheckAnswerSnapObjectWithThisPropertiesToPosition | CheckAnswerLastDialogue;
 
 export interface Interaction {
   interaction: number;
