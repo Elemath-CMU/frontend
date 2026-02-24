@@ -77,69 +77,25 @@ function Game() {
   }, [BOARD_HEIGHT, BOARD_WIDTH, getBoardScale, toBoardPoint]);
 
   const onMouseDown = (id: number | string) => (e: React.MouseEvent<SVGGElement>) => {
-    const obj = objects.find(o => o.id === id)!;
+    const selectedObject = objects.find(o => o.id === id)!;
     const point = toBoardPoint(e.clientX, e.clientY);
-    if (obj.type === "spawner") {
-      if (obj.spawnObject.type === "pencil") {
-        const newObj: PencilData = {
-          id: Date.now(),
-          type: "pencil",
-          x: point.x + obj.spawnObject.length / 2,
-          y: point.y - obj.spawnObject.width / 2,
-          length: obj.spawnObject.length,
-          width: obj.spawnObject.width,
-          color: obj.spawnObject.color,
-          orientation: obj.spawnObject.orientation,
-        };
-        setObjects((prev) => [...prev, newObj]);
-        setDragging({
-          id: newObj.id,
-          offsetX: point.x - newObj.x,
-          offsetY: point.y - newObj.y
-        });
-        setDraggedObject(newObj);
-      }
-    } else {
-      setDragging({
-        id,
-        offsetX: point.x - obj.x,
-        offsetY: point.y - obj.y
-      });
-      setDraggedObject(obj);
-    }
+    setDragging({
+      id,
+      offsetX: point.x - selectedObject.x,
+      offsetY: point.y - selectedObject.y
+    });
+    setDraggedObject(selectedObject);
   };
   const onTouchStart = (id: number | string) => (e: React.TouchEvent<SVGGElement>) => {
     const touch = e.touches[0];
-    const obj = objects.find(o => o.id === id)!;
+    const selectedObject = objects.find(o => o.id === id)!;
     const point = toBoardPoint(touch.clientX, touch.clientY);
-    if (obj.type === "spawner") {
-      if (obj.spawnObject.type === "pencil") {
-        const newObj: PencilData = {
-          id: Date.now(),
-          type: "pencil",
-          x: point.x + obj.spawnObject.length / 2,
-          y: point.y - obj.spawnObject.width / 2,
-          length: obj.spawnObject.length,
-          width: obj.spawnObject.width,
-          color: obj.spawnObject.color,
-          orientation: obj.spawnObject.orientation,
-        };
-        setObjects((prev) => [...prev, newObj]);
-        setDragging({
-          id: newObj.id,
-          offsetX: point.x - newObj.x,
-          offsetY: point.y - newObj.y
-        });
-        setDraggedObject(newObj);
-      }
-    } else {
-      setDragging({
-        id,
-        offsetX: point.x - obj.x,
-        offsetY: point.y - obj.y
-      });
-      setDraggedObject(obj);
-    }
+    setDragging({
+      id,
+      offsetX: point.x - selectedObject.x,
+      offsetY: point.y - selectedObject.y
+    });
+    setDraggedObject(selectedObject);
   };
 
   const onMouseMove = (e: React.MouseEvent<SVGGElement>) => {
@@ -149,8 +105,6 @@ function Game() {
     const { id, offsetX, offsetY } = dragging;
     const x = point.x - offsetX;
     const y = point.y - offsetY;
-
-    console.log(`Dragging object ${id} to (${x}, ${y})`);
 
     setObjects((objs) =>
       objs.map((o) => (o.id === id ? { ...o, x, y } : o))
@@ -165,8 +119,6 @@ function Game() {
     const { id, offsetX, offsetY } = dragging;
     const x = point.x - offsetX;
     const y = point.y - offsetY;
-
-    console.log(`Dragging object ${id} to (${x}, ${y})`);
 
     setObjects((objs) =>
       objs.map((o) => (o.id === id ? { ...o, x, y } : o))
@@ -532,7 +484,58 @@ function Game() {
           }
           if (obj.type === "spawner") {
             return (
-              <g key={obj.id} id={String(obj.id)} transform={`translate(${obj.x}, ${obj.y})`} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)}>
+              <g key={obj.id} id={String(obj.id)} transform={`translate(${obj.x}, ${obj.y})`}
+                onMouseDown={(e: React.MouseEvent<SVGGElement>) => {
+                  const selectedObject = objects.find(o => o.id === obj.id)!;
+                  const point = toBoardPoint(e.clientX, e.clientY);
+                  if (selectedObject.type === "spawner") {
+                    if (selectedObject.spawnObject.type === "pencil") {
+                      const newObj: PencilData = {
+                        id: Date.now(),
+                        type: "pencil",
+                        x: point.x + selectedObject.spawnObject.length / 2,
+                        y: point.y - selectedObject.spawnObject.width / 2,
+                        length: selectedObject.spawnObject.length,
+                        width: selectedObject.spawnObject.width,
+                        color: selectedObject.spawnObject.color,
+                        orientation: selectedObject.spawnObject.orientation,
+                      };
+                      setObjects((prev) => [...prev, newObj]);
+                      setDragging({
+                        id: newObj.id,
+                        offsetX: point.x - newObj.x,
+                        offsetY: point.y - newObj.y
+                      });
+                      setDraggedObject(newObj);
+                    }
+                  }
+                }}
+                onTouchStart={(e: React.TouchEvent<SVGGElement>) => {
+                  const touch = e.touches[0];
+                  const selectedObject = objects.find(o => o.id === obj.id)!;
+                  const point = toBoardPoint(touch.clientX, touch.clientY);
+                  if (selectedObject.type === "spawner") {
+                    if (selectedObject.spawnObject.type === "pencil") {
+                      const newObj: PencilData = {
+                        id: Date.now(),
+                        type: "pencil",
+                        x: point.x + selectedObject.spawnObject.length / 2,
+                        y: point.y - selectedObject.spawnObject.width / 2,
+                        length: selectedObject.spawnObject.length,
+                        width: selectedObject.spawnObject.width,
+                        color: selectedObject.spawnObject.color,
+                        orientation: selectedObject.spawnObject.orientation,
+                      };
+                      setObjects((prev) => [...prev, newObj]);
+                      setDragging({
+                        id: newObj.id,
+                        offsetX: point.x - newObj.x,
+                        offsetY: point.y - newObj.y
+                      });
+                      setDraggedObject(newObj);
+                    }
+                  }
+                }}>
                 {obj.spawnIcons}
               </g>
             );
