@@ -7,7 +7,7 @@ export interface DialogueData {
   canClickNext: boolean;
 }
 
-export type ObjectType = "pencil" | "other" | "spawner" | "message";
+export type ObjectType = "pencil" | "stick" | "other" | "spawner" | "message";
 export interface ObjectBaseData {
   id: number | string;
   type: ObjectType;
@@ -22,6 +22,11 @@ export interface PencilData extends ObjectBaseData {
   color: string;
   orientation?: "horizontal" | "vertical";
 }
+export interface StickData extends ObjectBaseData {
+  type: "stick";
+  length: number;
+  width: number;
+}
 export interface OtherObjectData extends ObjectBaseData {
   type: "other";
   svg: React.ReactNode;
@@ -30,14 +35,14 @@ export interface ObjectSpawner extends ObjectBaseData {
   type: "spawner";
   fixed?: true;
   spawnObject: Omit<PencilData, "id" | "x" | "y" | "fixed"> | Omit<OtherObjectData, "id" | "x" | "y" | "fixed">;
-  spawnIcons?: React.ReactNode;
+  spawnIcon?: React.ReactNode;
 }
 export interface Message extends ObjectBaseData {
   type: "message";
   fixed: true;
   message: string;
 }
-export type ObjectData = PencilData | OtherObjectData | ObjectSpawner;
+export type ObjectData = PencilData | StickData | OtherObjectData | ObjectSpawner;
 
 export interface CheckAnswerDropOnObject {
   type: "dropOnObject";
@@ -72,9 +77,10 @@ export interface CheckAnswerLastDialogue {
 }
 export type CheckAnswerRule = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerSnapToPosition | CheckAnswerSnapObjectWithThisPropertiesToPosition | CheckAnswerLastDialogue;
 
+export type InteractionType = "playground" | "checkpoint";
 export interface Interaction {
   interaction: number;
-  type: string;
+  type: InteractionType;
 }
 export interface PlayGroundData extends Interaction {
   type: "playground";

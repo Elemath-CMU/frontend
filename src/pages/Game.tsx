@@ -536,7 +536,10 @@ function Game() {
                     }
                   }
                 }}>
-                {obj.spawnIcons}
+                {obj.spawnIcon && obj.spawnIcon}
+                {!obj.spawnIcon && obj.spawnObject.type === "pencil" && (
+                  <Pencil id={`spawner-${obj.id}`} length={obj.spawnObject.length} width={obj.spawnObject.width} color={obj.spawnObject.color} orientation={obj.spawnObject.orientation ? (obj.spawnObject.orientation == "vertical" ? "up" : "right") : undefined} x={0} y={0} />
+                )}
               </g>
             );
           }
