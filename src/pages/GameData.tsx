@@ -628,31 +628,38 @@ export const gameData: InteractiveGameData[][] = [
           , x: 427 - 159, y: 200
         },
         {
-          id: 2, type: "spawner", spawnObject: { type: "pencil", orientation: "horizontal", length: 80, width: 40, color: "#E8E2F8" }, spawnIcons:
+          id: 2, type: "spawner", spawnObject: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, spawnIcons:
             <svg width="149" height="69" viewBox="0 0 149 69" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M78.4911 45.2119C79.0037 45.6123 79.0037 46.3877 78.4911 46.7881L55.6156 64.6566C54.959 65.1695 54 64.7017 54 63.8685V28.1315C54 27.2983 54.959 26.8305 55.6156 27.3434L78.4911 45.2119Z" fill="#FFECC3" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M78.4911 45.2119C79.0037 45.6123 79.0037 46.3877 78.4911 46.7881L55.6156 64.6566C54.959 65.1695 54 64.7017 54 63.8685V28.1315C54 27.2983 54.959 26.8305 55.6156 27.3434L78.4911 45.2119Z" fill="#FFECC3" stroke="black" strokeWidth="2" strokeLinecap="round" />
               <path d="M79.5 46.0001L70.5 52.3741V39.6262L79.5 46.0001Z" fill="black" />
               <path d="M53.5 65H12C5.92487 65 1 60.0751 1 54V38C1 31.9249 5.92487 27 12 27L53.5 27V65Z" fill="#E8E2F8" />
-              <path d="M53.5 65H12C5.92487 65 1 60.0751 1 54V38C1 31.9249 5.92487 27 12 27L53.5 27V65Z" stroke="black" stroke-width="2" stroke-linecap="round" />
-              <path d="M147.491 45.2119C148.004 45.6123 148.004 46.3877 147.491 46.7881L124.616 64.6566C123.959 65.1695 123 64.7017 123 63.8685V28.1315C123 27.2983 123.959 26.8305 124.616 27.3434L147.491 45.2119Z" fill="#FFECC3" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M53.5 65H12C5.92487 65 1 60.0751 1 54V38C1 31.9249 5.92487 27 12 27L53.5 27V65Z" stroke="black" strokeWidth="2" strokeLinecap="round" />
+              <path d="M147.491 45.2119C148.004 45.6123 148.004 46.3877 147.491 46.7881L124.616 64.6566C123.959 65.1695 123 64.7017 123 63.8685V28.1315C123 27.2983 123.959 26.8305 124.616 27.3434L147.491 45.2119Z" fill="#FFECC3" stroke="black" strokeWidth="2" strokeLinecap="round" />
               <path d="M148.5 46.0001L139.5 52.3741V39.6262L148.5 46.0001Z" fill="black" />
               <path d="M122.5 65H81C74.9249 65 70 60.0751 70 54V38C70 31.9249 74.9249 27 81 27L122.5 27V65Z" fill="#E8E2F8" />
-              <path d="M122.5 65H81C74.9249 65 70 60.0751 70 54V38C70 31.9249 74.9249 27 81 27L122.5 27V65Z" stroke="black" stroke-width="2" stroke-linecap="round" />
-              <path d="M118.491 22.2119C119.004 22.6123 119.004 23.3877 118.491 23.7881L95.6156 41.6566C94.959 42.1695 94 41.7017 94 40.8685V5.13145C94 4.29834 94.959 3.83053 95.6156 4.34338L118.491 22.2119Z" fill="#FFECC3" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M122.5 65H81C74.9249 65 70 60.0751 70 54V38C70 31.9249 74.9249 27 81 27L122.5 27V65Z" stroke="black" strokeWidth="2" strokeLinecap="round" />
+              <path d="M118.491 22.2119C119.004 22.6123 119.004 23.3877 118.491 23.7881L95.6156 41.6566C94.959 42.1695 94 41.7017 94 40.8685V5.13145C94 4.29834 94.959 3.83053 95.6156 4.34338L118.491 22.2119Z" fill="#FFECC3" stroke="black" strokeWidth="2" strokeLinecap="round" />
               <path d="M119.5 23.0001L110.5 29.3741V16.6262L119.5 23.0001Z" fill="black" />
               <path d="M93.5 42H52C45.9249 42 41 37.0751 41 31V15C41 8.92487 45.9249 4 52 4L93.5 4V42Z" fill="#E8E2F8" />
-              <path d="M93.5 42H52C45.9249 42 41 37.0751 41 31V15C41 8.92487 45.9249 4 52 4L93.5 4V42Z" stroke="black" stroke-width="2" stroke-linecap="round" />
-              <path d="M118.491 22.2119C119.004 22.6123 119.004 23.3877 118.491 23.7881L95.6156 41.6566C94.959 42.1695 94 41.7017 94 40.8685V5.13145C94 4.29834 94.959 3.83053 95.6156 4.34338L118.491 22.2119Z" fill="#FFECC3" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M93.5 42H52C45.9249 42 41 37.0751 41 31V15C41 8.92487 45.9249 4 52 4L93.5 4V42Z" stroke="black" strokeWidth="2" strokeLinecap="round" />
+              <path d="M118.491 22.2119C119.004 22.6123 119.004 23.3877 118.491 23.7881L95.6156 41.6566C94.959 42.1695 94 41.7017 94 40.8685V5.13145C94 4.29834 94.959 3.83053 95.6156 4.34338L118.491 22.2119Z" fill="#FFECC3" stroke="black" strokeWidth="2" strokeLinecap="round" />
               <path d="M119.5 23.0001L110.5 29.3741V16.6262L119.5 23.0001Z" fill="black" />
               <path d="M93.5 42H52C45.9249 42 41 37.0751 41 31V15C41 8.92487 45.9249 4 52 4L93.5 4V42Z" fill="#E8E2F8" />
-              <path d="M93.5 42H52C45.9249 42 41 37.0751 41 31V15C41 8.92487 45.9249 4 52 4L93.5 4V42Z" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M93.5 42H52C45.9249 42 41 37.0751 41 31V15C41 8.92487 45.9249 4 52 4L93.5 4V42Z" stroke="black" strokeWidth="2" strokeLinecap="round" />
             </svg>
           , x: 50, y: 300
         },
+        {
+          id: 3, type: "other", svg:
+            <svg width="97" height="48" viewBox="0 0 97 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1" y="1" width="95" height="46" stroke="#E04559" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="4 6" />
+            </svg>
+          , x: 285, y: 150
+        }
       ],
       rule: {
         type: "snapObjectWithThisPropertiesToPosition", answers: [{
-          objectProperties: { type: "pencil", orientation: "horizontal", length: 80, width: 40, color: "#E8E2F8" }, position: { x: 427 - 159, y: 200 },
+          objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 427 - 62, y: 155 },
         }]
       },
     },

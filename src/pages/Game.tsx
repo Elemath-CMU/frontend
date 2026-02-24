@@ -87,7 +87,7 @@ function Game() {
           x: point.x + obj.spawnObject.length / 2,
           y: point.y - obj.spawnObject.width / 2,
           length: obj.spawnObject.length,
-          width: obj.spawnObject.width, 
+          width: obj.spawnObject.width,
           color: obj.spawnObject.color,
           orientation: obj.spawnObject.orientation,
         };
@@ -112,12 +112,34 @@ function Game() {
     const touch = e.touches[0];
     const obj = objects.find(o => o.id === id)!;
     const point = toBoardPoint(touch.clientX, touch.clientY);
-    setDragging({
-      id,
-      offsetX: point.x - obj.x,
-      offsetY: point.y - obj.y
-    });
-    setDraggedObject(obj);
+    if (obj.type === "spawner") {
+      if (obj.spawnObject.type === "pencil") {
+        const newObj: PencilData = {
+          id: Date.now(),
+          type: "pencil",
+          x: point.x + obj.spawnObject.length / 2,
+          y: point.y - obj.spawnObject.width / 2,
+          length: obj.spawnObject.length,
+          width: obj.spawnObject.width,
+          color: obj.spawnObject.color,
+          orientation: obj.spawnObject.orientation,
+        };
+        setObjects((prev) => [...prev, newObj]);
+        setDragging({
+          id: newObj.id,
+          offsetX: point.x - newObj.x,
+          offsetY: point.y - newObj.y
+        });
+        setDraggedObject(newObj);
+      }
+    } else {
+      setDragging({
+        id,
+        offsetX: point.x - obj.x,
+        offsetY: point.y - obj.y
+      });
+      setDraggedObject(obj);
+    }
   };
 
   const onMouseMove = (e: React.MouseEvent<SVGGElement>) => {
@@ -127,6 +149,8 @@ function Game() {
     const { id, offsetX, offsetY } = dragging;
     const x = point.x - offsetX;
     const y = point.y - offsetY;
+
+    console.log(`Dragging object ${id} to (${x}, ${y})`);
 
     setObjects((objs) =>
       objs.map((o) => (o.id === id ? { ...o, x, y } : o))
@@ -141,6 +165,8 @@ function Game() {
     const { id, offsetX, offsetY } = dragging;
     const x = point.x - offsetX;
     const y = point.y - offsetY;
+
+    console.log(`Dragging object ${id} to (${x}, ${y})`);
 
     setObjects((objs) =>
       objs.map((o) => (o.id === id ? { ...o, x, y } : o))
