@@ -46,6 +46,21 @@ const pencilCaseSVG =
     <line x1="199.75" y1="10.75" x2="199.75" y2="79.25" stroke="#CF6EBA" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 
+const stickGroupSVG =
+  <svg width="160" height="108" viewBox="0 0 160 108" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0.5" y="36.5" width="79" height="35" rx="3.5" fill="#895129" />
+    <rect x="0.5" y="36.5" width="79" height="35" rx="3.5" stroke="black" />
+    <rect x="0.5" y="72.5" width="79" height="35" rx="3.5" fill="#895129" />
+    <rect x="0.5" y="72.5" width="79" height="35" rx="3.5" stroke="black" />
+    <rect x="80.5" y="36.5" width="79" height="35" rx="3.5" fill="#895129" />
+    <rect x="80.5" y="36.5" width="79" height="35" rx="3.5" stroke="black" />
+    <rect x="80.5" y="72.5" width="79" height="35" rx="3.5" fill="#895129" />
+    <rect x="80.5" y="72.5" width="79" height="35" rx="3.5" stroke="black" />
+    <rect x="40.5" y="0.5" width="79" height="35" rx="3.5" fill="#895129" />
+    <rect x="40.5" y="0.5" width="79" height="35" rx="3.5" stroke="black" />
+  </svg>
+
+
 export const ep3: InteractiveGameData[] = [
   {
     interaction: 1,
@@ -280,5 +295,89 @@ export const ep3: InteractiveGameData[] = [
       }
     ],
     rule: { type: "lastDialogue" },
+  },
+  {
+    interaction: 11,
+    type: "playground",
+    dialogues: [
+      {
+        text: "ลองใช้แท่งไม้จากกองนี้วัดกล่องดินสอดูอีกครั้งสิ!",
+        canClickNext: false
+      },
+    ],
+    objects: [
+      {
+        id: 1, type: "other", fixed: true, svg: pencilCaseSVG, x: 458 - 119, y: 300
+      },
+      {
+        id: 2, type: "other", svg:
+          <svg width="98" height="48" viewBox="0 0 98 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="96" height="46" stroke="#E04559" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="4 6" />
+          </svg>
+        , x: 458 - 119, y: 250
+      },
+      { id: 3, type: "spawner", spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280 },
+    ],
+    rule: {
+      type: "snapObjectWithThisPropertiesToPosition", answers: [{
+        objectProperties: { type: "stick", length: 80, width: 36 }, position: { x: 458 - 119, y: 255 },
+      }]
+    },
+  },
+  {
+    interaction: 12,
+    type: "playground",
+    dialogues: [
+      {
+        text: "ลองใช้แท่งไม้จากกองนี้วัดกล่องดินสอดูอีกครั้งสิ!",
+        canClickNext: false
+      },
+    ],
+    objects: [
+      {
+        id: 1, type: "other", fixed: true, svg: pencilCaseSVG, x: 458 - 119, y: 300
+      },
+      { id: 2, type: "spawner", spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280 },
+      { id: 3, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 119, y: 255 },
+    ],
+    rule: {
+      type: "snapObjectWithThisPropertiesToPosition", answers: [
+        { objectProperties: { type: "stick", length: 80, width: 36 }, position: { x: 458 - 119 + 80, y: 255 } },
+        { objectProperties: { type: "stick", length: 80, width: 36 }, position: { x: 458 - 119 + 80 * 2, y: 255 } },
+      ]
+    },
+  },
+  {
+    interaction: 13,
+    type: "playground",
+    dialogues: [
+      {
+        text: "วัดเสร็จแล้ว! กล่องดินสอนี้ยาว 3 แท่งไม้นี่เอง!",
+        canClickNext: true
+      },
+      {
+        text: <div>วัดแล้วได้ความยาวเท่ากับที่ใช้ดินสอวัดเลย<br/>แปลว่าแท่งไม้มีความยาวเท่ากับดินสอนั่นเอง</div>,
+        canClickNext: true
+      }
+    ],
+    objects: [
+      {
+        id: 1, type: "other", fixed: true, svg: pencilCaseSVG, x: 458 - 119, y: 300
+      },
+      { id: 2, type: "other", fixed: true, svg: stickGroupSVG, x: 50, y: 280 },
+      { id: 3, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 119, y: 255 },
+      { id: 4, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 119 + 80, y: 255 },
+      { id: 5, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 119 + 80 * 2, y: 255 },
+    ],
+    rule: { type: "lastDialogue" },
+  },
+  {
+    interaction: 14,
+    type: "checkpoint",
+    text: <div>
+      <p>ว้าว! เธอเริ่มใช้แท่งไม้วัดสิ่งต่าง ๆ คล่องแล้วสินะ</p>
+      <br />
+      <p>ตอนนี้เธออยากพักก่อนมั้ย?</p>
+    </div>,
   },
 ]

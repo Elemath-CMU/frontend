@@ -3,7 +3,7 @@ import Pencil from "../components/Pencil";
 import StoryLine from "../components/StoryLine";
 import useGameController from "./GameController";
 import BorderedButton from "../components/button/BorderedButton";
-import { gameData, type CheckAnswerRule, type DialogueData, type InteractiveGameData, type ObjectData, type PencilData } from "./GameData";
+import { gameData, type CheckAnswerRule, type DialogueData, type InteractiveGameData, type ObjectData, type PencilData, type StickData } from "./GameData";
 import useAuth from "../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
 import Stick from "../components/Stick";
@@ -299,11 +299,20 @@ function Game() {
         if (distanceX <= tolerance && distanceY <= tolerance) {
           if (draggedObject.type !== answer.objectProperties.type) return true;
           if (draggedObject.type === "pencil" && answer.objectProperties.type === "pencil") {
-            if (draggedObject.length !== answer.objectProperties.length) return true;
-            if (draggedObject.orientation !== answer.objectProperties.orientation) return true;
-            if (draggedObject.color !== answer.objectProperties.color) return true;
-            answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
-            return false;
+            if (draggedObject.length === answer.objectProperties.length &&
+              draggedObject.orientation === answer.objectProperties.orientation &&
+              draggedObject.color === answer.objectProperties.color) {
+              answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
+              setDraggedObject(null);
+              return false;
+            }
+          } else if (draggedObject.type === "stick" && answer.objectProperties.type === "stick") {
+            if (draggedObject.length === answer.objectProperties.length &&
+              draggedObject.orientation === answer.objectProperties.orientation) {
+              answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
+              setDraggedObject(null);
+              return false;
+            }
           }
         }
 
@@ -493,8 +502,9 @@ function Game() {
                   const selectedObject = objects.find(o => o.id === obj.id)!;
                   const point = toBoardPoint(e.clientX, e.clientY);
                   if (selectedObject.type === "spawner") {
+                    let newObj: PencilData | StickData;
                     if (selectedObject.spawnObject.type === "pencil") {
-                      const newObj: PencilData = {
+                      newObj = {
                         id: Date.now(),
                         type: "pencil",
                         x: point.x + selectedObject.spawnObject.length / 2,
@@ -504,14 +514,26 @@ function Game() {
                         color: selectedObject.spawnObject.color,
                         orientation: selectedObject.spawnObject.orientation,
                       };
-                      setObjects((prev) => [...prev, newObj]);
-                      setDragging({
-                        id: newObj.id,
-                        offsetX: point.x - newObj.x,
-                        offsetY: point.y - newObj.y
-                      });
-                      setDraggedObject(newObj);
+                    } else if (selectedObject.spawnObject.type === "stick") {
+                      newObj = {
+                        id: Date.now(),
+                        type: "stick",
+                        x: point.x - selectedObject.spawnObject.length / 2,
+                        y: point.y - selectedObject.spawnObject.width / 2,
+                        length: selectedObject.spawnObject.length,
+                        width: selectedObject.spawnObject.width,
+                        orientation: selectedObject.spawnObject.orientation,
+                      };
+                    } else {
+                      return;
                     }
+                    setObjects((prev) => [...prev, newObj]);
+                    setDragging({
+                      id: newObj.id,
+                      offsetX: point.x - newObj.x,
+                      offsetY: point.y - newObj.y
+                    });
+                    setDraggedObject(newObj);
                   }
                 }}
                 onTouchStart={(e: React.TouchEvent<SVGGElement>) => {
@@ -519,8 +541,9 @@ function Game() {
                   const selectedObject = objects.find(o => o.id === obj.id)!;
                   const point = toBoardPoint(touch.clientX, touch.clientY);
                   if (selectedObject.type === "spawner") {
+                    let newObj: PencilData | StickData;
                     if (selectedObject.spawnObject.type === "pencil") {
-                      const newObj: PencilData = {
+                      newObj = {
                         id: Date.now(),
                         type: "pencil",
                         x: point.x + selectedObject.spawnObject.length / 2,
@@ -530,14 +553,26 @@ function Game() {
                         color: selectedObject.spawnObject.color,
                         orientation: selectedObject.spawnObject.orientation,
                       };
-                      setObjects((prev) => [...prev, newObj]);
-                      setDragging({
-                        id: newObj.id,
-                        offsetX: point.x - newObj.x,
-                        offsetY: point.y - newObj.y
-                      });
-                      setDraggedObject(newObj);
+                    } else if (selectedObject.spawnObject.type === "stick") {
+                      newObj = {
+                        id: Date.now(),
+                        type: "stick",
+                        x: point.x - selectedObject.spawnObject.length / 2,
+                        y: point.y - selectedObject.spawnObject.width / 2,
+                        length: selectedObject.spawnObject.length,
+                        width: selectedObject.spawnObject.width,
+                        orientation: selectedObject.spawnObject.orientation,
+                      };
+                    } else {
+                      return;
                     }
+                    setObjects((prev) => [...prev, newObj]);
+                    setDragging({
+                      id: newObj.id,
+                      offsetX: point.x - newObj.x,
+                      offsetY: point.y - newObj.y
+                    });
+                    setDraggedObject(newObj);
                   }
                 }}>
                 {obj.spawnIcon && obj.spawnIcon}
