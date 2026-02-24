@@ -191,7 +191,7 @@ function Game() {
         const targetBounds = getTargetBounds(answer.targetObjectId);
         if (!targetBounds) return true;
 
-        const isCorrect = isWithinBounds(
+        const isCorrect = draggedObject.id === answer.objectId && isWithinBounds(
           draggedObject,
           targetBounds.x,
           targetBounds.y,
@@ -221,7 +221,7 @@ function Game() {
       const remainingAnswers = rule.answers.filter((answer) => {
         if (!draggedObject) return true;
 
-        const isCorrect = isWithinBounds(
+        const isCorrect = draggedObject.id === answer.objectId && isWithinBounds(
           draggedObject,
           answer.area.x,
           answer.area.y,
@@ -263,7 +263,7 @@ function Game() {
         const distanceX = Math.abs(draggedObject.x - answer.position.x);
         const distanceY = Math.abs(draggedObject.y - answer.position.y);
 
-        if (distanceX <= tolerance && distanceY <= tolerance) {
+        if (draggedObject.id === answer.objectId && distanceX <= tolerance && distanceY <= tolerance) {
           answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
           setDraggedObject(null);
           return false;
