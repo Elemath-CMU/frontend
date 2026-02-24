@@ -236,12 +236,73 @@ export const ep3: InteractiveGameData[] = [
           </svg>
         , x: 458 - 119, y: 250
       },
-      { id: 3, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8", x: 458 - 119 + 79.5, y: 255 },
+      { id: 3, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 130, y: 325 },
+      { id: 4, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 130 + 70, y: 325 },
+      { id: 5, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8", x: 130 + 70 / 2, y: 325 - 40 / 2 },
     ],
     rule: {
       type: "snapObjectWithThisPropertiesToPosition", answers: [{
-        objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 458 - 119, y: 245 },
+        objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 458 - 119 + 79.5, y: 255 },
       }]
     },
+  },
+  {
+    interaction: 6,
+    type: "playground",
+    dialogues: [
+      {
+        text: "ลองใช้ดินสอจากกองนี้วัดกล่องดินสอดูสิ!",
+        canClickNext: false
+      },
+    ],
+    objects: [
+      {
+        id: 1, type: "other", fixed: true, svg:
+          <svg width="239" height="90" viewBox="0 0 239 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 4C0 1.79086 1.79086 0 4 0H199V90H3.99999C1.79086 90 0 88.2091 0 86V4Z" fill="#FCD9DF" />
+            <path d="M199 0H235C237.209 0 239 1.79086 239 4V86C239 88.2091 237.209 90 235 90H199V0Z" fill="#FCD9DF" />
+            <line x1="199.75" y1="10.75" x2="199.75" y2="79.25" stroke="#CF6EBA" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        , x: 458 - 119, y: 300
+      },
+      { id: 2, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8", x: 130, y: 325 },
+      { id: 3, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8", x: 130 + 70, y: 325 },
+      { id: 4, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 119 + 79.5, y: 255 },
+    ],
+    rule: {
+      type: "snapObjectWithThisPropertiesToPosition", answers: [
+        { objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 458 - 119 + 79.5 * 2, y: 255 } },
+        { objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 458 - 119 + 79.5 * 3, y: 255 } },
+      ]
+    },
+  },
+  {
+    interaction: 7,
+    type: "playground",
+    dialogues: [
+      {
+        text: "ลองวัดแล้วกล่องดินสอมีความยาวเท่าไหร่นะ?",
+        canClickNext: true
+      },
+      {
+        text: "วัดเสร็จแล้ว! กล่องดินสอนี้ยาว 3 แท่งดินสอนี่เอง!",
+        canClickNext: true
+      },
+    ],
+    objects: [
+      {
+        id: 1, type: "other", fixed: true, svg:
+          <svg width="239" height="90" viewBox="0 0 239 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 4C0 1.79086 1.79086 0 4 0H199V90H3.99999C1.79086 90 0 88.2091 0 86V4Z" fill="#FCD9DF" />
+            <path d="M199 0H235C237.209 0 239 1.79086 239 4V86C239 88.2091 237.209 90 235 90H199V0Z" fill="#FCD9DF" />
+            <line x1="199.75" y1="10.75" x2="199.75" y2="79.25" stroke="#CF6EBA" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        , x: 458 - 119, y: 300
+      },
+      { id: 2, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 119 + 79.5, y: 255 },
+      { id: 3, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 119 + 79.5 * 2, y: 255 },
+      { id: 4, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 119 + 79.5 * 3, y: 255 },
+    ],
+    rule: { type: "lastDialogue" },
   },
 ]
