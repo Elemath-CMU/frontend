@@ -3,7 +3,7 @@ import Pencil from "../components/Pencil";
 import StoryLine from "../components/StoryLine";
 import useGameController from "./GameController";
 import BorderedButton from "../components/button/BorderedButton";
-import { gameData, type CheckAnswerRule, type DialogueData, type InteractiveGameData, type ObjectData } from "./GameData";
+import { gameData, type CheckAnswerRule, type DialogueData, type InteractiveGameData, type ObjectData, type PencilData } from "./GameData";
 import useAuth from "../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
 
@@ -79,12 +79,34 @@ function Game() {
   const onMouseDown = (id: number | string) => (e: React.MouseEvent<SVGGElement>) => {
     const obj = objects.find(o => o.id === id)!;
     const point = toBoardPoint(e.clientX, e.clientY);
-    setDragging({
-      id,
-      offsetX: point.x - obj.x,
-      offsetY: point.y - obj.y
-    });
-    setDraggedObject(obj);
+    if (obj.type === "spawner") {
+      if (obj.spawnObject.type === "pencil") {
+        const newObj: PencilData = {
+          id: Date.now(),
+          type: "pencil",
+          x: point.x + obj.spawnObject.length / 2,
+          y: point.y - obj.spawnObject.width / 2,
+          length: obj.spawnObject.length,
+          width: obj.spawnObject.width, 
+          color: obj.spawnObject.color,
+          orientation: obj.spawnObject.orientation,
+        };
+        setObjects((prev) => [...prev, newObj]);
+        setDragging({
+          id: newObj.id,
+          offsetX: point.x - newObj.x,
+          offsetY: point.y - newObj.y
+        });
+        setDraggedObject(newObj);
+      }
+    } else {
+      setDragging({
+        id,
+        offsetX: point.x - obj.x,
+        offsetY: point.y - obj.y
+      });
+      setDraggedObject(obj);
+    }
   };
   const onTouchStart = (id: number | string) => (e: React.TouchEvent<SVGGElement>) => {
     const touch = e.touches[0];
@@ -473,7 +495,7 @@ function Game() {
         </foreignObject>
         {objects.map(obj => {
           if (obj.type === "pencil") {
-            return <Pencil key={obj.id} id={obj.id} length={obj.length} color={obj.color} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} orientation={obj.orientation ? (obj.orientation == "vertical" ? "up" : "right") : undefined} fixed={obj.fixed} />;
+            return <Pencil key={obj.id} id={obj.id} length={obj.length} width={obj.width} color={obj.color} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} orientation={obj.orientation ? (obj.orientation == "vertical" ? "up" : "right") : undefined} fixed={obj.fixed} />;
           }
           if (obj.type === "other") {
             return (

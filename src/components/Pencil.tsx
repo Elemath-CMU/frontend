@@ -1,6 +1,7 @@
 export interface PencilProps {
   id: number | string;
   length: number;
+  width: number;
   color: string;
   x: number;
   y: number;
@@ -10,16 +11,19 @@ export interface PencilProps {
   onTouchStart?: React.TouchEventHandler<SVGGElement>;
 }
 
-function Pencil({ id: key, length, color, x, y, orientation, fixed, onMouseDown, onTouchStart }: PencilProps) {
+function Pencil({ id: key, length, width, color, x, y, orientation, fixed, onMouseDown, onTouchStart }: PencilProps) {
     // Fixed dimensions
     const tipHeight = 26;
     const bottomCapHeight = 11; // Space needed for rounded bottom
-    // const strokeWidth = 2;
-    // const width = 62;
+    
+    // Calculate positions based on width
+    const margin = width * 0.032; // ~2px margin at default 62px width
+    const leftX = margin;
+    const rightX = width - margin;
+    const tipCenterX = width / 2;
     
     // Calculate body height based on length
     const bodyHeight = length - tipHeight - bottomCapHeight;
-    // const totalHeight = length + strokeWidth; // Add stroke width to prevent cutoff
     
     // Calculate bottom position
     const bodyBottom = tipHeight + bodyHeight + bottomCapHeight;
@@ -29,13 +33,13 @@ function Pencil({ id: key, length, color, x, y, orientation, fixed, onMouseDown,
         <g key={key} transform={`translate(${x}, ${y}) ${orientation ? `rotate(${orientation === 'up' ? 0 : orientation === 'right' ? 90 : orientation === 'down' ? 180 : -90})` : ''}`} fill="none" onMouseDown={ fixed ? undefined : onMouseDown} onTouchStart={fixed ? undefined : onTouchStart} className="cursor-grab">
             {/* Pencil body */}
             <path 
-                d={`M60 ${tipHeight}V${bottomY}C60 ${bottomY + 6.075} 55.0751 ${bodyBottom} 49 ${bodyBottom}H13C6.92487 ${bodyBottom} 2 ${bottomY + 6.075} 2 ${bottomY}V${tipHeight}H60Z`} 
+                d={`M${rightX} ${tipHeight}V${bottomY}C${rightX} ${bottomY + 6.075} ${rightX - 5.0751} ${bodyBottom} ${rightX - 11} ${bodyBottom}H${leftX + 11}C${leftX + 6.92487} ${bodyBottom} ${leftX} ${bottomY + 6.075} ${leftX} ${bottomY}V${tipHeight}H${rightX}Z`} 
                 fill={color} 
                 stroke="black" 
                 strokeWidth="2" 
             />
             <path 
-                d={`M60 ${tipHeight}V${bottomY}C60 ${bottomY + 6.075} 55.0751 ${bodyBottom} 49 ${bodyBottom}H13C6.92487 ${bodyBottom} 2 ${bottomY + 6.075} 2 ${bottomY}V${tipHeight}H60Z`} 
+                d={`M${rightX} ${tipHeight}V${bottomY}C${rightX} ${bottomY + 6.075} ${rightX - 5.0751} ${bodyBottom} ${rightX - 11} ${bodyBottom}H${leftX + 11}C${leftX + 6.92487} ${bodyBottom} ${leftX} ${bottomY + 6.075} ${leftX} ${bottomY}V${tipHeight}H${rightX}Z`} 
                 fill={color} 
                 stroke="black" 
                 strokeWidth="2" 
@@ -43,12 +47,12 @@ function Pencil({ id: key, length, color, x, y, orientation, fixed, onMouseDown,
             
             {/* Pencil tip */}
             <g clipPath="url(#clip0_68_77)">
-                <path d="M30.3773 0.495544C30.7418 0.205499 31.2582 0.205499 31.6227 0.495543L60.8031 23.7175C61.5438 24.3069 61.127 25.5 60.1804 25.5H1.81957C0.873013 25.5 0.456231 24.307 1.19688 23.7175L30.3773 0.495544Z" fill="#FFECC3" stroke="black" strokeWidth="2" />
-                <path d="M30.84 0L41.0937 9H20.5863L30.84 0Z" fill="black" />
+                <path d={`M${tipCenterX} 0.495544C${tipCenterX + 0.3645} 0.205499 ${tipCenterX + 0.8809} 0.205499 ${tipCenterX + 1.2454} 0.495543L${rightX} 23.7175C${rightX + 0.7407} 24.3069 ${rightX + 0.3239} 25.5 ${rightX - 0.6227} 25.5H${leftX - 0.6227}C${leftX - 1.569} 25.5 ${leftX - 1.9858} 24.307 ${leftX - 1.2452} 23.7175L${tipCenterX} 0.495544Z`} fill="#FFECC3" stroke="black" strokeWidth="2" />
+                <path d={`M${tipCenterX} 0L${tipCenterX + width * 0.16538} 9H${tipCenterX - width * 0.16538}L${tipCenterX} 0Z`} fill="black" />
             </g>
             <defs>
                 <clipPath id="clip0_68_77">
-                    <rect width="62" height="26" fill="white" />
+                    <rect width={width} height="26" fill="white" />
                 </clipPath>
             </defs>
         </g>

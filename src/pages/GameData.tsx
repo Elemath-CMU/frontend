@@ -14,6 +14,7 @@ export interface ObjectBaseData {
 export interface PencilData extends ObjectBaseData {
   type: "pencil";
   length: number;
+  width: number;
   color: string;
   orientation?: "horizontal" | "vertical";
 }
@@ -23,8 +24,8 @@ export interface OtherObjectData extends ObjectBaseData {
 }
 export interface ObjectSpawner extends ObjectBaseData {
   type: "spawner";
-  fixed: true;
-  spawnObject: Omit<PencilData, "id" | "type" | "x" | "y" | "fixed"> | Omit<OtherObjectData, "id" | "type" | "x" | "y" | "fixed">;
+  fixed?: true;
+  spawnObject: Omit<PencilData, "id" | "x" | "y" | "fixed"> | Omit<OtherObjectData, "id" | "x" | "y" | "fixed">;
   spawnIcons?: React.ReactNode;
 }
 export interface Message extends ObjectBaseData {
@@ -103,7 +104,7 @@ export const gameData: InteractiveGameData[][] = [
         },
       ],
       objects: [
-        { id: 1, type: "pencil", fixed: true, length: 175, color: "#F9D17B", x: 427, y: 200 },
+        { id: 1, type: "pencil", fixed: true, length: 175, width: 62, color: "#F9D17B", x: 427, y: 200 },
       ],
       rule: { type: "lastDialogue" }
     },
@@ -117,7 +118,7 @@ export const gameData: InteractiveGameData[][] = [
         }
       ],
       objects: [
-        { id: 1, type: "pencil", length: 175, color: "#F9D17B", x: 427, y: 200 },
+        { id: 1, type: "pencil", length: 175, width: 62, color: "#F9D17B", x: 427, y: 200 },
       ],
       rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
     },
@@ -131,8 +132,8 @@ export const gameData: InteractiveGameData[][] = [
         }
       ],
       objects: [
-        { id: 1, type: "pencil", length: 175, color: "#F9D17B", x: 427 - 62, y: 200 },
-        { id: 2, type: "pencil", length: 70, color: "#F9D17B", x: 427 + 62, y: 200 },
+        { id: 1, type: "pencil", length: 175, width: 62, color: "#F9D17B", x: 427 - 62, y: 200 },
+        { id: 2, type: "pencil", length: 70, width: 62, color: "#F9D17B", x: 427 + 62, y: 200 },
       ],
       rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
     },
@@ -146,8 +147,8 @@ export const gameData: InteractiveGameData[][] = [
         }
       ],
       objects: [
-        { id: 1, type: "pencil", length: 70, color: "#F9D17B", x: 427 - 62, y: 200 },
-        { id: 2, type: "pencil", length: 175, color: "#F9D17B", x: 427 + 62, y: 200 },
+        { id: 1, type: "pencil", length: 70, width: 62, color: "#F9D17B", x: 427 - 62, y: 200 },
+        { id: 2, type: "pencil", length: 175, width: 62, color: "#F9D17B", x: 427 + 62, y: 200 },
       ],
       rule: { type: "dropOnObject", answers: [{ objectId: 2, targetObjectId: "spirit" }] },
     },
@@ -161,8 +162,8 @@ export const gameData: InteractiveGameData[][] = [
         }
       ],
       objects: [
-        { id: 1, type: "pencil", length: 160, color: "#F9D17B", x: 427 - 62, y: 200 },
-        { id: 2, type: "pencil", length: 70, color: "#F9D17B", x: 427 + 62, y: 200 },
+        { id: 1, type: "pencil", length: 160, width: 62, color: "#F9D17B", x: 427 - 62, y: 200 },
+        { id: 2, type: "pencil", length: 70, width: 62, color: "#F9D17B", x: 427 + 62, y: 200 },
       ],
       rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
     },
@@ -176,8 +177,8 @@ export const gameData: InteractiveGameData[][] = [
         }
       ],
       objects: [
-        { id: 1, type: "pencil", length: 160, color: "#F9D17B", x: 427 - 62, y: 200 },
-        { id: 2, type: "pencil", length: 90, color: "#F9D17B", x: 427 + 62, y: 200 },
+        { id: 1, type: "pencil", length: 160, width: 62, color: "#F9D17B", x: 427 - 62, y: 200 },
+        { id: 2, type: "pencil", length: 90, width: 62, color: "#F9D17B", x: 427 + 62, y: 200 },
       ],
       rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
     },
@@ -191,8 +192,8 @@ export const gameData: InteractiveGameData[][] = [
         }
       ],
       objects: [
-        { id: 1, type: "pencil", orientation: "horizontal", length: 160, color: "#F9D17B", x: 427 + 80, y: 200 },
-        { id: 2, type: "pencil", orientation: "horizontal", length: 90, color: "#F9D17B", x: 427 + 80, y: 300 },
+        { id: 1, type: "pencil", orientation: "horizontal", length: 160, width: 62, color: "#F9D17B", x: 427 + 80, y: 200 },
+        { id: 2, type: "pencil", orientation: "horizontal", length: 90, width: 62, color: "#F9D17B", x: 427 + 80, y: 300 },
       ],
       rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
     },
@@ -206,8 +207,8 @@ export const gameData: InteractiveGameData[][] = [
         }
       ],
       objects: [
-        { id: 1, type: "pencil", orientation: "horizontal", length: 90, color: "#F9D17B", x: 427 + 80, y: 200 },
-        { id: 2, type: "pencil", orientation: "horizontal", length: 160, color: "#F9D17B", x: 427 + 80, y: 300 },
+        { id: 1, type: "pencil", orientation: "horizontal", length: 90, width: 62, color: "#F9D17B", x: 427 + 80, y: 200 },
+        { id: 2, type: "pencil", orientation: "horizontal", length: 160, width: 62, color: "#F9D17B", x: 427 + 80, y: 300 },
       ],
       rule: { type: "dropOnObject", answers: [{ objectId: 2, targetObjectId: "spirit" }] },
     },
@@ -221,8 +222,8 @@ export const gameData: InteractiveGameData[][] = [
         }
       ],
       objects: [
-        { id: 1, type: "pencil", orientation: "horizontal", length: 90, color: "#F9D17B", x: 427 + 58, y: 200 },
-        { id: 2, type: "pencil", orientation: "horizontal", length: 115, color: "#F9D17B", x: 427 + 58, y: 300 },
+        { id: 1, type: "pencil", orientation: "horizontal", length: 90, width: 62, color: "#F9D17B", x: 427 + 58, y: 200 },
+        { id: 2, type: "pencil", orientation: "horizontal", length: 115, width: 62, color: "#F9D17B", x: 427 + 58, y: 300 },
       ],
       rule: { type: "dropOnObject", answers: [{ objectId: 2, targetObjectId: "spirit" }] },
     },
@@ -236,8 +237,8 @@ export const gameData: InteractiveGameData[][] = [
         }
       ],
       objects: [
-        { id: 1, type: "pencil", length: 90, color: "#F9D17B", x: 427 - 62, y: 200 },
-        { id: 2, type: "pencil", length: 115, color: "#F9D17B", x: 427 + 62, y: 200 },
+        { id: 1, type: "pencil", length: 90, width: 62, color: "#F9D17B", x: 427 - 62, y: 200 },
+        { id: 2, type: "pencil", length: 115, width: 62, color: "#F9D17B", x: 427 + 62, y: 200 },
       ],
       rule: { type: "dropOnObject", answers: [{ objectId: 2, targetObjectId: "spirit" }] }
     },
@@ -251,8 +252,8 @@ export const gameData: InteractiveGameData[][] = [
         }
       ],
       objects: [
-        { id: 1, type: "pencil", length: 105, color: "#F9D17B", x: 427 - 62, y: 200 },
-        { id: 2, type: "pencil", length: 90, color: "#F9D17B", x: 427 + 62, y: 200 },
+        { id: 1, type: "pencil", length: 105, width: 62, color: "#F9D17B", x: 427 - 62, y: 200 },
+        { id: 2, type: "pencil", length: 90, width: 62, color: "#F9D17B", x: 427 + 62, y: 200 },
       ],
       rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
     },
@@ -266,8 +267,8 @@ export const gameData: InteractiveGameData[][] = [
         }
       ],
       objects: [
-        { id: 1, type: "pencil", length: 90, color: "#F9D17B", x: 427 - 62, y: 200 },
-        { id: 2, type: "pencil", length: 85, color: "#F9D17B", x: 427 + 62, y: 200 },
+        { id: 1, type: "pencil", length: 90, width: 62, color: "#F9D17B", x: 427 - 62, y: 200 },
+        { id: 2, type: "pencil", length: 85, width: 62, color: "#F9D17B", x: 427 + 62, y: 200 },
       ],
       rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] }
     },
@@ -351,8 +352,8 @@ export const gameData: InteractiveGameData[][] = [
           </svg>
           , x: 427 - 143, y: 120
         },
-        { id: 3, type: "pencil", orientation: "horizontal", fixed: true, length: 159, color: "#F9D17B", x: 220, y: 330 },
-        { id: 2, type: "pencil", orientation: "horizontal", length: 159, color: "#F9D17B", x: 220, y: 330 },
+        { id: 3, type: "pencil", orientation: "horizontal", fixed: true, length: 159, width: 62, color: "#F9D17B", x: 220, y: 330 },
+        { id: 2, type: "pencil", orientation: "horizontal", length: 159, width: 62, color: "#F9D17B", x: 220, y: 330 },
       ],
       rule: { type: "snapToPosition", answers: [{ objectId: 2, position: { x: 427 + 17, y: 127 } }] }
     },
@@ -386,8 +387,8 @@ export const gameData: InteractiveGameData[][] = [
           </svg>
           , x: 427 - 159, y: 200
         },
-        { id: 3, type: "pencil", orientation: "horizontal", length: 159, color: "#F9D17B", x: 220, y: 330 },
-        { id: 2, type: "pencil", orientation: "horizontal", fixed: true, length: 159, color: "#F9D17B", x: 427 + 17, y: 127 },
+        { id: 3, type: "pencil", orientation: "horizontal", length: 159, width: 62, color: "#F9D17B", x: 220, y: 330 },
+        { id: 2, type: "pencil", orientation: "horizontal", fixed: true, length: 159, width: 62, color: "#F9D17B", x: 427 + 17, y: 127 },
       ],
       rule: { type: "snapToPosition", answers: [{ objectId: 3, position: { x: 427 + 176, y: 127 } }] }
     },
@@ -425,8 +426,8 @@ export const gameData: InteractiveGameData[][] = [
           </svg>
           , x: 427 - 159, y: 200
         },
-        { id: 3, type: "pencil", orientation: "horizontal", fixed: true, length: 159, color: "#F9D17B", x: 427 + 17, y: 127 },
-        { id: 2, type: "pencil", orientation: "horizontal", fixed: true, length: 159, color: "#F9D17B", x: 427 + 176, y: 127 },
+        { id: 3, type: "pencil", orientation: "horizontal", fixed: true, length: 159, width: 62, color: "#F9D17B", x: 427 + 17, y: 127 },
+        { id: 2, type: "pencil", orientation: "horizontal", fixed: true, length: 159, width: 62, color: "#F9D17B", x: 427 + 176, y: 127 },
       ],
       rule: { type: "lastDialogue" }
     },
@@ -466,11 +467,11 @@ export const gameData: InteractiveGameData[][] = [
           </svg>
           , x: 427 - 143, y: 120
         },
-        { id: 4, type: "pencil", orientation: "horizontal", fixed: true, length: 106, color: "#89C8E7", x: 220, y: 330 },
-        { id: 3, type: "pencil", orientation: "horizontal", fixed: true, length: 106, color: "#89C8E7", x: 220, y: 330 },
-        { id: 2, type: "pencil", orientation: "horizontal", length: 106, color: "#89C8E7", x: 220, y: 330 },
+        { id: 4, type: "pencil", orientation: "horizontal", fixed: true, length: 106, width: 62, color: "#89C8E7", x: 220, y: 330 },
+        { id: 3, type: "pencil", orientation: "horizontal", fixed: true, length: 106, width: 62, color: "#89C8E7", x: 220, y: 330 },
+        { id: 2, type: "pencil", orientation: "horizontal", length: 106, width: 62, color: "#89C8E7", x: 220, y: 330 },
       ],
-      rule: { type: "snapToPosition", answers: [{ objectId: 2, position: { x: 427 - 37 , y: 127 } }] },
+      rule: { type: "snapToPosition", answers: [{ objectId: 2, position: { x: 427 - 37, y: 127 } }] },
     },
     {
       interaction: 6,
@@ -502,9 +503,9 @@ export const gameData: InteractiveGameData[][] = [
           </svg>
           , x: 427 - 159, y: 200
         },
-        { id: 4, type: "pencil", orientation: "horizontal", length: 106, color: "#89C8E7", x: 220, y: 330 },
-        { id: 3, type: "pencil", orientation: "horizontal", length: 106, color: "#89C8E7", x: 220, y: 330 },
-        { id: 2, type: "pencil", orientation: "horizontal", fixed: true, length: 106, color: "#89C8E7", x: 427 - 37, y: 127 },
+        { id: 4, type: "pencil", orientation: "horizontal", length: 106, width: 62, color: "#89C8E7", x: 220, y: 330 },
+        { id: 3, type: "pencil", orientation: "horizontal", length: 106, width: 62, color: "#89C8E7", x: 220, y: 330 },
+        { id: 2, type: "pencil", orientation: "horizontal", fixed: true, length: 106, width: 62, color: "#89C8E7", x: 427 - 37, y: 127 },
       ],
       rule: { type: "snapToPosition", answers: [{ objectId: 3, position: { x: 427 - 37 + 106, y: 127 } }, { objectId: 4, position: { x: 427 - 37 + 106 * 2, y: 127 } }] },
     },
@@ -546,9 +547,9 @@ export const gameData: InteractiveGameData[][] = [
           </svg>
           , x: 427 - 159, y: 200
         },
-        { id: 4, type: "pencil", orientation: "horizontal", length: 106, fixed: true, color: "#89C8E7", x: 427 - 37 + 106 * 2, y: 127 },
-        { id: 3, type: "pencil", orientation: "horizontal", length: 106, fixed: true, color: "#89C8E7", x: 427 - 37 + 106, y: 127 },
-        { id: 2, type: "pencil", orientation: "horizontal", length: 106, fixed: true, color: "#89C8E7", x: 427 - 37, y: 127 },
+        { id: 4, type: "pencil", orientation: "horizontal", length: 106, width: 62, fixed: true, color: "#89C8E7", x: 427 - 37 + 106 * 2, y: 127 },
+        { id: 3, type: "pencil", orientation: "horizontal", length: 106, width: 62, fixed: true, color: "#89C8E7", x: 427 - 37 + 106, y: 127 },
+        { id: 2, type: "pencil", orientation: "horizontal", length: 106, width: 62, fixed: true, color: "#89C8E7", x: 427 - 37, y: 127 },
       ],
       rule: { type: "lastDialogue" },
     },
@@ -566,8 +567,8 @@ export const gameData: InteractiveGameData[][] = [
         },
       ],
       objects: [
-        { id: 1, type: "pencil", orientation: "horizontal", length: 159, fixed: true, color: "#F9D17B", x: 500, y: 230 },
-        { id: 2, type: "pencil", orientation: "horizontal", length: 106, fixed: true, color: "#89C8E7", x: 500, y: 320 },
+        { id: 1, type: "pencil", orientation: "horizontal", length: 159, width: 62, fixed: true, color: "#F9D17B", x: 500, y: 230 },
+        { id: 2, type: "pencil", orientation: "horizontal", length: 106, width: 62, fixed: true, color: "#89C8E7", x: 500, y: 320 },
       ],
       rule: { type: "lastDialogue" },
     },
@@ -592,7 +593,7 @@ export const gameData: InteractiveGameData[][] = [
         },
       ],
       objects: [
-        { id: 1, type: "pencil", orientation: "horizontal", length: 79.5, color: "#E8E2F8", x: 500, y: 230 },
+        { id: 1, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8", x: 500, y: 230 },
       ],
       rule: { type: "lastDialogue" },
     },
@@ -626,8 +627,34 @@ export const gameData: InteractiveGameData[][] = [
           </svg>
           , x: 427 - 159, y: 200
         },
+        {
+          id: 2, type: "spawner", spawnObject: { type: "pencil", orientation: "horizontal", length: 80, width: 40, color: "#E8E2F8" }, spawnIcons:
+            <svg width="149" height="69" viewBox="0 0 149 69" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M78.4911 45.2119C79.0037 45.6123 79.0037 46.3877 78.4911 46.7881L55.6156 64.6566C54.959 65.1695 54 64.7017 54 63.8685V28.1315C54 27.2983 54.959 26.8305 55.6156 27.3434L78.4911 45.2119Z" fill="#FFECC3" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M79.5 46.0001L70.5 52.3741V39.6262L79.5 46.0001Z" fill="black" />
+              <path d="M53.5 65H12C5.92487 65 1 60.0751 1 54V38C1 31.9249 5.92487 27 12 27L53.5 27V65Z" fill="#E8E2F8" />
+              <path d="M53.5 65H12C5.92487 65 1 60.0751 1 54V38C1 31.9249 5.92487 27 12 27L53.5 27V65Z" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M147.491 45.2119C148.004 45.6123 148.004 46.3877 147.491 46.7881L124.616 64.6566C123.959 65.1695 123 64.7017 123 63.8685V28.1315C123 27.2983 123.959 26.8305 124.616 27.3434L147.491 45.2119Z" fill="#FFECC3" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M148.5 46.0001L139.5 52.3741V39.6262L148.5 46.0001Z" fill="black" />
+              <path d="M122.5 65H81C74.9249 65 70 60.0751 70 54V38C70 31.9249 74.9249 27 81 27L122.5 27V65Z" fill="#E8E2F8" />
+              <path d="M122.5 65H81C74.9249 65 70 60.0751 70 54V38C70 31.9249 74.9249 27 81 27L122.5 27V65Z" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M118.491 22.2119C119.004 22.6123 119.004 23.3877 118.491 23.7881L95.6156 41.6566C94.959 42.1695 94 41.7017 94 40.8685V5.13145C94 4.29834 94.959 3.83053 95.6156 4.34338L118.491 22.2119Z" fill="#FFECC3" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M119.5 23.0001L110.5 29.3741V16.6262L119.5 23.0001Z" fill="black" />
+              <path d="M93.5 42H52C45.9249 42 41 37.0751 41 31V15C41 8.92487 45.9249 4 52 4L93.5 4V42Z" fill="#E8E2F8" />
+              <path d="M93.5 42H52C45.9249 42 41 37.0751 41 31V15C41 8.92487 45.9249 4 52 4L93.5 4V42Z" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M118.491 22.2119C119.004 22.6123 119.004 23.3877 118.491 23.7881L95.6156 41.6566C94.959 42.1695 94 41.7017 94 40.8685V5.13145C94 4.29834 94.959 3.83053 95.6156 4.34338L118.491 22.2119Z" fill="#FFECC3" stroke="black" stroke-width="2" stroke-linecap="round" />
+              <path d="M119.5 23.0001L110.5 29.3741V16.6262L119.5 23.0001Z" fill="black" />
+              <path d="M93.5 42H52C45.9249 42 41 37.0751 41 31V15C41 8.92487 45.9249 4 52 4L93.5 4V42Z" fill="#E8E2F8" />
+              <path d="M93.5 42H52C45.9249 42 41 37.0751 41 31V15C41 8.92487 45.9249 4 52 4L93.5 4V42Z" stroke="black" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          , x: 50, y: 300
+        },
       ],
-      rule: { type: "lastDialogue" },
+      rule: {
+        type: "snapObjectWithThisPropertiesToPosition", answers: [{
+          objectProperties: { type: "pencil", orientation: "horizontal", length: 80, width: 40, color: "#E8E2F8" }, position: { x: 427 - 159, y: 200 },
+        }]
+      },
     },
   ],
 ]
