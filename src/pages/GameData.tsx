@@ -26,6 +26,7 @@ export interface StickData extends ObjectBaseData {
   type: "stick";
   length: number;
   width: number;
+  orientation?: "horizontal" | "vertical";
 }
 export interface OtherObjectData extends ObjectBaseData {
   type: "other";
@@ -34,7 +35,7 @@ export interface OtherObjectData extends ObjectBaseData {
 export interface ObjectSpawner extends ObjectBaseData {
   type: "spawner";
   fixed?: true;
-  spawnObject: Omit<PencilData, "id" | "x" | "y" | "fixed"> | Omit<OtherObjectData, "id" | "x" | "y" | "fixed">;
+  spawnObject: Omit<PencilData, "id" | "x" | "y" | "fixed"> | Omit<StickData, "id" | "x" | "y" | "fixed"> | Omit<OtherObjectData, "id" | "x" | "y" | "fixed">;
   spawnIcon?: React.ReactNode;
 }
 export interface Message extends ObjectBaseData {
@@ -68,7 +69,7 @@ export interface CheckAnswerSnapToPosition {
 export interface CheckAnswerSnapObjectWithThisPropertiesToPosition {
   type: "snapObjectWithThisPropertiesToPosition";
   answers: {
-    objectProperties: Omit<PencilData, "id" | "x" | "y" | "fixed"> | Omit<OtherObjectData, "id" | "x" | "y" | "fixed">;
+    objectProperties: Omit<PencilData, "id" | "x" | "y" | "fixed"> | Omit<StickData, "id" | "x" | "y" | "fixed"> | Omit<OtherObjectData, "id" | "x" | "y" | "fixed">;
     position: { x: number; y: number };
   }[]
 }

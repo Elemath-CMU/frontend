@@ -6,6 +6,7 @@ import BorderedButton from "../components/button/BorderedButton";
 import { gameData, type CheckAnswerRule, type DialogueData, type InteractiveGameData, type ObjectData, type PencilData } from "./GameData";
 import useAuth from "../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
+import Stick from "../components/Stick";
 
 function Game() {
   useGameController();
@@ -474,6 +475,9 @@ function Game() {
         {objects.map(obj => {
           if (obj.type === "pencil") {
             return <Pencil key={obj.id} id={obj.id} length={obj.length} width={obj.width} color={obj.color} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} orientation={obj.orientation ? (obj.orientation == "vertical" ? "up" : "right") : undefined} fixed={obj.fixed} />;
+          }
+          if (obj.type === "stick") {
+            return <Stick key={obj.id} id={obj.id} length={obj.length} width={obj.width} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} orientation={obj.orientation} fixed={obj.fixed} />;
           }
           if (obj.type === "other") {
             return (

@@ -255,13 +255,29 @@ export const ep3: InteractiveGameData[] = [
       },
     ],
     objects: [
+      { id: 1, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 80 / 2, y: 180 },
+    ],
+    rule: { type: "lastDialogue" },
+  },
+  {
+    interaction: 10,
+    type: "playground",
+    dialogues: [
       {
-        id: 1, type: "other", fixed: true, svg:
-          <svg width="139" height="90" viewBox="0 0 139 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="1" y="1" width="136.25" height="87.75" stroke="#E04559" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="4 6" />
-          </svg>
-        , x: 55, y: 290
+        text: "ไม้นี้เป็นไม้ที่มีความยาวเท่ากับดินสอแท่งเมื่อกี้ล่ะ",
+        canClickNext: true
       },
+    ],
+    objects: [
+      { id: 1, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 80 / 2, y: 180 },
+      { id: 2, type: "pencil", orientation: "horizontal", length: 80, width: 40, fixed: true, color: "#E8E2F8", x: 458 + 80 / 2, y: 240 },
+      {
+        id: 3, type: "other", fixed: true, svg:
+          <svg width="82" height="48" viewBox="0 0 82 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="80.5" y="1" width="46" height="79.5" transform="rotate(90 80.5 1)" stroke="#E04559" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="4 6" />
+          </svg>
+        , x: 458 - 80 / 2 - 1, y: 236
+      }
     ],
     rule: { type: "lastDialogue" },
   },
