@@ -1,6 +1,7 @@
 import { ep1 } from "./GameDataEP1";
 import { ep2 } from "./GameDataEP2";
 import { ep3 } from "./GameDataEP3";
+import { ep4 } from "./GameDataEP4";
 
 export interface DialogueData {
   text: string | React.ReactNode;
@@ -107,4 +108,5 @@ export const gameData: InteractiveGameData[][] = [
   ep1,
   ep2,
   ep3,
+  ep4,
 ]
