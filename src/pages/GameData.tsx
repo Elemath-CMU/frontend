@@ -28,6 +28,8 @@ export interface StickData extends ObjectBaseData {
   length: number;
   width: number;
   orientation?: "horizontal" | "vertical";
+  cutLeft?: boolean;
+  cutRight?: boolean;
 }
 export interface OtherObjectData extends ObjectBaseData {
   type: "other";
