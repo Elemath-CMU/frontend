@@ -86,7 +86,7 @@ function Game() {
     if (obj.type === "pencil") {
       objWidth = obj.width;
       objHeight = obj.length;
-      
+
       if (obj.orientation === "horizontal") {
         // When rotated 90°, swap dimensions and adjust position
         [objWidth, objHeight] = [objHeight, objWidth];
@@ -364,10 +364,7 @@ function Game() {
               return false;
             }
           } else if (draggedObject.type === "stick" && answer.objectProperties.type === "stick") {
-            if (draggedObject.length === answer.objectProperties.length &&
-              draggedObject.cutLeft === answer.objectProperties.cutLeft &&
-              draggedObject.cutRight === answer.objectProperties.cutRight
-            ) {
+            if (draggedObject.length === answer.objectProperties.length) {
               answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
               setDraggedObject(null);
               return false;

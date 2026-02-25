@@ -56,7 +56,7 @@ export const ep4: InteractiveGameData[] = [
         id: 2, type: "other", fixed: true, svg: stickGroupSVG, x: 50, y: 280
       },
       {
-        id: 3, type: "stick", fixed: true, length: 80, width: 36, cutRight: true, x: 458 - 140, y: 160
+        id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
       }
     ],
     rule: {
@@ -153,7 +153,7 @@ export const ep4: InteractiveGameData[] = [
     }
   },
   {
-    interaction: 3,
+    interaction: 5,
     type: "playground",
     dialogues: [
       {
@@ -192,7 +192,7 @@ export const ep4: InteractiveGameData[] = [
     rule: { type: "lastDialogue" }
   },
   {
-    interaction: 4,
+    interaction: 6,
     type: "playground",
     dialogues: [
       {
@@ -226,32 +226,119 @@ export const ep4: InteractiveGameData[] = [
     }
   },
   {
-    interaction: 5,
+    interaction: 7,
     type: "playground",
     dialogues: [
       {
-        text: "ลากกรรไกรไปที่แท่งไม้เพื่อตัดได้เลยนะ!",
+        text: "ใช่แล้ว! ถ้าแบ่งครึ่ง ต้องตัดเป็น 2 ส่วนที่เท่ากันแบบนี้!",
+        canClickNext: true,
+      },
+    ],
+    objects: [
+      { id: 1, type: "stick", fixed: true, length: 40, width: 36, cutRight: true, x: 458 - 80 / 2 - 5, y: 220 },
+      { id: 2, type: "stick", fixed: true, length: 40, width: 36, cutLeft: true, x: 458 + 80 / 2 - 40 + 5, y: 220 },
+    ],
+    rule: { type: "lastDialogue" }
+  },
+  {
+    interaction: 8,
+    type: "playground",
+    dialogues: [
+      {
+        text: "ถ้าเราเอามาเทียบกัน ก็จะเห็นว่ามันเท่ากันเป๊ะเลย",
+        canClickNext: true,
+      },
+    ],
+    objects: [
+      { id: 1, type: "stick", fixed: true, length: 40, width: 36, cutRight: true, x: 458 - 40 / 2, y: 220 },
+      { id: 2, type: "stick", fixed: true, length: 40, width: 36, cutLeft: true, x: 458 - 40 / 2, y: 270 },
+    ],
+    rule: { type: "lastDialogue" }
+  },
+  {
+    interaction: 9,
+    type: "playground",
+    dialogues: [
+      {
+        text: "ทีนี้เธอลองเอาแท่งไม้ที่แบ่งครึ่งเมื้อกี้มาวัดต่อสิ",
         canClickNext: false,
       },
     ],
     objects: [
-      { id: 1, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 80 / 2, y: 220 },
       {
-        id: 2, type: "other", svg: <svg width="76" height="140" viewBox="0 0 76 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="0" y="0" width="76" height="140" fill="none" stroke="red" strokeWidth="2"/>
-          <line x1="39.5" y1="1.5" x2="39.5" y2="74.5" stroke="black" strokeWidth="3" strokeLinecap="round" />
-          <path d="M51.076 84.036L28.5432 116.966C27.6578 116.698 26.7377 116.562 25.8127 116.563C23.6918 116.562 21.6334 117.281 19.9738 118.602C18.3143 119.923 17.1515 121.767 16.6756 123.834C16.1997 125.901 16.4387 128.068 17.3535 129.981C18.2683 131.895 19.805 133.442 21.7125 134.369C23.6199 135.296 25.7855 135.549 27.8554 135.087C29.9253 134.625 31.7773 133.474 33.1088 131.823C34.4403 130.172 35.1727 128.119 35.1863 125.998C35.2 123.877 34.494 121.814 33.1838 120.146L38.0025 113.115L42.8213 120.146C41.7052 121.567 41.0234 123.279 40.8577 125.078C40.692 126.877 41.0496 128.686 41.8875 130.286C42.7253 131.887 44.0077 133.211 45.5804 134.1C47.1531 134.989 48.9492 135.404 50.7524 135.296C52.5557 135.189 54.2895 134.562 55.7451 133.492C57.2008 132.422 58.3163 130.955 58.9576 129.266C59.5989 127.577 59.7386 125.739 59.3599 123.973C58.9811 122.206 58.1001 120.587 56.8229 119.309C55.9538 118.435 54.9197 117.742 53.7807 117.271C52.6417 116.799 51.4204 116.558 50.1877 116.563C49.2619 116.562 48.3411 116.698 47.4549 116.966L41.408 108.125L55.719 87.2141C55.9276 86.9092 56.0742 86.5662 56.1503 86.2047C56.2265 85.8432 56.2307 85.4702 56.1626 85.1071C56.0946 84.744 55.9558 84.3978 55.754 84.0884C55.5522 83.7789 55.2914 83.5122 54.9865 83.3035C54.6817 83.0949 54.3387 82.9483 53.9772 82.8721C53.6157 82.796 53.2427 82.7918 52.8796 82.8598C52.5164 82.9279 52.1703 83.0667 51.8608 83.2685C51.5513 83.4703 51.2847 83.7311 51.076 84.036ZM52.8432 123.287C53.4563 123.9 53.8378 124.707 53.9227 125.571C54.0075 126.434 53.7905 127.3 53.3086 128.021C52.8266 128.742 52.1096 129.274 51.2795 129.526C50.4495 129.778 49.5578 129.734 48.7564 129.402C47.9549 129.071 47.2933 128.471 46.8841 127.706C46.4749 126.942 46.3435 126.059 46.5123 125.208C46.6811 124.357 47.1396 123.591 47.8098 123.04C48.48 122.49 49.3203 122.188 50.1877 122.188C50.6809 122.187 51.1693 122.284 51.6249 122.473C52.0806 122.661 52.4946 122.938 52.8432 123.287ZM28.4611 128.588C27.9368 129.113 27.2686 129.47 26.5411 129.615C25.8136 129.76 25.0595 129.686 24.3741 129.402C23.6888 129.119 23.1029 128.638 22.6908 128.021C22.2786 127.404 22.0586 126.679 22.0586 125.938C22.0586 125.196 22.2786 124.471 22.6908 123.854C23.1029 123.237 23.6888 122.756 24.3741 122.473C25.0595 122.189 25.8136 122.115 26.5411 122.26C27.2686 122.405 27.9368 122.762 28.4611 123.287C29.1639 123.99 29.5586 124.943 29.5586 125.938C29.5586 126.932 29.1639 127.885 28.4611 128.588ZM33.908 102.146C33.6032 102.355 33.2602 102.501 32.8988 102.577C32.5373 102.653 32.1644 102.657 31.8014 102.589C31.4384 102.521 31.0923 102.382 30.783 102.18C30.4737 101.978 30.2072 101.717 29.9986 101.413L20.2815 87.2141C19.86 86.5984 19.7004 85.8405 19.8378 85.1071C19.9751 84.3738 20.3982 83.725 21.0139 83.3035C21.6296 82.8821 22.3875 82.7225 23.1208 82.8598C23.8542 82.9972 24.503 83.4203 24.9244 84.036L34.6416 98.2367C34.8501 98.5416 34.9966 98.8845 35.0726 99.246C35.1486 99.6075 35.1526 99.9803 35.0845 100.343C35.0164 100.706 34.8774 101.052 34.6756 101.362C34.4737 101.671 34.2129 101.938 33.908 102.146Z" fill="black" />
-        </svg>
-        , x: 458 + 200, y: 200
+        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
       },
-      // dot for debug bounds
-      // {
-      //   id: 10001, type: "other", svg: <circle cx="0" cy="0" r="4" fill="red" />, x: 458 - 80 / 2 - 2, y: 170
-      // },
-      // {
-      //   id: 10002, type: "other", svg: <circle cx="0" cy="0" r="4" fill="red" />, x: 458 - 80 / 2 + 80, y: 170 + 200
-      // },
+      {
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+      },
+      {
+        id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
+      },
+      {
+        id: 4, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140 + 80, y: 160
+      },
+      {
+        id: 5, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140 + 80 * 2, y: 160
+      },
+      {
+        id: 6, type: "stick", length: 40, width: 36, cutRight: true, x: 650, y: 250
+      },
+      {
+        id: 7, type: "stick", length: 40, width: 36, cutLeft: true, x: 650, y: 290
+      },
+    ],
+    rule: {
+      type: "snapObjectWithThisPropertiesToPosition",
+      answers: [
+        { objectProperties: { type: "stick", length: 40, width: 36 }, position: { x: 458 - 140 + 80 * 3, y: 160 } },
+      ]
+    }
+  },
+  {
+    interaction: 10,
+    type: "playground",
+    dialogues: [
+      {
+        text: "ลองวัดแล้วหนังสือมีความยาวเท่าไหร่นะ?",
+        canClickNext: true,
+      },
+      {
+        text: "วัดเสร็จแล้ว! หนังสือนี้ยาว 3 แท่งไม้ กับอีกครึ่งแท่งไม้นี่เอง!",
+        canClickNext: true,
+      }
+    ],
+    objects: [
+      {
+        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+      },
+      {
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+      },
+      {
+        id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
+      },
+      {
+        id: 4, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140 + 80, y: 160
+      },
+      {
+        id: 5, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140 + 80 * 2, y: 160
+      },
+      {
+        id: 6, type: "stick", fixed: true, length: 40, width: 36, cutRight: true, x: 458 - 140 + 80 * 3, y: 160
+      },
+      {
+        id: 7, type: "stick", fixed: true, length: 40, width: 36, cutLeft: true, x: 650, y: 290
+      },
     ],
     rule: { type: "lastDialogue" }
+  },
+  {
+    interaction: 11,
+    type: "checkpoint",
+    text: <div>
+      <p>ตอนนี้เราก็รู้แล้วว่าครึ่งคืออะไร แถมยังรู้ด้วยว่าความยาว</p>
+      <br />
+      <p>ไม่จำเป็นต้องเป็นจำนวนเต็มตลอด ตอนนี้เธออยากพักก่อนมั้ย?</p>
+    </div>,
   },
 ]
