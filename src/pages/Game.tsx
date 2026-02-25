@@ -286,13 +286,6 @@ function Game() {
           draggedBounds.y >= answer.area.y &&
           draggedBounds.x + draggedBounds.width <= answer.area.x + answer.area.width &&
           draggedBounds.y + draggedBounds.height <= answer.area.y + answer.area.height;
-          
-        console.log("checking drop inside area")
-        console.log(draggedBounds.x, ">=", answer.area.x, "is", draggedBounds.x >= answer.area.x);
-        console.log(draggedBounds.y, ">=", answer.area.y, "is", draggedBounds.y >= answer.area.y);
-        console.log(draggedBounds.x + draggedBounds.width, "<=", answer.area.x + answer.area.width, "is", draggedBounds.x + draggedBounds.width <= answer.area.x + answer.area.width);
-        console.log(draggedBounds.y + draggedBounds.height, "<=", answer.area.y + answer.area.height, "is", draggedBounds.y + draggedBounds.height <= answer.area.y + answer.area.height);
-        console.log("isCorrect:", isCorrect);
 
         if (isCorrect) {
           usedObjectIds.add(draggedObject.id);
