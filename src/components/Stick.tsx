@@ -4,19 +4,18 @@ export interface StickProps {
   width: number;
   x: number;
   y: number;
-  orientation?: 'horizontal' | 'vertical';
+  cutLeft?: boolean;
+  cutRight?: boolean;
   fixed?: boolean;
   onMouseDown?: React.MouseEventHandler<SVGGElement>;
   onTouchStart?: React.TouchEventHandler<SVGGElement>;
 }
 
-function Stick({ id: key, length, width, x, y, orientation, fixed, onMouseDown, onTouchStart }: StickProps) {
-  const rotation = orientation === 'vertical' ? `rotate(90) translate(0, -${length})` : '';
-
+function Stick({ id: key, length, width, x, y, cutLeft, cutRight, fixed, onMouseDown, onTouchStart }: StickProps) {
   return (
     <g
       key={key}
-      transform={`translate(${x}, ${y}) ${rotation}`}
+      transform={`translate(${x}, ${y})`}
       fill="none"
       onMouseDown={fixed ? undefined : onMouseDown}
       onTouchStart={fixed ? undefined : onTouchStart}

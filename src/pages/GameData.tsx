@@ -27,7 +27,8 @@ export interface StickData extends ObjectBaseData {
   type: "stick";
   length: number;
   width: number;
-  orientation?: "horizontal" | "vertical";
+  cutLeft?: boolean;
+  cutRight?: boolean;
 }
 export interface OtherObjectData extends ObjectBaseData {
   type: "other";
@@ -60,6 +61,13 @@ export interface CheckAnswerDropOnArea {
     area: { x: number; y: number; width: number; height: number };
   }[]
 }
+export interface CheckAnswerDropInsideArea {
+  type: "dropInsideArea";
+  answers: {
+    objectId: number | string;
+    area: { x: number; y: number; width: number; height: number };
+  }[]
+}
 export interface CheckAnswerSnapToPosition {
   type: "snapToPosition";
   answers: {
@@ -77,7 +85,7 @@ export interface CheckAnswerSnapObjectWithThisPropertiesToPosition {
 export interface CheckAnswerLastDialogue {
   type: "lastDialogue";
 }
-export type CheckAnswerRule = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerSnapToPosition | CheckAnswerSnapObjectWithThisPropertiesToPosition | CheckAnswerLastDialogue;
+export type CheckAnswerRule = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerDropInsideArea | CheckAnswerSnapToPosition | CheckAnswerSnapObjectWithThisPropertiesToPosition | CheckAnswerLastDialogue;
 
 export type InteractionType = "playground" | "checkpoint";
 export interface Interaction {

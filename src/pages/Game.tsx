@@ -77,6 +77,46 @@ function Game() {
     return null;
   }, [BOARD_HEIGHT, BOARD_WIDTH, getBoardScale, toBoardPoint]);
 
+  const getObjectBounds = useCallback((obj: ObjectData) => {
+    let objX = obj.x;
+    let objY = obj.y;
+    let objWidth = 62; // default for unknown types
+    let objHeight = 62; // default for unknown types
+
+    if (obj.type === "pencil") {
+      objWidth = obj.width;
+      objHeight = obj.length;
+      
+      if (obj.orientation === "horizontal") {
+        // When rotated 90°, swap dimensions and adjust position
+        [objWidth, objHeight] = [objHeight, objWidth];
+        objX = obj.x - obj.length;
+      }
+    } else if (obj.type === "stick") {
+      objWidth = obj.width;
+      objHeight = obj.length;
+    } else if (obj.type === "other") {
+      // For SVG objects, try to get their actual bounding box
+      const element = document.getElementById(String(obj.id));
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        const topLeft = toBoardPoint(rect.left, rect.top);
+        const { scaleX, scaleY } = getBoardScale();
+        objX = topLeft.x;
+        objY = topLeft.y;
+        objWidth = rect.width * scaleX;
+        objHeight = rect.height * scaleY;
+      }
+    }
+
+    return {
+      x: objX,
+      y: objY,
+      width: objWidth,
+      height: objHeight
+    };
+  }, [getBoardScale, toBoardPoint]);
+
   const onMouseDown = (id: number | string) => (e: React.MouseEvent<SVGGElement>) => {
     const selectedObject = objects.find(o => o.id === id)!;
     const point = toBoardPoint(e.clientX, e.clientY);
@@ -154,19 +194,8 @@ function Game() {
   }, [episodeIndex, interactionIndex, navigate]);
 
   // Check if an object is within bounds of a target
-  const isWithinBounds = (draggedObj: ObjectData, targetX: number, targetY: number, targetWidth: number, targetHeight: number) => {
-    let objX = draggedObj.x;
-    const objY = draggedObj.y;
-
-    let objWidth = 62; // default width for pencil
-    let objHeight = draggedObj.type === "pencil" ? draggedObj.length : 62;
-
-    if (draggedObj.type === "pencil" && draggedObj.orientation === "horizontal") {
-      // When rotated 90°, swap dimensions and adjust position
-      [objWidth, objHeight] = [objHeight, objWidth];
-      // The rotation happens around (0,0), so after 90° rotation, the bounds shift
-      objX = draggedObj.x - draggedObj.length;
-    }
+  const isBoundsOverlap = useCallback((draggedObj: ObjectData, targetX: number, targetY: number, targetWidth: number, targetHeight: number) => {
+    const { x: objX, y: objY, width: objWidth, height: objHeight } = getObjectBounds(draggedObj);
 
     const objRight = objX + objWidth;
     const objBottom = objY + objHeight;
@@ -179,7 +208,7 @@ function Game() {
       objY < targetBottom &&
       objBottom > targetY
     );
-  };
+  }, [getObjectBounds]);
 
   // Main check answer function
   const checkAnswer = useCallback(() => {
@@ -192,7 +221,7 @@ function Game() {
         const targetBounds = getTargetBounds(answer.targetObjectId);
         if (!targetBounds) return true;
 
-        const isCorrect = draggedObject.id === answer.objectId && isWithinBounds(
+        const isCorrect = draggedObject.id === answer.objectId && isBoundsOverlap(
           draggedObject,
           targetBounds.x,
           targetBounds.y,
@@ -222,13 +251,48 @@ function Game() {
       const remainingAnswers = rule.answers.filter((answer) => {
         if (!draggedObject) return true;
 
-        const isCorrect = draggedObject.id === answer.objectId && isWithinBounds(
+        const isCorrect = draggedObject.id === answer.objectId && isBoundsOverlap(
           draggedObject,
           answer.area.x,
           answer.area.y,
           answer.area.width,
           answer.area.height
         );
+
+        if (isCorrect) {
+          usedObjectIds.add(draggedObject.id);
+          setDraggedObject(null);
+          return false;
+        }
+
+        return true;
+      });
+
+      if (remainingAnswers.length !== rule.answers.length) {
+        setRule({ ...rule, answers: remainingAnswers });
+      }
+
+      if (usedObjectIds.size > 0) {
+        setObjects((prevObjects) => prevObjects.filter(o => !usedObjectIds.has(o.id)));
+      }
+    }
+    else if (rule.type === "dropInsideArea") {
+      const usedObjectIds = new Set<number | string>();
+      const remainingAnswers = rule.answers.filter((answer) => {
+        if (!draggedObject) return true;
+        const draggedBounds = getObjectBounds(draggedObject);
+        const isCorrect = draggedObject.id === answer.objectId &&
+          draggedBounds.x >= answer.area.x &&
+          draggedBounds.y >= answer.area.y &&
+          draggedBounds.x + draggedBounds.width <= answer.area.x + answer.area.width &&
+          draggedBounds.y + draggedBounds.height <= answer.area.y + answer.area.height;
+          
+        console.log("checking drop inside area")
+        console.log(draggedBounds.x, ">=", answer.area.x, "is", draggedBounds.x >= answer.area.x);
+        console.log(draggedBounds.y, ">=", answer.area.y, "is", draggedBounds.y >= answer.area.y);
+        console.log(draggedBounds.x + draggedBounds.width, "<=", answer.area.x + answer.area.width, "is", draggedBounds.x + draggedBounds.width <= answer.area.x + answer.area.width);
+        console.log(draggedBounds.y + draggedBounds.height, "<=", answer.area.y + answer.area.height, "is", draggedBounds.y + draggedBounds.height <= answer.area.y + answer.area.height);
+        console.log("isCorrect:", isCorrect);
 
         if (isCorrect) {
           usedObjectIds.add(draggedObject.id);
@@ -308,7 +372,9 @@ function Game() {
             }
           } else if (draggedObject.type === "stick" && answer.objectProperties.type === "stick") {
             if (draggedObject.length === answer.objectProperties.length &&
-              draggedObject.orientation === answer.objectProperties.orientation) {
+              draggedObject.cutLeft === answer.objectProperties.cutLeft &&
+              draggedObject.cutRight === answer.objectProperties.cutRight
+            ) {
               answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
               setDraggedObject(null);
               return false;
@@ -333,7 +399,7 @@ function Game() {
         setRule({ ...rule, answers: remainingAnswers });
       }
     }
-  }, [dialogueIndex, dialogues.length, draggedObject, getTargetBounds, nextInteractionIndex, rule]);
+  }, [dialogueIndex, dialogues.length, draggedObject, getObjectBounds, getTargetBounds, isBoundsOverlap, nextInteractionIndex, rule]);
 
   useEffect(() => {
     if (!currentUser) {
@@ -486,7 +552,7 @@ function Game() {
             return <Pencil key={obj.id} id={obj.id} length={obj.length} width={obj.width} color={obj.color} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} orientation={obj.orientation ? (obj.orientation == "vertical" ? "up" : "right") : undefined} fixed={obj.fixed} />;
           }
           if (obj.type === "stick") {
-            return <Stick key={obj.id} id={obj.id} length={obj.length} width={obj.width} x={obj.x} y={obj.y} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} orientation={obj.orientation} fixed={obj.fixed} />;
+            return <Stick key={obj.id} id={obj.id} length={obj.length} width={obj.width} x={obj.x} y={obj.y} cutLeft={obj.cutLeft} cutRight={obj.cutRight} onMouseDown={onMouseDown(obj.id)} onTouchStart={onTouchStart(obj.id)} fixed={obj.fixed} />;
           }
           if (obj.type === "other") {
             return (
@@ -520,9 +586,10 @@ function Game() {
                         type: "stick",
                         x: point.x - selectedObject.spawnObject.length / 2,
                         y: point.y - selectedObject.spawnObject.width / 2,
+                        cutLeft: selectedObject.spawnObject.cutLeft,
+                        cutRight: selectedObject.spawnObject.cutRight,
                         length: selectedObject.spawnObject.length,
                         width: selectedObject.spawnObject.width,
-                        orientation: selectedObject.spawnObject.orientation,
                       };
                     } else {
                       return;
@@ -559,9 +626,10 @@ function Game() {
                         type: "stick",
                         x: point.x - selectedObject.spawnObject.length / 2,
                         y: point.y - selectedObject.spawnObject.width / 2,
+                        cutLeft: selectedObject.spawnObject.cutLeft,
+                        cutRight: selectedObject.spawnObject.cutRight,
                         length: selectedObject.spawnObject.length,
                         width: selectedObject.spawnObject.width,
-                        orientation: selectedObject.spawnObject.orientation,
                       };
                     } else {
                       return;
