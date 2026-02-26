@@ -2,6 +2,7 @@ import { ep1 } from "./GameDataEP1";
 import { ep2 } from "./GameDataEP2";
 import { ep3 } from "./GameDataEP3";
 import { ep4 } from "./GameDataEP4";
+import { ep5 } from "./GameDataEP5";
 
 export interface DialogueData {
   text: string | React.ReactNode;
@@ -47,45 +48,51 @@ export interface Message extends ObjectBaseData {
 }
 export type ObjectData = PencilData | StickData | OtherObjectData | ObjectSpawner;
 
-export interface CheckAnswerDropOnObject {
+export type CheckAnswerType = "dropOnObject" | "dropOnArea" | "dropInsideArea" | "snapToPosition" | "snapObjectWithThisPropertiesToPosition" | "lastDialogue";
+export interface CheckAnswer {
+  type: CheckAnswerType;
+  nextInteraction: number;
+}
+export interface CheckAnswerDropOnObject extends CheckAnswer {
   type: "dropOnObject";
   answers: {
     objectId: number | string;
     targetObjectId: number | string;
   }[]
 }
-export interface CheckAnswerDropOnArea {
+export interface CheckAnswerDropOnArea extends CheckAnswer {
   type: "dropOnArea";
   answers: {
     objectId: number | string;
     area: { x: number; y: number; width: number; height: number };
   }[]
 }
-export interface CheckAnswerDropInsideArea {
+export interface CheckAnswerDropInsideArea extends CheckAnswer {
   type: "dropInsideArea";
   answers: {
     objectId: number | string;
     area: { x: number; y: number; width: number; height: number };
   }[]
 }
-export interface CheckAnswerSnapToPosition {
+export interface CheckAnswerSnapToPosition extends CheckAnswer {
   type: "snapToPosition";
   answers: {
     objectId: number | string;
     position: { x: number; y: number };
   }[]
 }
-export interface CheckAnswerSnapObjectWithThisPropertiesToPosition {
+export interface CheckAnswerSnapObjectWithThisPropertiesToPosition extends CheckAnswer {
   type: "snapObjectWithThisPropertiesToPosition";
   answers: {
     objectProperties: Omit<PencilData, "id" | "x" | "y" | "fixed"> | Omit<StickData, "id" | "x" | "y" | "fixed"> | Omit<OtherObjectData, "id" | "x" | "y" | "fixed">;
     position: { x: number; y: number };
   }[]
 }
-export interface CheckAnswerLastDialogue {
+export interface CheckAnswerLastDialogue extends CheckAnswer {
   type: "lastDialogue";
 }
-export type CheckAnswerRule = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerDropInsideArea | CheckAnswerSnapToPosition | CheckAnswerSnapObjectWithThisPropertiesToPosition | CheckAnswerLastDialogue;
+export type RuleWithAnswer = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerDropInsideArea | CheckAnswerSnapToPosition | CheckAnswerSnapObjectWithThisPropertiesToPosition;
+export type CheckAnswerRule = RuleWithAnswer | CheckAnswerLastDialogue;
 
 export type InteractionType = "playground" | "checkpoint";
 export interface Interaction {
@@ -117,4 +124,5 @@ export const gameData: InteractiveGameData[][] = [
   ep2,
   ep3,
   ep4,
+  ep5,
 ]

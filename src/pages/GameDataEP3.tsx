@@ -74,7 +74,7 @@ export const ep3: InteractiveGameData[] = [
     objects: [
       { id: 1, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8", x: 500, y: 230 },
     ],
-    rule: { type: "lastDialogue" },
+    rule: { type: "lastDialogue", nextInteraction: 2 },
   },
   {
     interaction: 2,
@@ -101,7 +101,7 @@ export const ep3: InteractiveGameData[] = [
       }
     ],
     rule: {
-      type: "snapObjectWithThisPropertiesToPosition", answers: [{
+      type: "snapObjectWithThisPropertiesToPosition", nextInteraction: 3, answers: [{
         objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 458 - 159 + 79.5, y: 155 },
       }]
     },
@@ -127,7 +127,7 @@ export const ep3: InteractiveGameData[] = [
       }
     ],
     rule: {
-      type: "snapObjectWithThisPropertiesToPosition", answers: [
+      type: "snapObjectWithThisPropertiesToPosition", nextInteraction: 4, answers: [
         { objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 458 - 159 + 79.5 * 2, y: 155 } },
         { objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 458 - 159 + 79.5 * 3, y: 155 } },
         { objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 458 - 159 + 79.5 * 4, y: 155 } },
@@ -160,7 +160,7 @@ export const ep3: InteractiveGameData[] = [
       { id: 6, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 159 + 79.5 * 4, y: 155 },
     ],
     rule: {
-      type: "lastDialogue",
+      type: "lastDialogue", nextInteraction: 5
     },
   },
   {
@@ -188,7 +188,7 @@ export const ep3: InteractiveGameData[] = [
       { id: 5, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8", x: 130 + 70 / 2, y: 325 - 40 / 2 },
     ],
     rule: {
-      type: "snapObjectWithThisPropertiesToPosition", answers: [{
+      type: "snapObjectWithThisPropertiesToPosition", nextInteraction: 6, answers: [{
         objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 458 - 119 + 79.5, y: 255 },
       }]
     },
@@ -211,7 +211,7 @@ export const ep3: InteractiveGameData[] = [
       { id: 4, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 119 + 79.5, y: 255 },
     ],
     rule: {
-      type: "snapObjectWithThisPropertiesToPosition", answers: [
+      type: "snapObjectWithThisPropertiesToPosition", nextInteraction: 7, answers: [
         { objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 458 - 119 + 79.5 * 2, y: 255 } },
         { objectProperties: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, position: { x: 458 - 119 + 79.5 * 3, y: 255 } },
       ]
@@ -238,7 +238,7 @@ export const ep3: InteractiveGameData[] = [
       { id: 3, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 119 + 79.5 * 2, y: 255 },
       { id: 4, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 119 + 79.5 * 3, y: 255 },
     ],
-    rule: { type: "lastDialogue" },
+    rule: { type: "lastDialogue", nextInteraction: 8 },
   },
   {
     interaction: 8,
@@ -258,7 +258,7 @@ export const ep3: InteractiveGameData[] = [
         , x: 55, y: 290
       },
     ],
-    rule: { type: "lastDialogue" },
+    rule: { type: "lastDialogue", nextInteraction: 9 },
   },
   {
     interaction: 9,
@@ -272,7 +272,7 @@ export const ep3: InteractiveGameData[] = [
     objects: [
       { id: 1, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 80 / 2, y: 180 },
     ],
-    rule: { type: "lastDialogue" },
+    rule: { type: "lastDialogue", nextInteraction: 10 },
   },
   {
     interaction: 10,
@@ -294,7 +294,7 @@ export const ep3: InteractiveGameData[] = [
         , x: 458 - 80 / 2 - 1, y: 236
       }
     ],
-    rule: { type: "lastDialogue" },
+    rule: { type: "lastDialogue", nextInteraction: 11 },
   },
   {
     interaction: 11,
@@ -319,7 +319,7 @@ export const ep3: InteractiveGameData[] = [
       { id: 3, type: "spawner", spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280 },
     ],
     rule: {
-      type: "snapObjectWithThisPropertiesToPosition", answers: [{
+      type: "snapObjectWithThisPropertiesToPosition", nextInteraction: 12, answers: [{
         objectProperties: { type: "stick", length: 80, width: 36 }, position: { x: 458 - 119, y: 255 },
       }]
     },
@@ -341,7 +341,7 @@ export const ep3: InteractiveGameData[] = [
       { id: 3, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 119, y: 255 },
     ],
     rule: {
-      type: "snapObjectWithThisPropertiesToPosition", answers: [
+      type: "snapObjectWithThisPropertiesToPosition", nextInteraction: 13, answers: [
         { objectProperties: { type: "stick", length: 80, width: 36 }, position: { x: 458 - 119 + 80, y: 255 } },
         { objectProperties: { type: "stick", length: 80, width: 36 }, position: { x: 458 - 119 + 80 * 2, y: 255 } },
       ]
@@ -369,7 +369,7 @@ export const ep3: InteractiveGameData[] = [
       { id: 4, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 119 + 80, y: 255 },
       { id: 5, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 119 + 80 * 2, y: 255 },
     ],
-    rule: { type: "lastDialogue" },
+    rule: { type: "lastDialogue", nextInteraction: 14 },
   },
   {
     interaction: 14,

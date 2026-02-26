@@ -11,14 +11,14 @@ import Stick from "../components/Stick";
 function Game() {
   useGameController();
   const { state } = useLocation() as { state: { episodeIndex: number } };
-  const { currentUser, nextInteractionIndex, nextEpisodeIndex, resetInteractionIndex } = useAuth();
+  const { currentUser, nextEpisodeIndex } = useAuth();
   const navigate = useNavigate();
   const BOARD_WIDTH = 917;
   const BOARD_HEIGHT = 412;
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [episodeIndex, setEpisodeIndex] = useState<number>(state?.episodeIndex || 0);
   const [interactions, setInteractions] = useState<InteractiveGameData[]>([]);
-  const [interactionIndex, setInteractionIndex] = useState<number>(0);
+  const [interactionIndex, setInteractionIndex] = useState<number>(1);
 
   const [dialogues, setDialogues] = useState<DialogueData[]>([]);
   const [dialogueIndex, setDialogueIndex] = useState<number>(0);
@@ -180,11 +180,12 @@ function Game() {
         return;
       }
       setInteractions(gameInteractions);
-      if (gameInteractions[interactionIndex].type === "playground") {
-        setDialogues(gameInteractions[interactionIndex].dialogues);
-        setObjects(gameInteractions[interactionIndex].objects);
-        setRule(gameInteractions[interactionIndex].rule);
-      } else if (gameInteractions[interactionIndex].type === "checkpoint") {
+      const initialInteraction = gameInteractions.find(inter => inter.interaction === interactionIndex);
+      if (initialInteraction && initialInteraction.type === "playground") {
+        setDialogues(initialInteraction.dialogues);
+        setObjects(initialInteraction.objects);
+        setRule(initialInteraction.rule);
+      } else if (initialInteraction && initialInteraction.type === "checkpoint") {
         setDialogues([]);
         setObjects([]);
         setRule(null);
@@ -307,9 +308,8 @@ function Game() {
     else if (rule.type === "lastDialogue") {
       if (dialogueIndex >= dialogues.length) {
         setRule(null);
-        setInteractionIndex((prev) => prev + 1);
+        setInteractionIndex(rule.nextInteraction);
         setDialogueIndex(0);
-        nextInteractionIndex();
       }
     }
     else if (rule.type === "snapToPosition") {
@@ -389,7 +389,7 @@ function Game() {
         setRule({ ...rule, answers: remainingAnswers });
       }
     }
-  }, [dialogueIndex, dialogues.length, draggedObject, getObjectBounds, getTargetBounds, isBoundsOverlap, nextInteractionIndex, rule]);
+  }, [dialogueIndex, dialogues.length, draggedObject, getObjectBounds, getTargetBounds, isBoundsOverlap, rule]);
 
   useEffect(() => {
     if (!currentUser) {
@@ -410,14 +410,14 @@ function Game() {
     if (rule && rule.type !== "lastDialogue" && rule.answers.length === 0) {
       const timer = setTimeout(() => {
         setRule(null);
-        setInteractionIndex((prev) => prev + 1);
+        setInteractionIndex(rule.nextInteraction);
         setDialogueIndex(0);
-        nextInteractionIndex();
       }, 0);
       return () => clearTimeout(timer);
     }
-  }, [nextInteractionIndex, rule]);
+  }, [rule]);
 
+  const currentInteraction = interactions.find(inter => inter.interaction === interactionIndex);
   return (
     <div className="font-mali h-dvh w-screen relative touch-none">
       <div className="flex h-1/3 w-full bg-linear-to-b from-[#FFF1F6] to-[#CFE1F9]" />
@@ -439,7 +439,7 @@ function Game() {
           <div className="flex flex-row justify-between items-center px-5">
             <div className="w-24"></div>
             <div className="flex justify-center items-center gap-3">
-              {interactions[interactionIndex]?.type === "playground" && dialogues[dialogueIndex] &&
+              {currentInteraction?.type === "playground" && dialogues[dialogueIndex] &&
                 <div className="flex justify-center items-center">
                   <StoryLine story={dialogues[dialogueIndex].text} onNext={() => {
                     checkAnswer();
@@ -463,10 +463,10 @@ function Game() {
                   </svg>
                 </div>
               }
-              {interactions[interactionIndex]?.type === "checkpoint" &&
+              {currentInteraction?.type === "checkpoint" &&
                 <div className="p-0.5 rounded-[20px] bg-linear-to-b from-[#D1AADB] to-[#5263D2]">
                   <div className="flex flex-col p-5 gap-6 rounded-[18px] bg-white">
-                    <div className="text-base">{interactions[interactionIndex].text}</div>
+                    <div className="text-base">{currentInteraction.text}</div>
                     <div className="flex justify-center items-center gap-10">
                       <button type="button" className="flex p-1.5 bg-linear-to-b from-[#E8E2F8] to-[#C6CDF9] text-primary rounded-full cursor-pointer shadow-[0_0_12px_0_rgba(175,168,207,0.5)]" onClick={() => {
                         nextEpisodeIndex();
@@ -489,7 +489,7 @@ function Game() {
                       <button type="button" className="flex p-1.5 bg-white text-primary rounded-full cursor-pointer shadow-[0_0_12px_0_rgba(175,168,207,0.5)]" onClick={() => {
                         setRule(null);
                         setDialogueIndex(0);
-                        setInteractionIndex(0);
+                        setInteractionIndex(1);
                         setEpisodeIndex((prev) => prev + 1)
                         nextEpisodeIndex();
                       }}>
@@ -519,14 +519,13 @@ function Game() {
                 <path d="M70.0488 57.9128C69.4313 58.2693 69.4313 59.1607 70.0488 59.5172L77.6911 63.9295C78.3087 64.2861 79.0806 63.8404 79.0806 63.1273V54.3027C79.0806 53.5896 78.3087 53.1439 77.6911 53.5005L70.0488 57.9128Z" fill="#FCD9DF" />
               </svg>
             </div>
-            {interactions[interactionIndex]?.type === "playground" ?
+            {currentInteraction?.type === "playground" ?
               <BorderedButton onClick={() => {
-                if (interactions[interactionIndex].type === "playground") {
+                if (currentInteraction.type === "playground") {
                   setRule(null);
                   setDialogueIndex(0);
-                  setInteractionIndex(0);
+                  setInteractionIndex(1);
                   setEpisodeIndex((prev) => prev)
-                  resetInteractionIndex();
                 }
               }}>
                 <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">

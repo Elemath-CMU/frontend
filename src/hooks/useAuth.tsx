@@ -5,16 +5,12 @@ export type AuthContextType = {
     currentUser: User | null;
     setCurrentUser: Dispatch<SetStateAction<User | null>>;
     nextEpisodeIndex: () => void;
-    nextInteractionIndex: () => void;
-    resetInteractionIndex: () => void;
 };
 
 export const AuthContext = createContext<AuthContextType>({
     currentUser: null,
     setCurrentUser: () => { },
     nextEpisodeIndex: () => { },
-    nextInteractionIndex: () => { },
-    resetInteractionIndex: () => { },
 });
 
 function useAuth() {

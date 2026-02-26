@@ -28,42 +28,6 @@ function Layout() {
       }
     }
   };
-  const nextInteractionIndex = () => {
-    if (currentUser) {
-      setCurrentUser({
-        ...currentUser,
-        interaction: currentUser.interaction + 1,
-      });
-      const savedUsers = localStorage.getItem("users");
-      if (savedUsers) {
-        const users: User[] = JSON.parse(savedUsers);
-        const updatedUsers = users.map((user) =>
-          user.name === currentUser.name
-            ? { ...user, interaction: user.interaction + 1 }
-            : user
-        );
-        localStorage.setItem("users", JSON.stringify(updatedUsers));
-      }
-    }
-  };
-  const resetInteractionIndex = () => {
-    if (currentUser) {
-      setCurrentUser({
-        ...currentUser,
-        interaction: 0,
-      });
-      const savedUsers = localStorage.getItem("users");
-      if (savedUsers) {
-        const users: User[] = JSON.parse(savedUsers);
-        const updatedUsers = users.map((user) =>
-          user.name === currentUser.name
-            ? { ...user, interaction: 0 }
-            : user
-        );
-        localStorage.setItem("users", JSON.stringify(updatedUsers));
-      }
-    }
-  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -80,7 +44,7 @@ function Layout() {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser, setCurrentUser, nextEpisodeIndex, nextInteractionIndex, resetInteractionIndex }}>
+    <AuthContext.Provider value={{ currentUser, setCurrentUser, nextEpisodeIndex }}>
       {isLandscape ?
         <Outlet />
         :
