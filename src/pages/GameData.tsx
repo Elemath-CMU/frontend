@@ -103,7 +103,7 @@ export interface PlayGroundData extends Interaction {
   type: "playground";
   dialogues: DialogueData[];
   objects: ObjectData[];
-  rule: CheckAnswerRule;
+  rule: CheckAnswerRule | CheckAnswerRule[];
 }
 export interface CheckPointData extends Interaction {
   type: "checkpoint";
@@ -117,6 +117,14 @@ export interface InteractiveGameDataAux {
   episode: number;
   interactions: Interaction[];
   epEndMessage: string | React.ReactNode;
+}
+
+export interface CheckAnswerResult<T extends PlayGroundData["rule"] = PlayGroundData["rule"]> {
+  isChange: boolean;
+  remainingRule: T;
+  objectsToRemove: (number | string)[];
+  objectsToSnap: { objectId: number | string; position: { x: number; y: number } }[];
+  nextInteraction: number | null;
 }
 
 export const gameData: InteractiveGameData[][] = [

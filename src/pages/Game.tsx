@@ -3,7 +3,7 @@ import Pencil from "../components/Pencil";
 import StoryLine from "../components/StoryLine";
 import useGameController from "./GameController";
 import BorderedButton from "../components/button/BorderedButton";
-import { gameData, type CheckAnswerRule, type DialogueData, type InteractiveGameData, type ObjectData, type PencilData, type StickData } from "./GameData";
+import { gameData, type CheckAnswerResult, type DialogueData, type InteractiveGameData, type ObjectData, type PencilData, type PlayGroundData, type StickData } from "./GameData";
 import useAuth from "../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
 import Stick from "../components/Stick";
@@ -25,7 +25,7 @@ function Game() {
 
   const [objects, setObjects] = useState<ObjectData[]>([]);
 
-  const [rule, setRule] = useState<null | CheckAnswerRule>(null);
+  const [rule, setRule] = useState<PlayGroundData["rule"] | null>(null);
 
   const [dragging, setDragging] = useState<{ id: number | string; offsetX: number; offsetY: number; } | null>(null);
   const [draggedObject, setDraggedObject] = useState<ObjectData | null>(null);
@@ -86,9 +86,7 @@ function Game() {
     if (obj.type === "pencil") {
       objWidth = obj.width;
       objHeight = obj.length;
-
       if (obj.orientation === "horizontal") {
-        // When rotated 90°, swap dimensions and adjust position
         [objWidth, objHeight] = [objHeight, objWidth];
         objX = obj.x - obj.length;
       }
@@ -96,7 +94,6 @@ function Game() {
       objWidth = obj.width;
       objHeight = obj.length;
     } else if (obj.type === "other") {
-      // For SVG objects, try to get their actual bounding box
       const element = document.getElementById(String(obj.id));
       if (element) {
         const rect = element.getBoundingClientRect();
@@ -117,31 +114,27 @@ function Game() {
     };
   }, [getBoardScale, toBoardPoint]);
 
-  const onMouseDown = (id: number | string) => (e: React.MouseEvent<SVGGElement>) => {
+  const onMouseDownOrTouchStart = (id: number | string, clientX: number, clientY: number) => {
     const selectedObject = objects.find(o => o.id === id)!;
-    const point = toBoardPoint(e.clientX, e.clientY);
+    const point = toBoardPoint(clientX, clientY);
     setDragging({
       id,
       offsetX: point.x - selectedObject.x,
       offsetY: point.y - selectedObject.y
     });
     setDraggedObject(selectedObject);
+  };
+  const onMouseDown = (id: number | string) => (e: React.MouseEvent<SVGGElement>) => {
+    onMouseDownOrTouchStart(id, e.clientX, e.clientY);
   };
   const onTouchStart = (id: number | string) => (e: React.TouchEvent<SVGGElement>) => {
     const touch = e.touches[0];
-    const selectedObject = objects.find(o => o.id === id)!;
-    const point = toBoardPoint(touch.clientX, touch.clientY);
-    setDragging({
-      id,
-      offsetX: point.x - selectedObject.x,
-      offsetY: point.y - selectedObject.y
-    });
-    setDraggedObject(selectedObject);
+    onMouseDownOrTouchStart(id, touch.clientX, touch.clientY);
   };
 
-  const onMouseMove = (e: React.MouseEvent<SVGGElement>) => {
+  const onMove = (clientX: number, clientY: number) => {
     if (!dragging) return;
-    const point = toBoardPoint(e.clientX, e.clientY);
+    const point = toBoardPoint(clientX, clientY);
 
     const { id, offsetX, offsetY } = dragging;
     const x = point.x - offsetX;
@@ -151,25 +144,21 @@ function Game() {
       objs.map((o) => (o.id === id ? { ...o, x, y } : o))
     );
     setDraggedObject((obj) => obj && obj.id === id ? { ...obj, x, y } : obj);
+  }
+  const onMouseMove = (e: React.MouseEvent<SVGGElement>) => {
+    onMove(e.clientX, e.clientY);
   };
   const onTouchMove = (e: React.TouchEvent<SVGGElement>) => {
-    if (!dragging) return;
     const touch = e.touches[0];
-    const point = toBoardPoint(touch.clientX, touch.clientY);
-
-    const { id, offsetX, offsetY } = dragging;
-    const x = point.x - offsetX;
-    const y = point.y - offsetY;
-
-    setObjects((objs) =>
-      objs.map((o) => (o.id === id ? { ...o, x, y } : o))
-    );
-    setDraggedObject((obj) => obj && obj.id === id ? { ...obj, x, y } : obj);
+    onMove(touch.clientX, touch.clientY);
   };
 
-  const onMouseUp = () => setDragging(null);
-  const onTouchCancel = () => setDragging(null);
-  const onTouchEnd = () => setDragging(null);
+  const onMouseUpOrTouchEnd = () => {
+    setDragging(null);
+  };
+  const onMouseUp = () => onMouseUpOrTouchEnd();
+  const onTouchCancel = () => onMouseUpOrTouchEnd();
+  const onTouchEnd = () => onMouseUpOrTouchEnd();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -194,7 +183,6 @@ function Game() {
     return () => clearTimeout(timer);
   }, [episodeIndex, interactionIndex, navigate]);
 
-  // Check if an object is within bounds of a target
   const isBoundsOverlap = useCallback((draggedObj: ObjectData, targetX: number, targetY: number, targetWidth: number, targetHeight: number) => {
     const { x: objX, y: objY, width: objWidth, height: objHeight } = getObjectBounds(draggedObj);
 
@@ -211,182 +199,218 @@ function Game() {
     );
   }, [getObjectBounds]);
 
-  // Main check answer function
   const checkAnswer = useCallback(() => {
     if (!rule) return;
-    if (rule.type === "dropOnObject") {
-      const usedObjectIds = new Set<number | string>();
-      const remainingAnswers = rule.answers.filter((answer) => {
-        if (!draggedObject) return true;
-
-        const targetBounds = getTargetBounds(answer.targetObjectId);
-        if (!targetBounds) return true;
-
-        const isCorrect = draggedObject.id === answer.objectId && isBoundsOverlap(
-          draggedObject,
-          targetBounds.x,
-          targetBounds.y,
-          targetBounds.width,
-          targetBounds.height
-        );
-
-        if (isCorrect) {
-          usedObjectIds.add(draggedObject.id);
-          setDraggedObject(null);
-          return false;
+    const checkAnswerAux = (inputRule: PlayGroundData["rule"]): CheckAnswerResult<PlayGroundData["rule"]> => {
+      if (Array.isArray(inputRule)) {
+        const results = inputRule.map(r => checkAnswerAux(r));
+        const isChange = results.some(res => res.isChange);
+        const remainingRule = results.map(res => res.remainingRule) as PlayGroundData["rule"];
+        const doneRule = results.find(res => res.nextInteraction !== null);
+        return {
+          isChange,
+          remainingRule,
+          objectsToRemove: results.flatMap(res => res.objectsToRemove),
+          objectsToSnap: results.flatMap(res => res.objectsToSnap),
+          nextInteraction: doneRule?.nextInteraction || null,
         }
+      } else {
+        if (inputRule.type === "dropOnObject") {
+          const usedObjectIds = new Set<number | string>();
+          const remainingAnswers = inputRule.answers.filter((answer) => {
+            if (!draggedObject) return true;
 
-        return true;
-      });
+            const targetBounds = getTargetBounds(answer.targetObjectId);
+            if (!targetBounds) return true;
 
-      if (remainingAnswers.length !== rule.answers.length) {
-        setRule({ ...rule, answers: remainingAnswers });
-      }
+            const isCorrect = draggedObject.id === answer.objectId && isBoundsOverlap(
+              draggedObject,
+              targetBounds.x,
+              targetBounds.y,
+              targetBounds.width,
+              targetBounds.height
+            );
 
-      if (usedObjectIds.size > 0) {
-        setObjects((prevObjects) => prevObjects.filter(o => !usedObjectIds.has(o.id)));
-      }
-    }
-    else if (rule.type === "dropOnArea") {
-      const usedObjectIds = new Set<number | string>();
-      const remainingAnswers = rule.answers.filter((answer) => {
-        if (!draggedObject) return true;
-
-        const isCorrect = draggedObject.id === answer.objectId && isBoundsOverlap(
-          draggedObject,
-          answer.area.x,
-          answer.area.y,
-          answer.area.width,
-          answer.area.height
-        );
-
-        if (isCorrect) {
-          usedObjectIds.add(draggedObject.id);
-          setDraggedObject(null);
-          return false;
-        }
-
-        return true;
-      });
-
-      if (remainingAnswers.length !== rule.answers.length) {
-        setRule({ ...rule, answers: remainingAnswers });
-      }
-
-      if (usedObjectIds.size > 0) {
-        setObjects((prevObjects) => prevObjects.filter(o => !usedObjectIds.has(o.id)));
-      }
-    }
-    else if (rule.type === "dropInsideArea") {
-      const usedObjectIds = new Set<number | string>();
-      const remainingAnswers = rule.answers.filter((answer) => {
-        if (!draggedObject) return true;
-        const draggedBounds = getObjectBounds(draggedObject);
-        const isCorrect = draggedObject.id === answer.objectId &&
-          draggedBounds.x >= answer.area.x &&
-          draggedBounds.y >= answer.area.y &&
-          draggedBounds.x + draggedBounds.width <= answer.area.x + answer.area.width &&
-          draggedBounds.y + draggedBounds.height <= answer.area.y + answer.area.height;
-
-        if (isCorrect) {
-          usedObjectIds.add(draggedObject.id);
-          setDraggedObject(null);
-          return false;
-        }
-
-        return true;
-      });
-
-      if (remainingAnswers.length !== rule.answers.length) {
-        setRule({ ...rule, answers: remainingAnswers });
-      }
-
-      if (usedObjectIds.size > 0) {
-        setObjects((prevObjects) => prevObjects.filter(o => !usedObjectIds.has(o.id)));
-      }
-    }
-    else if (rule.type === "lastDialogue") {
-      if (dialogueIndex >= dialogues.length) {
-        setRule(null);
-        setInteractionIndex(rule.nextInteraction);
-        setDialogueIndex(0);
-      }
-    }
-    else if (rule.type === "snapToPosition") {
-      const answersToSnap = new Map<number | string, { x: number; y: number }>();
-      const remainingAnswers = rule.answers.filter((answer) => {
-        if (!draggedObject) return true;
-
-        const tolerance = 15; // pixels
-        const distanceX = Math.abs(draggedObject.x - answer.position.x);
-        const distanceY = Math.abs(draggedObject.y - answer.position.y);
-
-        if (draggedObject.id === answer.objectId && distanceX <= tolerance && distanceY <= tolerance) {
-          answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
-          setDraggedObject(null);
-          return false;
-        }
-
-        return true;
-      });
-
-      if (answersToSnap.size > 0) {
-        setObjects((prevObjects) =>
-          prevObjects.map((o) => {
-            const snap = answersToSnap.get(o.id);
-            if (!snap) return o;
-            return { ...o, x: snap.x, y: snap.y, fixed: true };
-          })
-        );
-      }
-
-      if (remainingAnswers.length !== rule.answers.length) {
-        setRule({ ...rule, answers: remainingAnswers });
-      }
-    }
-    else if (rule.type === "snapObjectWithThisPropertiesToPosition") {
-      const answersToSnap = new Map<number | string, { x: number; y: number }>();
-      const remainingAnswers = rule.answers.filter((answer) => {
-        if (!draggedObject) return true;
-
-        const tolerance = 15; // pixels
-        const distanceX = Math.abs(draggedObject.x - answer.position.x);
-        const distanceY = Math.abs(draggedObject.y - answer.position.y);
-
-        if (distanceX <= tolerance && distanceY <= tolerance) {
-          if (draggedObject.type !== answer.objectProperties.type) return true;
-          if (draggedObject.type === "pencil" && answer.objectProperties.type === "pencil") {
-            if (draggedObject.length === answer.objectProperties.length &&
-              draggedObject.orientation === answer.objectProperties.orientation &&
-              draggedObject.color === answer.objectProperties.color) {
-              answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
+            if (isCorrect) {
+              usedObjectIds.add(draggedObject.id);
               setDraggedObject(null);
               return false;
             }
-          } else if (draggedObject.type === "stick" && answer.objectProperties.type === "stick") {
-            if (draggedObject.length === answer.objectProperties.length) {
-              answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
+
+            return true;
+          });
+
+          return {
+            isChange: remainingAnswers.length !== inputRule.answers.length,
+            remainingRule: { ...inputRule, answers: remainingAnswers },
+            objectsToRemove: Array.from(usedObjectIds),
+            objectsToSnap: [],
+            nextInteraction: remainingAnswers.length === 0 ? inputRule.nextInteraction : null,
+          };
+        }
+        else if (inputRule.type === "dropOnArea") {
+          const usedObjectIds = new Set<number | string>();
+          const remainingAnswers = inputRule.answers.filter((answer) => {
+            if (!draggedObject) return true;
+
+            const isCorrect = draggedObject.id === answer.objectId && isBoundsOverlap(
+              draggedObject,
+              answer.area.x,
+              answer.area.y,
+              answer.area.width,
+              answer.area.height
+            );
+
+            if (isCorrect) {
+              usedObjectIds.add(draggedObject.id);
               setDraggedObject(null);
               return false;
             }
+
+            return true;
+          });
+
+          return {
+            isChange: remainingAnswers.length !== inputRule.answers.length,
+            remainingRule: { ...inputRule, answers: remainingAnswers },
+            objectsToRemove: Array.from(usedObjectIds),
+            objectsToSnap: [],
+            nextInteraction: remainingAnswers.length === 0 ? inputRule.nextInteraction : null,
+          };
+        }
+        else if (inputRule.type === "dropInsideArea") {
+          const usedObjectIds = new Set<number | string>();
+          const remainingAnswers = inputRule.answers.filter((answer) => {
+            if (!draggedObject) return true;
+            const draggedBounds = getObjectBounds(draggedObject);
+            const isCorrect = draggedObject.id === answer.objectId &&
+              draggedBounds.x >= answer.area.x &&
+              draggedBounds.y >= answer.area.y &&
+              draggedBounds.x + draggedBounds.width <= answer.area.x + answer.area.width &&
+              draggedBounds.y + draggedBounds.height <= answer.area.y + answer.area.height;
+
+            if (isCorrect) {
+              usedObjectIds.add(draggedObject.id);
+              setDraggedObject(null);
+              return false;
+            }
+
+            return true;
+          });
+
+          return {
+            isChange: remainingAnswers.length !== inputRule.answers.length,
+            remainingRule: { ...inputRule, answers: remainingAnswers },
+            objectsToRemove: Array.from(usedObjectIds),
+            objectsToSnap: [],
+            nextInteraction: remainingAnswers.length === 0 ? inputRule.nextInteraction : null,
+          };
+        }
+        else if (inputRule.type === "lastDialogue") {
+          const done = dialogueIndex >= dialogues.length;
+          return {
+            isChange: done,
+            remainingRule: inputRule,
+            objectsToRemove: [],
+            objectsToSnap: [],
+            nextInteraction: done ? inputRule.nextInteraction : null,
           }
         }
+        else if (inputRule.type === "snapToPosition") {
+          const answersToSnap = new Map<number | string, { x: number; y: number }>();
+          const remainingAnswers = inputRule.answers.filter((answer) => {
+            if (!draggedObject) return true;
 
-        return true;
-      });
+            const tolerance = 15;
+            const distanceX = Math.abs(draggedObject.x - answer.position.x);
+            const distanceY = Math.abs(draggedObject.y - answer.position.y);
 
-      if (answersToSnap.size > 0) {
-        setObjects((prevObjects) =>
-          prevObjects.map((o) => {
-            const snap = answersToSnap.get(o.id);
-            if (!snap) return o;
-            return { ...o, x: snap.x, y: snap.y, fixed: true };
+            if (draggedObject.id === answer.objectId && distanceX <= tolerance && distanceY <= tolerance) {
+              answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
+              setDraggedObject(null);
+              return false;
+            }
+
+            return true;
+          });
+
+          return {
+            isChange: remainingAnswers.length !== inputRule.answers.length,
+            remainingRule: { ...inputRule, answers: remainingAnswers },
+            objectsToRemove: [],
+            objectsToSnap: Array.from(answersToSnap.entries()).map(([id, pos]) => ({ objectId: id, position: pos })),
+            nextInteraction: remainingAnswers.length === 0 ? inputRule.nextInteraction : null,
+          };
+        }
+        else if (inputRule.type === "snapObjectWithThisPropertiesToPosition") {
+          const answersToSnap = new Map<number | string, { x: number; y: number }>();
+          const remainingAnswers = inputRule.answers.filter((answer) => {
+            if (!draggedObject) return true;
+
+            const tolerance = 15; // pixels
+            const distanceX = Math.abs(draggedObject.x - answer.position.x);
+            const distanceY = Math.abs(draggedObject.y - answer.position.y);
+
+            if (distanceX <= tolerance && distanceY <= tolerance) {
+              if (draggedObject.type !== answer.objectProperties.type) return true;
+              if (draggedObject.type === "pencil" && answer.objectProperties.type === "pencil") {
+                if (draggedObject.length === answer.objectProperties.length &&
+                  draggedObject.orientation === answer.objectProperties.orientation &&
+                  draggedObject.color === answer.objectProperties.color) {
+                  answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
+                  setDraggedObject(null);
+                  return false;
+                }
+              } else if (draggedObject.type === "stick" && answer.objectProperties.type === "stick") {
+                if (draggedObject.length === answer.objectProperties.length) {
+                  answersToSnap.set(draggedObject.id, { x: answer.position.x, y: answer.position.y });
+                  setDraggedObject(null);
+                  return false;
+                }
+              }
+            }
+
+            return true;
+          });
+
+          return {
+            isChange: remainingAnswers.length !== inputRule.answers.length,
+            remainingRule: { ...inputRule, answers: remainingAnswers },
+            objectsToRemove: [],
+            objectsToSnap: Array.from(answersToSnap.entries()).map(([id, pos]) => ({ objectId: id, position: pos })),
+            nextInteraction: remainingAnswers.length === 0 ? inputRule.nextInteraction : null,
+          }
+        }
+      }
+      return {
+        isChange: false,
+        remainingRule: inputRule,
+        objectsToRemove: [],
+        objectsToSnap: [],
+        nextInteraction: null,
+      }
+    }
+    const result = checkAnswerAux(rule);
+    if (result.isChange) {
+      setRule(result.remainingRule);
+      if (result.objectsToRemove.length > 0) {
+        setObjects((objs) => objs.filter(o => !result.objectsToRemove.includes(o.id)));
+      }
+      if (result.objectsToSnap.length > 0) {
+        setObjects((objs) =>
+          objs.map(o => {
+            const snapInfo = result.objectsToSnap?.find(s => s.objectId === o.id);
+            if (snapInfo) {
+              return { ...o, x: snapInfo.position.x, y: snapInfo.position.y };
+            }
+            return o;
           })
         );
       }
-
-      if (remainingAnswers.length !== rule.answers.length) {
-        setRule({ ...rule, answers: remainingAnswers });
+      if (result.nextInteraction) {
+        setRule(null);
+        setInteractionIndex(result.nextInteraction);
+        setDialogueIndex(0);
       }
     }
   }, [dialogueIndex, dialogues.length, draggedObject, getObjectBounds, getTargetBounds, isBoundsOverlap, rule]);
@@ -405,17 +429,6 @@ function Game() {
       return () => clearTimeout(timer);
     }
   }, [checkAnswer, dragging]);
-
-  useEffect(() => {
-    if (rule && rule.type !== "lastDialogue" && rule.answers.length === 0) {
-      const timer = setTimeout(() => {
-        setRule(null);
-        setInteractionIndex(rule.nextInteraction);
-        setDialogueIndex(0);
-      }, 0);
-      return () => clearTimeout(timer);
-    }
-  }, [rule]);
 
   const currentInteraction = interactions.find(inter => inter.interaction === interactionIndex);
   return (
