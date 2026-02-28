@@ -43,14 +43,14 @@ export interface ObjectSpawner extends ObjectBaseData {
 }
 export interface FractionInput extends ObjectBaseData {
   type: "fractionInput";
-  fixed: true;
+  fixed?: true;
   numerator: number | null;
   denominator: number | null;
   fixedDenominator?: boolean;
 }
 export interface Message extends ObjectBaseData {
   type: "message";
-  fixed: true;
+  fixed?: true;
   message: string;
 }
 export type ObjectData = PencilData | StickData | OtherObjectData | ObjectSpawner | FractionInput;

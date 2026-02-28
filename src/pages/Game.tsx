@@ -381,6 +381,26 @@ function Game() {
             nextInteraction: remainingAnswers.length === 0 ? inputRule.nextInteraction : null,
           }
         }
+        else if (inputRule.type === "enterFraction") {
+          const remainingAnswers = inputRule.answers.filter((answer) => {
+            const fractionInput = draggedObject && draggedObject.id === answer.objectId ? draggedObject : null;
+            if (!fractionInput || fractionInput.type !== "fractionInput" || !fractionInput.numerator || !fractionInput.denominator) return true;
+            const isCorrect = (fractionInput.numerator / fractionInput.denominator) === answer.fraction;
+            if (!isCorrect) {
+              alert("คำตอบไม่ถูกต้อง ลองใหม่อีกครั้งนะ");
+            }
+            setDraggedObject(null);
+            return !isCorrect;
+          });
+
+          return {
+            isChange: remainingAnswers.length !== inputRule.answers.length,
+            remainingRule: { ...inputRule, answers: remainingAnswers },
+            objectsToRemove: [],
+            objectsToSnap: [],
+            nextInteraction: remainingAnswers.length === 0 ? inputRule.nextInteraction : null,
+          };
+        }
       }
       return {
         isChange: false,
@@ -669,7 +689,59 @@ function Game() {
               </g>
             );
           }
-          return null;
+          if (obj.type === "fractionInput") {
+            return (
+              <g key={obj.id} id={`fractionInput-${obj.id}`} transform={`translate(${obj.x}, ${obj.y})`}>
+                <foreignObject x={0} y={0} width={128} height={200}>
+                  <div className="flex flex-col gap-4 h-full w-full items-center justify-center">
+                    <div className="flex flex-col gap-2 h-full w-full items-center justify-center">
+                      <input type="text" title="fraction numerator" className="bg-white h-12 w-full rounded-xl text-center text-xl font-bold text-primary"
+                        placeholder="เท่าไหร่นะ"
+                        value={obj.numerator ? obj.numerator : ""}
+                        onChange={(e) => {
+                          const newNumerator = e.target.value;
+                          setObjects((prev) => prev.map(o => {
+                            if (o.id === obj.id && o.type === "fractionInput") {
+                              return {
+                                ...o,
+                                numerator: Number.isNaN(Number(newNumerator)) ? null : Number(newNumerator)
+                              };
+                            }
+                            return o;
+                          }));
+                        }}
+                      />
+                      <div className="bg-black h-1 w-full rounded-full" />
+                      <input type="text" title="fraction denominator" className="bg-white h-12 w-full rounded-xl text-center text-xl font-bold text-primary"
+                        disabled={obj.fixedDenominator}
+                        placeholder="เท่าไหร่นะ"
+                        value={obj.denominator ? obj.denominator : ""}
+                        onChange={(e) => {
+                          const newDenominator = e.target.value;
+                          setObjects((prev) => prev.map(o => {
+                            if (o.id === obj.id && o.type === "fractionInput") {
+                              return {
+                                ...o,
+                                denominator: Number.isNaN(Number(newDenominator)) ? null : Number(newDenominator)
+                              };
+                            }
+                            return o;
+                          }));
+                        }}
+                      />
+                    </div>
+                    <BorderedButton onClick={(e) => {
+                      e.preventDefault();
+                      setDraggedObject(objects.find(o => o.id === obj.id) || null);
+                      checkAnswer();
+                    }}>
+                      ส่งคำตอบ
+                    </BorderedButton>
+                  </div>
+                </foreignObject>
+              </g>
+            );
+          }
         })}
       </svg>
     </div>
