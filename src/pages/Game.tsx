@@ -538,7 +538,24 @@ function Game() {
                   setRule(null);
                   setDialogueIndex(0);
                   setInteractionIndex(1);
-                  setEpisodeIndex((prev) => prev)
+                  setEpisodeIndex((prev) => prev);
+                  const gameInteractions = gameData[episodeIndex];
+                  if (!gameInteractions) {
+                    alert("เกมหมดแล้วจ้า");
+                    navigate('/map', { replace: true });
+                    return;
+                  }
+                  setInteractions(gameInteractions);
+                  const initialInteraction = gameInteractions.find(inter => inter.interaction === interactionIndex);
+                  if (initialInteraction && initialInteraction.type === "playground") {
+                    setDialogues(initialInteraction.dialogues);
+                    setObjects(initialInteraction.objects);
+                    setRule(initialInteraction.rule);
+                  } else if (initialInteraction && initialInteraction.type === "checkpoint") {
+                    setDialogues([]);
+                    setObjects([]);
+                    setRule(null);
+                  }
                 }
               }}>
                 <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">

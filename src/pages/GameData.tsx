@@ -44,8 +44,9 @@ export interface ObjectSpawner extends ObjectBaseData {
 export interface FractionInput extends ObjectBaseData {
   type: "fractionInput";
   fixed: true;
-  numerator: number;
-  denominator: number;
+  numerator: number | null;
+  denominator: number | null;
+  fixedDenominator?: boolean;
 }
 export interface Message extends ObjectBaseData {
   type: "message";
