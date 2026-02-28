@@ -2,14 +2,14 @@ import { ep1 } from "./GameDataEP1";
 import { ep2 } from "./GameDataEP2";
 import { ep3 } from "./GameDataEP3";
 import { ep4 } from "./GameDataEP4";
-import { ep5 } from "./GameDataEP5";
+import { ep7 } from "./GameDataEP7";
 
 export interface DialogueData {
   text: string | React.ReactNode;
   canClickNext: boolean;
 }
 
-export type ObjectType = "pencil" | "stick" | "other" | "spawner" | "message";
+export type ObjectType = "pencil" | "stick" | "other" | "spawner" | "fractionInput" | "message";
 export interface ObjectBaseData {
   id: number | string;
   type: ObjectType;
@@ -41,14 +41,20 @@ export interface ObjectSpawner extends ObjectBaseData {
   spawnObject: Omit<PencilData, "id" | "x" | "y" | "fixed"> | Omit<StickData, "id" | "x" | "y" | "fixed"> | Omit<OtherObjectData, "id" | "x" | "y" | "fixed">;
   spawnIcon?: React.ReactNode;
 }
+export interface FractionInput extends ObjectBaseData {
+  type: "fractionInput";
+  fixed: true;
+  numerator: number;
+  denominator: number;
+}
 export interface Message extends ObjectBaseData {
   type: "message";
   fixed: true;
   message: string;
 }
-export type ObjectData = PencilData | StickData | OtherObjectData | ObjectSpawner;
+export type ObjectData = PencilData | StickData | OtherObjectData | ObjectSpawner | FractionInput;
 
-export type CheckAnswerType = "dropOnObject" | "dropOnArea" | "dropInsideArea" | "snapToPosition" | "snapObjectWithThisPropertiesToPosition" | "lastDialogue";
+export type CheckAnswerType = "dropOnObject" | "dropOnArea" | "dropInsideArea" | "snapToPosition" | "snapObjectWithThisPropertiesToPosition" | "lastDialogue" | "enterFraction";
 export interface CheckAnswer {
   type: CheckAnswerType;
   nextInteraction: number;
@@ -91,7 +97,14 @@ export interface CheckAnswerSnapObjectWithThisPropertiesToPosition extends Check
 export interface CheckAnswerLastDialogue extends CheckAnswer {
   type: "lastDialogue";
 }
-export type RuleWithAnswer = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerDropInsideArea | CheckAnswerSnapToPosition | CheckAnswerSnapObjectWithThisPropertiesToPosition;
+export interface CheckAnswerEnterFraction extends CheckAnswer {
+  type: "enterFraction";
+  answers: {
+    objectId: number | string;
+    fraction: number;
+  }[]
+}
+export type RuleWithAnswer = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerDropInsideArea | CheckAnswerSnapToPosition | CheckAnswerSnapObjectWithThisPropertiesToPosition | CheckAnswerEnterFraction;
 export type CheckAnswerRule = RuleWithAnswer | CheckAnswerLastDialogue;
 
 export type InteractionType = "playground" | "checkpoint";
@@ -116,7 +129,6 @@ export type InteractiveGameData = PlayGroundData | CheckPointData;
 export interface InteractiveGameDataAux {
   episode: number;
   interactions: Interaction[];
-  epEndMessage: string | React.ReactNode;
 }
 
 export interface CheckAnswerResult<T extends PlayGroundData["rule"] = PlayGroundData["rule"]> {
@@ -132,5 +144,5 @@ export const gameData: InteractiveGameData[][] = [
   ep2,
   ep3,
   ep4,
-  ep5,
+  ep7,
 ]

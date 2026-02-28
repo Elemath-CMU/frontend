@@ -288,12 +288,20 @@ export const ep4: InteractiveGameData[] = [
         id: 7, type: "stick", length: 40, width: 36, cutLeft: true, x: 650, y: 290
       },
     ],
-    rule: {
-      type: "snapObjectWithThisPropertiesToPosition", nextInteraction: 10,
-      answers: [
-        { objectProperties: { type: "stick", length: 40, width: 36 }, position: { x: 458 - 140 + 80 * 3, y: 160 } },
-      ]
-    }
+    rule: [
+      {
+        type: "snapToPosition", nextInteraction: 10,
+        answers: [
+          { objectId: 6, position: { x: 458 - 140 + 80 * 3, y: 160 } },
+        ]
+      },
+      {
+        type: "snapToPosition", nextInteraction: 10.5,
+        answers: [
+          { objectId: 7, position: { x: 458 - 140 + 80 * 3, y: 160 } },
+        ]
+      },
+    ]
   },
   {
     interaction: 10,
@@ -329,6 +337,44 @@ export const ep4: InteractiveGameData[] = [
       },
       {
         id: 7, type: "stick", fixed: true, length: 40, width: 36, cutLeft: true, x: 650, y: 290
+      },
+    ],
+    rule: { type: "lastDialogue", nextInteraction: 11 }
+  },
+  {
+    interaction: 10.5,
+    type: "playground",
+    dialogues: [
+      {
+        text: "ลองวัดแล้วหนังสือมีความยาวเท่าไหร่นะ?",
+        canClickNext: true,
+      },
+      {
+        text: "วัดเสร็จแล้ว! หนังสือนี้ยาว 3 แท่งไม้ กับอีกครึ่งแท่งไม้นี่เอง!",
+        canClickNext: true,
+      }
+    ],
+    objects: [
+      {
+        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+      },
+      {
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+      },
+      {
+        id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
+      },
+      {
+        id: 4, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140 + 80, y: 160
+      },
+      {
+        id: 5, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140 + 80 * 2, y: 160
+      },
+      {
+        id: 6, type: "stick", fixed: true, length: 40, width: 36, cutRight: true, x: 650, y: 250
+      },
+      {
+        id: 7, type: "stick", fixed: true, length: 40, width: 36, cutLeft: true, x: 458 - 140 + 80 * 3, y: 160
       },
     ],
     rule: { type: "lastDialogue", nextInteraction: 11 }

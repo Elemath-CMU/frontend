@@ -68,7 +68,7 @@ const redDotVerticleLine =
     <path d="M1.5 85.5L1.5 1.5" stroke="#E04559" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 6" />
   </svg>
 
-export const ep5: InteractiveGameData[] = [
+export const ep7: InteractiveGameData[] = [
   {
     interaction: 1,
     type: "playground",
