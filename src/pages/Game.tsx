@@ -749,7 +749,7 @@ function Game() {
         })}
       </svg>
       {currentInteraction?.type === "choiceAnswer" &&
-        <foreignObject x={0} y={0} width={BOARD_WIDTH} height={BOARD_HEIGHT}>
+        <div className="absolute inset-0">
           <div className="fixed inset-0 flex flex-col gap-4 justify-center items-center bg-black/25">
             {currentInteraction.choices.map((choice, index) => (
               <button key={index} type="button" className="p-5 border-[3px] border-white rounded-[20px] bg-linear-to-b from-[#E8E2F8] to-[#C6CDF9] text-primary font-semibold cursor-pointer" onClick={() => setInteractionIndex(choice.nextInteraction)}>
@@ -757,7 +757,7 @@ function Game() {
               </button>
             ))}
           </div>
-        </foreignObject>
+        </div>
       }
     </div>
   );
