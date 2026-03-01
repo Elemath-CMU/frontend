@@ -174,6 +174,10 @@ function Game() {
         setDialogues(initialInteraction.dialogues);
         setObjects(initialInteraction.objects);
         setRule(initialInteraction.rule);
+      } else if (initialInteraction && initialInteraction.type === "choiceAnswer") {
+        setDialogues([{ text: initialInteraction.text, canClickNext: false }]);
+        setObjects([]);
+        setRule(null);
       } else if (initialInteraction && initialInteraction.type === "checkpoint") {
         setDialogues([]);
         setObjects([]);
@@ -472,7 +476,7 @@ function Game() {
           <div className="flex flex-row justify-between items-center px-5">
             <div className="w-24"></div>
             <div className="flex justify-center items-center gap-3">
-              {currentInteraction?.type === "playground" && dialogues[dialogueIndex] &&
+              {(currentInteraction?.type === "playground" || currentInteraction?.type === "choiceAnswer") && dialogues[dialogueIndex] &&
                 <div className="flex justify-center items-center">
                   <StoryLine story={dialogues[dialogueIndex].text} onNext={() => {
                     checkAnswer();
@@ -744,6 +748,17 @@ function Game() {
           }
         })}
       </svg>
+      {currentInteraction?.type === "choiceAnswer" &&
+        <foreignObject x={0} y={0} width={BOARD_WIDTH} height={BOARD_HEIGHT}>
+          <div className="fixed inset-0 flex flex-col gap-4 justify-center items-center bg-black/25">
+            {currentInteraction.choices.map((choice, index) => (
+              <button key={index} type="button" className="p-5 border-[3px] border-white rounded-[20px] bg-linear-to-b from-[#E8E2F8] to-[#C6CDF9] text-primary font-semibold cursor-pointer" onClick={() => setInteractionIndex(choice.nextInteraction)}>
+                {choice.text}
+              </button>
+            ))}
+          </div>
+        </foreignObject>
+      }
     </div>
   );
 }

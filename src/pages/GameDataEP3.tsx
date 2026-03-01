@@ -1,6 +1,6 @@
 import type { InteractiveGameData } from "./GameData";
 
-const bookSVG =
+const book =
   <svg width="350" height="180" viewBox="0 0 318 180" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clipPath="url(#clip0_292_1291)">
       <rect x="318" width="180" height="318" rx="12" transform="rotate(90 318 0)" fill="url(#paint0_linear_292_1291)" />
@@ -19,7 +19,7 @@ const bookSVG =
     </defs>
   </svg>
 
-const pencilGroupSVG =
+const pencilGroup =
   <svg width="149" height="69" viewBox="0 0 149 69" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M78.4911 45.2119C79.0037 45.6123 79.0037 46.3877 78.4911 46.7881L55.6156 64.6566C54.959 65.1695 54 64.7017 54 63.8685V28.1315C54 27.2983 54.959 26.8305 55.6156 27.3434L78.4911 45.2119Z" fill="#FFECC3" stroke="black" strokeWidth="2" strokeLinecap="round" />
     <path d="M79.5 46.0001L70.5 52.3741V39.6262L79.5 46.0001Z" fill="black" />
@@ -39,14 +39,14 @@ const pencilGroupSVG =
     <path d="M93.5 42H52C45.9249 42 41 37.0751 41 31V15C41 8.92487 45.9249 4 52 4L93.5 4V42Z" stroke="black" strokeWidth="2" strokeLinecap="round" />
   </svg>
 
-const pencilCaseSVG =
+const pencilCase =
   <svg width="239" height="90" viewBox="0 0 239 90" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M0 4C0 1.79086 1.79086 0 4 0H199V90H3.99999C1.79086 90 0 88.2091 0 86V4Z" fill="#FCD9DF" />
     <path d="M199 0H235C237.209 0 239 1.79086 239 4V86C239 88.2091 237.209 90 235 90H199V0Z" fill="#FCD9DF" />
     <line x1="199.75" y1="10.75" x2="199.75" y2="79.25" stroke="#CF6EBA" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 
-const stickGroupSVG =
+const stickGroup =
   <svg width="160" height="108" viewBox="0 0 160 108" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="0.5" y="36.5" width="79" height="35" rx="3.5" fill="#895129" />
     <rect x="0.5" y="36.5" width="79" height="35" rx="3.5" stroke="black" />
@@ -87,10 +87,10 @@ export const ep3: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 175, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 175, y: 200
       },
       {
-        id: 2, type: "spawner", spawnObject: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, spawnIcon: pencilGroupSVG, x: 50, y: 300
+        id: 2, type: "spawner", spawnObject: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, spawnIcon: pencilGroup, x: 50, y: 300
       },
       {
         id: 3, type: "other", svg:
@@ -117,10 +117,10 @@ export const ep3: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 175, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 175, y: 200
       },
       {
-        id: 2, type: "spawner", spawnObject: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, spawnIcon: pencilGroupSVG, x: 50, y: 300
+        id: 2, type: "spawner", spawnObject: { type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8" }, spawnIcon: pencilGroup, x: 50, y: 300
       },
       {
         id: 3, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8", x: 458 - 159 + 79.5, y: 155
@@ -149,10 +149,10 @@ export const ep3: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 175, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 175, y: 200
       },
       {
-        id: 2, type: "other", fixed: true, svg: pencilGroupSVG, x: 50, y: 300
+        id: 2, type: "other", fixed: true, svg: pencilGroup, x: 50, y: 300
       },
       { id: 3, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 159 + 79.5, y: 155 },
       { id: 4, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 159 + 79.5 * 2, y: 155 },
@@ -174,7 +174,7 @@ export const ep3: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: pencilCaseSVG, x: 458 - 119, y: 300
+        id: 1, type: "other", fixed: true, svg: pencilCase, x: 458 - 119, y: 300
       },
       {
         id: 2, type: "other", svg:
@@ -204,7 +204,7 @@ export const ep3: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: pencilCaseSVG, x: 458 - 119, y: 300
+        id: 1, type: "other", fixed: true, svg: pencilCase, x: 458 - 119, y: 300
       },
       { id: 2, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8", x: 130, y: 325 },
       { id: 3, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, color: "#E8E2F8", x: 130 + 70, y: 325 },
@@ -232,7 +232,7 @@ export const ep3: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: pencilCaseSVG, x: 458 - 119, y: 300
+        id: 1, type: "other", fixed: true, svg: pencilCase, x: 458 - 119, y: 300
       },
       { id: 2, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 119 + 79.5, y: 255 },
       { id: 3, type: "pencil", orientation: "horizontal", length: 79.5, width: 40, fixed: true, color: "#E8E2F8", x: 458 - 119 + 79.5 * 2, y: 255 },
@@ -307,7 +307,7 @@ export const ep3: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: pencilCaseSVG, x: 458 - 119, y: 300
+        id: 1, type: "other", fixed: true, svg: pencilCase, x: 458 - 119, y: 300
       },
       {
         id: 2, type: "other", svg:
@@ -316,7 +316,7 @@ export const ep3: InteractiveGameData[] = [
           </svg>
         , x: 458 - 119, y: 250
       },
-      { id: 3, type: "spawner", spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280 },
+      { id: 3, type: "spawner", spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280 },
     ],
     rule: {
       type: "snapObjectWithThisPropertiesToPosition", nextInteraction: 12, answers: [{
@@ -335,9 +335,9 @@ export const ep3: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: pencilCaseSVG, x: 458 - 119, y: 300
+        id: 1, type: "other", fixed: true, svg: pencilCase, x: 458 - 119, y: 300
       },
-      { id: 2, type: "spawner", spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280 },
+      { id: 2, type: "spawner", spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280 },
       { id: 3, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 119, y: 255 },
     ],
     rule: {
@@ -362,9 +362,9 @@ export const ep3: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: pencilCaseSVG, x: 458 - 119, y: 300
+        id: 1, type: "other", fixed: true, svg: pencilCase, x: 458 - 119, y: 300
       },
-      { id: 2, type: "other", fixed: true, svg: stickGroupSVG, x: 50, y: 280 },
+      { id: 2, type: "other", fixed: true, svg: stickGroup, x: 50, y: 280 },
       { id: 3, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 119, y: 255 },
       { id: 4, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 119 + 80, y: 255 },
       { id: 5, type: "stick", length: 80, width: 36, fixed: true, x: 458 - 119 + 80 * 2, y: 255 },

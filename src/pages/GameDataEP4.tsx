@@ -1,6 +1,6 @@
 import type { InteractiveGameData } from "./GameData";
 
-const bookSVG =
+const book =
   <svg width="280" height="180" viewBox="0 0 280 180" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clipPath="url(#clip0_638_1293)">
       <rect x="280" width="180" height="280" rx="12" transform="rotate(90 280 0)" fill="url(#paint0_linear_638_1293)" />
@@ -19,7 +19,7 @@ const bookSVG =
     </defs>
   </svg>
 
-const stickGroupSVG =
+const stickGroup =
   <svg width="160" height="108" viewBox="0 0 160 108" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="0.5" y="36.5" width="79" height="35" rx="3.5" fill="#895129" />
     <rect x="0.5" y="36.5" width="79" height="35" rx="3.5" stroke="black" />
@@ -50,10 +50,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "other", fixed: true, svg: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "other", fixed: true, svg: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -74,10 +74,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -102,10 +102,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "other", fixed: true, svg: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "other", fixed: true, svg: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -130,10 +130,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -171,10 +171,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "other", fixed: true, svg: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "other", fixed: true, svg: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -267,10 +267,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -318,10 +318,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -356,10 +356,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160

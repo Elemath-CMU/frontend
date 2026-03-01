@@ -2,6 +2,7 @@ import { ep1 } from "./GameDataEP1";
 import { ep2 } from "./GameDataEP2";
 import { ep3 } from "./GameDataEP3";
 import { ep4 } from "./GameDataEP4";
+import { ep5 } from "./GameDataEP5";
 import { ep7 } from "./GameDataEP7";
 
 export interface DialogueData {
@@ -108,7 +109,7 @@ export interface CheckAnswerEnterFraction extends CheckAnswer {
 export type RuleWithAnswer = CheckAnswerDropOnObject | CheckAnswerDropOnArea | CheckAnswerDropInsideArea | CheckAnswerSnapToPosition | CheckAnswerSnapObjectWithThisPropertiesToPosition | CheckAnswerEnterFraction;
 export type CheckAnswerRule = RuleWithAnswer | CheckAnswerLastDialogue;
 
-export type InteractionType = "playground" | "checkpoint";
+export type InteractionType = "playground" | "choiceAnswer" | "checkpoint";
 export interface Interaction {
   interaction: number;
   type: InteractionType;
@@ -119,12 +120,17 @@ export interface PlayGroundData extends Interaction {
   objects: ObjectData[];
   rule: CheckAnswerRule | CheckAnswerRule[];
 }
+export interface ChoiceAnswerData extends Interaction {
+  type: "choiceAnswer";
+  text: string | React.ReactNode;
+  choices: { text: string; nextInteraction: number }[];
+}
 export interface CheckPointData extends Interaction {
   type: "checkpoint";
   text: string | React.ReactNode;
 }
 
-export type InteractiveGameData = PlayGroundData | CheckPointData;
+export type InteractiveGameData = PlayGroundData | ChoiceAnswerData | CheckPointData;
 
 // will migrate to use InteractiveGameDataAux structure in the future
 export interface InteractiveGameDataAux {
@@ -145,5 +151,6 @@ export const gameData: InteractiveGameData[][] = [
   ep2,
   ep3,
   ep4,
+  ep5,
   ep7,
 ]
