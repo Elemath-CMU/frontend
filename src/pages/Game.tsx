@@ -700,7 +700,7 @@ function Game() {
                   <div className="flex flex-col gap-4 h-full w-full items-center justify-center">
                     <div className="flex flex-col gap-2 h-full w-full items-center justify-center">
                       <input type="text" title="fraction numerator" className="bg-white h-12 w-full rounded-xl text-center text-xl font-bold text-primary"
-                        placeholder="เท่าไหร่นะ"
+                        placeholder={obj.numeratorPlaceholder ?? "ตัวเศษ"}
                         value={obj.numerator ? obj.numerator : ""}
                         onChange={(e) => {
                           const newNumerator = e.target.value;
@@ -718,7 +718,7 @@ function Game() {
                       <div className="bg-black h-1 w-full rounded-full" />
                       <input type="text" title="fraction denominator" className="bg-white h-12 w-full rounded-xl text-center text-xl font-bold text-primary"
                         disabled={obj.fixedDenominator}
-                        placeholder="เท่าไหร่นะ"
+                        placeholder={obj.denominatorPlaceholder ?? "ตัวส่วน"}
                         value={obj.denominator ? obj.denominator : ""}
                         onChange={(e) => {
                           const newDenominator = e.target.value;

@@ -47,7 +47,9 @@ export interface FractionInput extends ObjectBaseData {
   type: "fractionInput";
   fixed?: true;
   numerator: number | null;
+  numeratorPlaceholder?: string;
   denominator: number | null;
+  denominatorPlaceholder?: string;
   fixedDenominator?: boolean;
 }
 export interface Message extends ObjectBaseData {

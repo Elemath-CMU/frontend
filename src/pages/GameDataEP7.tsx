@@ -422,7 +422,7 @@ export const ep7: InteractiveGameData[] = [
         id: 8, type: "other", fixed: true, svg: whatOverFour, x: 458 - 581 / 2 + 210 - 15 / 2 + 40, y: 250 + 80
       },
       {
-        id: 9, type: "fractionInput", x: 458 + 581 / 2 + 15, y: 200, numerator: null, denominator: 4, fixedDenominator: true
+        id: 9, type: "fractionInput", x: 458 + 581 / 2 + 15, y: 200, numerator: null, numeratorPlaceholder: "เท่าไหร่นะ", denominator: 4, fixedDenominator: true
       },
     ],
     rule: { type: "enterFraction", nextInteraction: 10, answers: [{ objectId: 9, fraction: 3 / 4 }] }
