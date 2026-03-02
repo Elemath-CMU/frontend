@@ -1,70 +1,71 @@
 import { useNavigate } from "react-router";
 import FullScreenCloudBackground from "../components/FullScreenCloudBackground";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import StoryLine from "../components/StoryLine";
 
-type IntroState = {
+interface IntroState {
+    index: number;
+    type: string;
     dialogue: string;
-} | {
-    specialInteraction: () => void;
+};
+interface IntroDialogueState extends IntroState {
+    type: "dialogue";
+    nextStateIndex?: number;
 }
+interface IntroChoiceState extends IntroState {
+    type: "choiceAnswer";
+    choices: {
+        text: string;
+        nextStateIndex: number;
+    }[];
+}
+type IntroStateType = IntroDialogueState | IntroChoiceState;
 
 function Intro() {
     // const { state } = useLocation();
     const navigate = useNavigate();
-    const [panelOpened, setPanelOpened] = useState<boolean>(false);
-    const states: IntroState[] = useMemo(() => [
+    const states: IntroStateType[] = useMemo(() => [
         {
-            dialogue: 'สวัสดี! ยินดีต้อนรับเข้าสู่โรงงานผลิตของเล่นของเรานะ'
+            index: 0,
+            type: "dialogue",
+            dialogue: 'สวัสดี! ยินดีต้อนรับเข้าสู่โรงงานผลิตของเล่นของเรานะ',
+            nextStateIndex: 1,
         },
         {
-            dialogue: 'เธอเป็นภูติที่มาใหม่สินะ คงจะเรียนรู้การทำของเล่นมาแล้วสินะ'
+            index: 1,
+            type: "dialogue",
+            dialogue: 'เธอเป็นภูติที่มาใหม่สินะ คงจะเรียนรู้การทำของเล่นมาแล้วสินะ',
+            nextStateIndex: 2,
         },
         {
-            specialInteraction: () => {
-                setPanelOpened(true);
-            }
+            index: 2,
+            type: "choiceAnswer",
+            dialogue: 'เธอเป็นภูติที่มาใหม่สินะ คงจะเรียนรู้การทำของเล่นมาแล้วสินะ',
+            choices: [{ text: 'ยังไม่เคยเรียนมาก่อนเลย...' , nextStateIndex: 3 }],
         },
         {
-            dialogue: 'อะไรนะ! ยังไม่เคยเรียนเหรอ... งั้นก็ไม่เป็นไร ฉันจะสอนเธอเอง!'
+            index: 3,
+            type: "dialogue",
+            dialogue: 'อะไรนะ! ยังไม่เคยเรียนเหรอ... งั้นก็ไม่เป็นไร ฉันจะสอนเธอเอง!',
         },
-        {
-            specialInteraction: () => {
-                navigate("/game");
-            }
-        }
-    ], [navigate]);
+    ], []);
     const [currentStateIndex, setCurrentStateIndex] = useState<number>(0);
 
-    useEffect(() => {
-        const currentState = states[currentStateIndex];
-
-        if ('specialInteraction' in currentState) {
-            currentState.specialInteraction();
-        }
-    }, [currentStateIndex, states]);
-
+    const currentState = states[currentStateIndex];
     return (
         <FullScreenCloudBackground>
             <div className="flex h-full w-full justify-center items-center touch-none">
                 <div className="flex flex-col justify-center items-center gap-16">
                     <StoryLine
-                        story={(() => {
-                                const currentState = states[currentStateIndex];
-                                if ('dialogue' in currentState) {
-                                    return currentState.dialogue;
-                                } else if ('specialInteraction' in currentState) {
-                                    return <span className="blur-[3px]">Lorem ipsum dolor sit amet, consectetur adipiscing elit</span>;
-                                }
-                            })()}
+                        story={currentState.dialogue}
                         onNext={() => {
-                            setCurrentStateIndex((prevIndex) => {
-                                if (prevIndex < states.length - 1) {
-                                    return (prevIndex + 1);
+                            if (currentState.type === "dialogue") {
+                                if (currentState.nextStateIndex !== undefined) {
+                                    setCurrentStateIndex(currentState.nextStateIndex);
                                 } else {
-                                    return prevIndex;
+                                    navigate("/game");
                                 }
-                            })
+                            }
                         }}
                     />
                     <svg width="143" height="116" viewBox="0 0 143 116" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -84,17 +85,13 @@ function Intro() {
 
                 </div>
             </div>
-            {panelOpened && (
+            {currentState.type === "choiceAnswer" && (
                 <div className="fixed inset-0 flex justify-center items-center bg-black/25">
-                    <button type="button" className="p-5 border-[3px] border-white rounded-[20px] bg-linear-to-b from-[#E8E2F8] to-[#C6CDF9] text-primary font-semibold cursor-pointer" onClick={() => {
-                        setPanelOpened(false); setCurrentStateIndex((prevIndex) => {
-                            if (prevIndex < states.length - 1) {
-                                return (prevIndex + 1);
-                            } else {
-                                return prevIndex;
-                            }
-                        })
-                    }}>ยังไม่เคยเรียนมาก่อนเลย...</button>
+                    {currentState.choices.map((choice, index) => (
+                        <button key={index} type="button" className="p-5 border-[3px] border-white rounded-[20px] bg-linear-to-b from-[#E8E2F8] to-[#C6CDF9] text-primary font-semibold cursor-pointer" onClick={() => setCurrentStateIndex(choice.nextStateIndex)}>
+                            {choice.text}
+                        </button>
+                    ))}
                 </div>
             )}
         </FullScreenCloudBackground>

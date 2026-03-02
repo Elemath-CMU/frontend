@@ -20,7 +20,7 @@ function MapPage() {
     <FullScreenCloudBackground>
       <div className="flex h-1/2 w-full justify-center items-center touch-none">
       </div>
-      <div className="flex h-1/2 w-full justify-center items-center overflow-x-scroll">
+      <div className="flex h-1/2 w-full overflow-x-scroll px-8">
         <div className="flex justify-center items-center gap-20">
           {gameData.map((_, index) =>
             index <= (currentUser?.episode || 0) ? (

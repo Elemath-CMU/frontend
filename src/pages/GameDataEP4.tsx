@@ -1,6 +1,6 @@
 import type { InteractiveGameData } from "./GameData";
 
-const bookSVG =
+const book =
   <svg width="280" height="180" viewBox="0 0 280 180" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clipPath="url(#clip0_638_1293)">
       <rect x="280" width="180" height="280" rx="12" transform="rotate(90 280 0)" fill="url(#paint0_linear_638_1293)" />
@@ -19,7 +19,7 @@ const bookSVG =
     </defs>
   </svg>
 
-const stickGroupSVG =
+const stickGroup =
   <svg width="160" height="108" viewBox="0 0 160 108" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="0.5" y="36.5" width="79" height="35" rx="3.5" fill="#895129" />
     <rect x="0.5" y="36.5" width="79" height="35" rx="3.5" stroke="black" />
@@ -50,17 +50,17 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "other", fixed: true, svg: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "other", fixed: true, svg: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
       }
     ],
     rule: {
-      type: "lastDialogue",
+      type: "lastDialogue", nextInteraction: 2
     }
   },
   {
@@ -74,17 +74,17 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
       },
     ],
     rule: {
-      type: "snapObjectWithThisPropertiesToPosition",
+      type: "snapObjectWithThisPropertiesToPosition", nextInteraction: 3,
       answers: [
         { objectProperties: { type: "stick", length: 80, width: 36 }, position: { x: 458 - 140 + 80, y: 160 } },
         { objectProperties: { type: "stick", length: 80, width: 36 }, position: { x: 458 - 140 + 80 * 2, y: 160 } },
@@ -102,10 +102,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "other", fixed: true, svg: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "other", fixed: true, svg: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -117,7 +117,7 @@ export const ep4: InteractiveGameData[] = [
         id: 5, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140 + 80 * 2, y: 160
       },
     ],
-    rule: { type: "lastDialogue" }
+    rule: { type: "lastDialogue", nextInteraction: 4 }
   },
   {
     interaction: 4,
@@ -130,10 +130,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -146,7 +146,7 @@ export const ep4: InteractiveGameData[] = [
       },
     ],
     rule: {
-      type: "snapObjectWithThisPropertiesToPosition",
+      type: "snapObjectWithThisPropertiesToPosition", nextInteraction: 5,
       answers: [
         { objectProperties: { type: "stick", length: 80, width: 36 }, position: { x: 458 - 140 + 80 * 3, y: 160 } },
       ]
@@ -171,10 +171,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "other", fixed: true, svg: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "other", fixed: true, svg: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -189,7 +189,7 @@ export const ep4: InteractiveGameData[] = [
         id: 6, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140 + 80 * 3, y: 160
       },
     ],
-    rule: { type: "lastDialogue" }
+    rule: { type: "lastDialogue", nextInteraction: 6 }
   },
   {
     interaction: 6,
@@ -220,7 +220,7 @@ export const ep4: InteractiveGameData[] = [
       // },
     ],
     rule: {
-      type: "dropInsideArea",
+      type: "dropInsideArea", nextInteraction: 7,
       answers: [
         { objectId: 2, area: { x: 458 - 80 / 2 - 2, y: 140, width: 80, height: 250 } },
       ]
@@ -239,7 +239,7 @@ export const ep4: InteractiveGameData[] = [
       { id: 1, type: "stick", fixed: true, length: 40, width: 36, cutRight: true, x: 458 - 80 / 2 - 5, y: 220 },
       { id: 2, type: "stick", fixed: true, length: 40, width: 36, cutLeft: true, x: 458 + 80 / 2 - 40 + 5, y: 220 },
     ],
-    rule: { type: "lastDialogue" }
+    rule: { type: "lastDialogue", nextInteraction: 8 }
   },
   {
     interaction: 8,
@@ -254,7 +254,7 @@ export const ep4: InteractiveGameData[] = [
       { id: 1, type: "stick", fixed: true, length: 40, width: 36, cutRight: true, x: 458 - 40 / 2, y: 220 },
       { id: 2, type: "stick", fixed: true, length: 40, width: 36, cutLeft: true, x: 458 - 40 / 2, y: 270 },
     ],
-    rule: { type: "lastDialogue" }
+    rule: { type: "lastDialogue", nextInteraction: 9 }
   },
   {
     interaction: 9,
@@ -267,10 +267,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -288,12 +288,20 @@ export const ep4: InteractiveGameData[] = [
         id: 7, type: "stick", length: 40, width: 36, cutLeft: true, x: 650, y: 290
       },
     ],
-    rule: {
-      type: "snapObjectWithThisPropertiesToPosition",
-      answers: [
-        { objectProperties: { type: "stick", length: 40, width: 36 }, position: { x: 458 - 140 + 80 * 3, y: 160 } },
-      ]
-    }
+    rule: [
+      {
+        type: "snapToPosition", nextInteraction: 10,
+        answers: [
+          { objectId: 6, position: { x: 458 - 140 + 80 * 3, y: 160 } },
+        ]
+      },
+      {
+        type: "snapToPosition", nextInteraction: 10.5,
+        answers: [
+          { objectId: 7, position: { x: 458 - 140 + 80 * 3, y: 160 } },
+        ]
+      },
+    ]
   },
   {
     interaction: 10,
@@ -310,10 +318,10 @@ export const ep4: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 140, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
       },
       {
-        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroupSVG, x: 50, y: 280
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280
       },
       {
         id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
@@ -331,7 +339,45 @@ export const ep4: InteractiveGameData[] = [
         id: 7, type: "stick", fixed: true, length: 40, width: 36, cutLeft: true, x: 650, y: 290
       },
     ],
-    rule: { type: "lastDialogue" }
+    rule: { type: "lastDialogue", nextInteraction: 11 }
+  },
+  {
+    interaction: 10.5,
+    type: "playground",
+    dialogues: [
+      {
+        text: "ลองวัดแล้วหนังสือมีความยาวเท่าไหร่นะ?",
+        canClickNext: true,
+      },
+      {
+        text: "วัดเสร็จแล้ว! หนังสือนี้ยาว 3 แท่งไม้ กับอีกครึ่งแท่งไม้นี่เอง!",
+        canClickNext: true,
+      }
+    ],
+    objects: [
+      {
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 140, y: 200
+      },
+      {
+        id: 2, type: "spawner", fixed: true, spawnObject: { type: "stick", length: 80, width: 36 }, spawnIcon: stickGroup, x: 50, y: 280
+      },
+      {
+        id: 3, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140, y: 160
+      },
+      {
+        id: 4, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140 + 80, y: 160
+      },
+      {
+        id: 5, type: "stick", fixed: true, length: 80, width: 36, x: 458 - 140 + 80 * 2, y: 160
+      },
+      {
+        id: 6, type: "stick", fixed: true, length: 40, width: 36, cutRight: true, x: 650, y: 250
+      },
+      {
+        id: 7, type: "stick", fixed: true, length: 40, width: 36, cutLeft: true, x: 458 - 140 + 80 * 3, y: 160
+      },
+    ],
+    rule: { type: "lastDialogue", nextInteraction: 11 }
   },
   {
     interaction: 11,

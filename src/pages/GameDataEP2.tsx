@@ -1,6 +1,6 @@
 import type { InteractiveGameData } from "./GameData";
 
-const bookSVG =
+const book =
   <svg width="350" height="180" viewBox="0 0 318 180" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clipPath="url(#clip0_292_1291)">
       <rect x="318" width="180" height="318" rx="12" transform="rotate(90 318 0)" fill="url(#paint0_linear_292_1291)" />
@@ -31,10 +31,10 @@ export const ep2: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 175, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 175, y: 200
       },
     ],
-    rule: { type: "lastDialogue" },
+    rule: { type: "lastDialogue", nextInteraction: 2 },
   },
   {
     interaction: 2,
@@ -47,7 +47,7 @@ export const ep2: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 175, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 175, y: 200
       },
       {
         id: 4, type: "other", fixed: true, svg: <svg width="161" height="76" viewBox="0 0 161 76" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,7 +58,7 @@ export const ep2: InteractiveGameData[] = [
       { id: 3, type: "pencil", orientation: "horizontal", fixed: true, length: 159, width: 62, color: "#F9D17B", x: 220, y: 330 },
       { id: 2, type: "pencil", orientation: "horizontal", length: 159, width: 62, color: "#F9D17B", x: 220, y: 330 },
     ],
-    rule: { type: "snapToPosition", answers: [{ objectId: 2, position: { x: 458, y: 127 } }] }
+    rule: { type: "snapToPosition", nextInteraction: 3, answers: [{ objectId: 2, position: { x: 458, y: 127 } }] }
   },
   {
     interaction: 3,
@@ -71,12 +71,12 @@ export const ep2: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 175, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 175, y: 200
       },
       { id: 3, type: "pencil", orientation: "horizontal", length: 159, width: 62, color: "#F9D17B", x: 220, y: 330 },
       { id: 2, type: "pencil", orientation: "horizontal", fixed: true, length: 159, width: 62, color: "#F9D17B", x: 458, y: 127 },
     ],
-    rule: { type: "snapToPosition", answers: [{ objectId: 3, position: { x: 458 + 159, y: 127 } }] }
+    rule: { type: "snapToPosition", nextInteraction: 4, answers: [{ objectId: 3, position: { x: 458 + 159, y: 127 } }] }
   },
   {
     interaction: 4,
@@ -93,12 +93,12 @@ export const ep2: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 175, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 175, y: 200
       },
       { id: 3, type: "pencil", orientation: "horizontal", fixed: true, length: 159, width: 62, color: "#F9D17B", x: 458, y: 127 },
       { id: 2, type: "pencil", orientation: "horizontal", fixed: true, length: 159, width: 62, color: "#F9D17B", x: 458 + 159, y: 127 },
     ],
-    rule: { type: "lastDialogue" }
+    rule: { type: "lastDialogue", nextInteraction: 5 }
   },
   {
     interaction: 5,
@@ -111,7 +111,7 @@ export const ep2: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 175, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 175, y: 200
       },
       {
         id: 5, type: "other", fixed: true, svg: <svg width="108" height="76" viewBox="0 0 108 76" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -123,7 +123,7 @@ export const ep2: InteractiveGameData[] = [
       { id: 3, type: "pencil", orientation: "horizontal", fixed: true, length: 106, width: 62, color: "#89C8E7", x: 220, y: 330 },
       { id: 2, type: "pencil", orientation: "horizontal", length: 106, width: 62, color: "#89C8E7", x: 220, y: 330 },
     ],
-    rule: { type: "snapToPosition", answers: [{ objectId: 2, position: { x: 458 - 159 + 106, y: 127 } }] },
+    rule: { type: "snapToPosition", nextInteraction: 6, answers: [{ objectId: 2, position: { x: 458 - 159 + 106, y: 127 } }] },
   },
   {
     interaction: 6,
@@ -136,13 +136,13 @@ export const ep2: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 175, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 175, y: 200
       },
       { id: 4, type: "pencil", orientation: "horizontal", length: 106, width: 62, color: "#89C8E7", x: 220, y: 330 },
       { id: 3, type: "pencil", orientation: "horizontal", length: 106, width: 62, color: "#89C8E7", x: 220, y: 330 },
       { id: 2, type: "pencil", orientation: "horizontal", fixed: true, length: 106, width: 62, color: "#89C8E7", x: 458 - 159 + 106, y: 127 },
     ],
-    rule: { type: "snapToPosition", answers: [{ objectId: 3, position: { x: 458 - 159 + 106 * 2, y: 127 } }, { objectId: 4, position: { x: 458 - 159 + 106 * 3, y: 127 } }] },
+    rule: { type: "snapToPosition", nextInteraction: 7, answers: [{ objectId: 3, position: { x: 458 - 159 + 106 * 2, y: 127 } }, { objectId: 4, position: { x: 458 - 159 + 106 * 3, y: 127 } }] },
   },
   {
     interaction: 7,
@@ -163,13 +163,13 @@ export const ep2: InteractiveGameData[] = [
     ],
     objects: [
       {
-        id: 1, type: "other", fixed: true, svg: bookSVG, x: 458 - 175, y: 200
+        id: 1, type: "other", fixed: true, svg: book, x: 458 - 175, y: 200
       },
       { id: 4, type: "pencil", orientation: "horizontal", length: 106, width: 62, fixed: true, color: "#89C8E7", x: 458 - 159 + 106 * 3, y: 127 },
       { id: 3, type: "pencil", orientation: "horizontal", length: 106, width: 62, fixed: true, color: "#89C8E7", x: 458 - 159 + 106 * 2, y: 127 },
       { id: 2, type: "pencil", orientation: "horizontal", length: 106, width: 62, fixed: true, color: "#89C8E7", x: 458 - 159 + 106, y: 127 },
     ],
-    rule: { type: "lastDialogue" },
+    rule: { type: "lastDialogue", nextInteraction: 8 },
   },
   {
     interaction: 8,
@@ -188,7 +188,7 @@ export const ep2: InteractiveGameData[] = [
       { id: 1, type: "pencil", orientation: "horizontal", length: 159, width: 62, fixed: true, color: "#F9D17B", x: 458 + 159 / 2, y: 230 },
       { id: 2, type: "pencil", orientation: "horizontal", length: 106, width: 62, fixed: true, color: "#89C8E7", x: 458 + 159 / 2, y: 320 },
     ],
-    rule: { type: "lastDialogue" },
+    rule: { type: "lastDialogue", nextInteraction: 9 },
   },
   {
     interaction: 9,

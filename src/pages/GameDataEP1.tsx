@@ -13,7 +13,7 @@ export const ep1: InteractiveGameData[] = [
     objects: [
       { id: 1, type: "pencil", fixed: true, length: 175, width: 62, color: "#F9D17B", x: 458 - 62 / 2, y: 200 },
     ],
-    rule: { type: "lastDialogue" }
+    rule: { type: "lastDialogue", nextInteraction: 2 },
   },
   {
     interaction: 2,
@@ -27,7 +27,7 @@ export const ep1: InteractiveGameData[] = [
     objects: [
       { id: 1, type: "pencil", length: 175, width: 62, color: "#F9D17B", x: 458 - 62 / 2, y: 200 },
     ],
-    rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
+    rule: { type: "dropOnObject", nextInteraction: 3, answers: [{ objectId: 1, targetObjectId: "spirit" }] },
   },
   {
     interaction: 3,
@@ -42,7 +42,7 @@ export const ep1: InteractiveGameData[] = [
       { id: 1, type: "pencil", length: 175, width: 62, color: "#F9D17B", x: 458 - 62 / 2 - 62, y: 200 },
       { id: 2, type: "pencil", length: 70, width: 62, color: "#F9D17B", x: 458 + 62 / 2, y: 200 },
     ],
-    rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
+    rule: { type: "dropOnObject", nextInteraction: 4, answers: [{ objectId: 1, targetObjectId: "spirit" }] },
   },
   {
     interaction: 4,
@@ -57,7 +57,7 @@ export const ep1: InteractiveGameData[] = [
       { id: 1, type: "pencil", length: 70, width: 62, color: "#F9D17B", x: 458 - 62 / 2 - 62, y: 200 },
       { id: 2, type: "pencil", length: 175, width: 62, color: "#F9D17B", x: 458 + 62 / 2, y: 200 },
     ],
-    rule: { type: "dropOnObject", answers: [{ objectId: 2, targetObjectId: "spirit" }] },
+    rule: { type: "dropOnObject", nextInteraction: 5, answers: [{ objectId: 2, targetObjectId: "spirit" }] },
   },
   {
     interaction: 5,
@@ -72,7 +72,7 @@ export const ep1: InteractiveGameData[] = [
       { id: 1, type: "pencil", length: 160, width: 62, color: "#F9D17B", x: 458 - 62 / 2 - 62, y: 200 },
       { id: 2, type: "pencil", length: 70, width: 62, color: "#F9D17B", x: 458 + 62 / 2, y: 200 },
     ],
-    rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
+    rule: { type: "dropOnObject", nextInteraction: 6, answers: [{ objectId: 1, targetObjectId: "spirit" }] },
   },
   {
     interaction: 6,
@@ -87,7 +87,7 @@ export const ep1: InteractiveGameData[] = [
       { id: 1, type: "pencil", length: 160, width: 62, color: "#F9D17B", x: 458 - 62 / 2 - 62, y: 200 },
       { id: 2, type: "pencil", length: 90, width: 62, color: "#F9D17B", x: 458 + 62 / 2, y: 200 },
     ],
-    rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
+    rule: { type: "dropOnObject", nextInteraction: 7, answers: [{ objectId: 1, targetObjectId: "spirit" }] },
   },
   {
     interaction: 7,
@@ -102,7 +102,7 @@ export const ep1: InteractiveGameData[] = [
       { id: 1, type: "pencil", orientation: "horizontal", length: 160, width: 62, color: "#F9D17B", x: 458 + 80, y: 200 },
       { id: 2, type: "pencil", orientation: "horizontal", length: 90, width: 62, color: "#F9D17B", x: 458 + 80, y: 300 },
     ],
-    rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
+    rule: { type: "dropOnObject", nextInteraction: 8, answers: [{ objectId: 1, targetObjectId: "spirit" }] },
   },
   {
     interaction: 8,
@@ -117,7 +117,7 @@ export const ep1: InteractiveGameData[] = [
       { id: 1, type: "pencil", orientation: "horizontal", length: 90, width: 62, color: "#F9D17B", x: 458 + 80, y: 200 },
       { id: 2, type: "pencil", orientation: "horizontal", length: 160, width: 62, color: "#F9D17B", x: 458 + 80, y: 300 },
     ],
-    rule: { type: "dropOnObject", answers: [{ objectId: 2, targetObjectId: "spirit" }] },
+    rule: { type: "dropOnObject", nextInteraction: 9, answers: [{ objectId: 2, targetObjectId: "spirit" }] },
   },
   {
     interaction: 9,
@@ -132,7 +132,7 @@ export const ep1: InteractiveGameData[] = [
       { id: 1, type: "pencil", orientation: "horizontal", length: 90, width: 62, color: "#F9D17B", x: 458 + 58, y: 200 },
       { id: 2, type: "pencil", orientation: "horizontal", length: 115, width: 62, color: "#F9D17B", x: 458 + 58, y: 300 },
     ],
-    rule: { type: "dropOnObject", answers: [{ objectId: 2, targetObjectId: "spirit" }] },
+    rule: { type: "dropOnObject", nextInteraction: 10, answers: [{ objectId: 2, targetObjectId: "spirit" }] },
   },
   {
     interaction: 10,
@@ -147,7 +147,7 @@ export const ep1: InteractiveGameData[] = [
       { id: 1, type: "pencil", length: 90, width: 62, color: "#F9D17B", x: 458 - 62 / 2 - 62, y: 200 },
       { id: 2, type: "pencil", length: 115, width: 62, color: "#F9D17B", x: 458 + 62 / 2, y: 200 },
     ],
-    rule: { type: "dropOnObject", answers: [{ objectId: 2, targetObjectId: "spirit" }] }
+    rule: { type: "dropOnObject", nextInteraction: 11, answers: [{ objectId: 2, targetObjectId: "spirit" }] }
   },
   {
     interaction: 11,
@@ -162,7 +162,7 @@ export const ep1: InteractiveGameData[] = [
       { id: 1, type: "pencil", length: 105, width: 62, color: "#F9D17B", x: 458 - 62 / 2 - 62, y: 200 },
       { id: 2, type: "pencil", length: 90, width: 62, color: "#F9D17B", x: 458 + 62 / 2, y: 200 },
     ],
-    rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] },
+    rule: { type: "dropOnObject", nextInteraction: 12, answers: [{ objectId: 1, targetObjectId: "spirit" }] },
   },
   {
     interaction: 12,
@@ -177,7 +177,7 @@ export const ep1: InteractiveGameData[] = [
       { id: 1, type: "pencil", length: 90, width: 62, color: "#F9D17B", x: 458 - 62 / 2 - 62, y: 200 },
       { id: 2, type: "pencil", length: 85, width: 62, color: "#F9D17B", x: 458 + 62 / 2, y: 200 },
     ],
-    rule: { type: "dropOnObject", answers: [{ objectId: 1, targetObjectId: "spirit" }] }
+    rule: { type: "dropOnObject", nextInteraction: 13, answers: [{ objectId: 1, targetObjectId: "spirit" }] }
   },
   {
     interaction: 13,
