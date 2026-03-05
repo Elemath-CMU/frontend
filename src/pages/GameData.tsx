@@ -3,6 +3,7 @@ import { ep2 } from "./GameDataEP2";
 import { ep3 } from "./GameDataEP3";
 import { ep4 } from "./GameDataEP4";
 import { ep5 } from "./GameDataEP5";
+import { ep6 } from "./GameDataEP6";
 import { ep7 } from "./GameDataEP7";
 import { ep8 } from "./GameDataEP8";
 import { ep9 } from "./GameDataEP9";
@@ -156,6 +157,7 @@ export const gameData: InteractiveGameData[][] = [
   ep3,
   ep4,
   ep5,
+  ep6,
   ep7,
   ep8,
   ep9,
