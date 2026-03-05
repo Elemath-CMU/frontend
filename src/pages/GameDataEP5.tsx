@@ -413,6 +413,12 @@ export const ep5: InteractiveGameData[] = [
     interaction: 11,
     type: "choiceAnswer",
     text: "แล้วถ้าเราลองเอาแท่งไม้ที่แบ่งเป็นชิ้นละ 1/2 หน่วย กับแท่งไม้ที่แบ่งเป็นชิ้นละ 1/5 หน่วย มาเทียบกัน อันไหนจะยาวกว่ากันนะ?",
+    objects: [
+      { id: 1, type: "stick", fixed: true, length: 160, width: 36, x: 458 - 80, y: 180 },
+      { id: 2, type: "other", fixed: true, svg: one, x: 458 - 160 + 320 / 2 - 11.5, y: 180 + 36 / 2 - 15 + 50 },
+      ...(Array.from({ length: 5 }, (_, i) => ({ id: 3 + i, type: "stick" as const, fixed: true, length: 160 / 5, width: 36, cutRight: i !== 4, cutLeft: i !== 0, x: 458 - 80 + (160 / 5) * i, y: 180 + 100 }))),
+      ...(Array.from({ length: 5 }, (_, i) => ({ id: 8 + i, type: "other" as const, fixed: true, svg: oneOverFive, x: 458 - 80 + (160 / 5) * i + (160 / 5) / 2 - 8, y: 180 + 100 + 36 / 2 - 15 + 50 }))),
+    ],
     choices: [
       { text: "แท่งไม้ที่ยาว 1/2 หน่วย", nextInteraction: 12 },
       { text: "แท่งไม้ที่ยาว 1/5 หน่วย", nextInteraction: 13 },
