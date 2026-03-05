@@ -21,14 +21,14 @@ function MapPage() {
       <div className="flex h-1/2 w-full justify-center items-center touch-none">
       </div>
       <div className="flex h-1/2 w-full overflow-x-scroll px-8">
-        <div className="flex justify-center items-center gap-20">
+        <div className="flex justify-center items-center">
           {gameData.map((_, index) =>
             index <= (currentUser?.episode || 0) ? (
-              <MapButtonActive key={index} onClick={() => navigate('/game', { state: { episodeIndex: index } })}>
+              <MapButtonActive key={index} index={index} onClick={() => navigate('/game', { state: { episodeIndex: index } })}>
                 {index + 1}
               </MapButtonActive>
             ) : (
-              <MapButtonInactive key={index}>
+              <MapButtonInactive key={index} index={index}>
                 {index + 1}
               </MapButtonInactive>
             )
