@@ -414,8 +414,8 @@ export const ep5: InteractiveGameData[] = [
     type: "choiceAnswer",
     text: "แล้วถ้าเราลองเอาแท่งไม้ที่แบ่งเป็นชิ้นละ 1/2 หน่วย กับแท่งไม้ที่แบ่งเป็นชิ้นละ 1/5 หน่วย มาเทียบกัน อันไหนจะยาวกว่ากันนะ?",
     choices: [
-      { text: "แท่งไม้ที่แบ่งเป็น 1/2 ยาวกว่า", nextInteraction: 12 },
-      { text: "แท่งไม้ที่แบ่งเป็น 1/5 ยาวกว่า", nextInteraction: 13 },
+      { text: "แท่งไม้ที่ยาว 1/2 หน่วย", nextInteraction: 12 },
+      { text: "แท่งไม้ที่ยาว 1/5 หน่วย", nextInteraction: 13 },
     ],
   },
   {
