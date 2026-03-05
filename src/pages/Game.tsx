@@ -176,7 +176,7 @@ function Game() {
         setRule(initialInteraction.rule);
       } else if (initialInteraction && initialInteraction.type === "choiceAnswer") {
         setDialogues([{ text: initialInteraction.text, canClickNext: false }]);
-        setObjects([]);
+        setObjects(initialInteraction.objects);
         setRule(null);
       } else if (initialInteraction && initialInteraction.type === "checkpoint") {
         setDialogues([]);
@@ -425,7 +425,7 @@ function Game() {
           objs.map(o => {
             const snapInfo = result.objectsToSnap?.find(s => s.objectId === o.id);
             if (snapInfo) {
-              return { ...o, x: snapInfo.position.x, y: snapInfo.position.y };
+              return { ...o, x: snapInfo.position.x, y: snapInfo.position.y, fixed: true };
             }
             return o;
           })

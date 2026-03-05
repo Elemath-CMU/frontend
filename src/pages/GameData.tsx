@@ -128,6 +128,7 @@ export interface PlayGroundData extends Interaction {
 export interface ChoiceAnswerData extends Interaction {
   type: "choiceAnswer";
   text: string | React.ReactNode;
+  objects: ObjectData[];
   choices: { text: string; nextInteraction: number }[];
 }
 export interface CheckPointData extends Interaction {
