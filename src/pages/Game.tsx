@@ -455,6 +455,7 @@ function Game() {
   }, [checkAnswer, dragging]);
 
   const currentInteraction = interactions.find(inter => inter.interaction === interactionIndex);
+  console.log("currentInteraction", currentInteraction);
   return (
     <div className="font-mali h-dvh w-screen relative touch-none">
       <div className="flex h-1/3 w-full bg-linear-to-b from-[#FFF1F6] to-[#CFE1F9]" />

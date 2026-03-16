@@ -352,7 +352,7 @@ export const ep9: InteractiveGameData[] = [
       { id: 9, type: "other", fixed: true, svg: highlightedThreeOverFour, x: 458 - 80 * 2 + 80 + 40 - 8.5, y: 340 },
       { id: 10, type: "other", fixed: true, svg: twoSticks, x: 458 - 80 * 2, y: 260 },
     ],
-    rule: { type: "lastDialogue", nextInteraction: 1000 },
+    rule: { type: "lastDialogue", nextInteraction: 9 },
   },
   {
     interaction: 9,
